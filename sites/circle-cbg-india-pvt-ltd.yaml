@@ -1,0 +1,32 @@
+site:
+  name: "Circle CBG India Pvt. Ltd."
+  slug: "circle-cbg-india-pvt-ltd"
+  org_id: 20
+  timezone: "Asia/Kolkata"
+
+team_folders:
+  master-data-management:
+    name: "Master Data Management"
+    folder_uid: "e6f493df-49fc-4832-bca1-d1e5997db68e"
+  meerut-cbg-plant:
+    name: "Meerut CBG Plant"
+    folder_uid: "e16dfbf3-8730-4edf-a113-043b027d76bd"
+  meerut-fertilizer-marketing:
+    name: "Meerut Fertilizer Marketing"
+    folder_uid: "edfae40a-3dee-4f14-83ab-6dc40d2e8bd2"
+  membrane-gas-upgradation-system:
+    name: "Membrane Gas Upgradation System"
+    folder_uid: "c4df8713-ed58-4ae6-957a-c21b511b6e6a"
+  meerut-cbg-plant-gas-quality-monitor:
+    name: "Meerut CBG Plant - Gas Quality Monitor"
+    folder_uid: "fa668e23-7622-41ec-9ab2-6a20ffcf74d8"
+  meerut-cbg-plant-gas-production-monitor:
+    name: "Meerut CBG Plant - Gas Production Monitor"
+    folder_uid: "dfeljx6qj54aof"
+  weighment-system:
+    name: "Weighment System"
+    folder_uid: "efmj2bxlqij9cd"
+
+datasources:
+  influxdb: "influx-circle-cbg-prod"
+  postgres: "pg-circle-cbg-prod"

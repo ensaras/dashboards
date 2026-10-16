@@ -1,0 +1,44 @@
+site:
+  name: "Global Scientific Inc."
+  slug: "global-scientific-inc"
+  org_id: 19
+  timezone: "Asia/Kolkata"
+
+team_folders:
+  master-data-management:
+    name: "Master Data Management"
+    folder_uid: "cfb61ade-ef2f-4e2f-952b-76ba14b6bb6b"
+  nanded-mbr:
+    name: "Nanded MBR"
+    folder_uid: "daa59449-7fdf-46d3-b983-5ba58b66bda2"
+  ntiem:
+    name: "NTIEM"
+    folder_uid: "e068ce70-9ca9-404c-bde5-361c7b5b560d"
+  riverview-city-2000-kld-wtp:
+    name: "Riverview City 2000 KLD WTP"
+    folder_uid: "dfd1b73d-2545-42c2-9182-d3cd16961fc3"
+  riverview-city-1500-kld-mbr:
+    name: "Riverview City 1500 KLD MBR"
+    folder_uid: "d8ea4ae4-e967-445d-9dfb-7b9b86945688"
+  ahspa-30-mld-cetp:
+    name: "AHSPA 30 MLD CETP"
+    folder_uid: "c3b49fd5-f8f7-4869-b9d5-05947001b946"
+  zim-lab:
+    name: "Zim Lab"
+    folder_uid: "afgg60608y0owc"
+  kalol-old-plant:
+    name: "Kalol Old Plant"
+    folder_uid: "dfgg61nqbbqwwc"
+  kalol-new-plant:
+    name: "Kalol New Plant"
+    folder_uid: "efgg62fiunkzkb"
+  ntiem-official:
+    name: "NTIEM Official"
+    folder_uid: "efj8ct9wt9o8wc"
+  ahspa-official:
+    name: "AHSPA Official"
+    folder_uid: "ffmtuz1adaf40f"
+
+datasources:
+  influxdb: "influx-gsi-prod"
+  postgres: "pg-gsi-prod"

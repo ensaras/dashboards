@@ -1,0 +1,22 @@
+site:
+  name: "Ensaras"
+  slug: "ensaras"
+  org_id: 1
+  timezone: "Asia/Kolkata"
+
+team_folders:
+  master-data-management:
+    name: "Master Data Management"
+    folder_uid: "cfz3ptseejt34a"
+  tech-stack:
+    name: "Tech Stack"
+    folder_uid: "aebb9dda-0d94-448f-a86b-acbe4bf251bd"
+  project-analytics:
+    name: "Project Analytics"
+    folder_uid: "bd2e332b-77fe-487d-9756-600d5e7fc393"
+  engineer:
+    name: "Engineer"
+    folder_uid: "e2d0b91f-4a43-46a8-9b9b-ea1f87a4761c"
+
+datasources:
+  postgres: "pg-ensaras-prod"
