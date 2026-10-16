@@ -6,6 +6,8 @@ Discovers and exports Grafana dashboards based on declarative site configuration
 - Normalizes JSON via `normalizer.py`.
 - Saves to standard canonical path:
   `orgs/<org_slug>/<team_slug>/<dashboard_slug>__<uid>.json`
+  or for retired dashboards:
+  `orgs/<org_slug>/<team_slug>/retired/<dashboard_slug>__<uid>.json`
 """
 
 from __future__ import annotations
@@ -39,6 +41,33 @@ def get_dashboard_filename(title: str, uid: str) -> str:
     """Generate standard hybrid dashboard filename: <dashboard_slug>__<uid>.json."""
     title_slug = slugify(title) or "dashboard"
     return f"{title_slug}__{uid}.json"
+
+
+def get_dashboard_path(
+    org_slug: str,
+    team_slug: str,
+    title: str,
+    uid: str,
+    retired: bool = False,
+    output_root: Path = Path("orgs"),
+) -> Path:
+    """Derive canonical repository path for a dashboard.
+
+    Args:
+        org_slug: Organization slug (e.g. 'circle-cbg-india-pvt-ltd').
+        team_slug: Team slug (e.g. 'meerut-cbg-plant' or 'master-data-management').
+        title: Dashboard title.
+        uid: Dashboard UID.
+        retired: If True, place in dedicated 'retired/' subdirectory.
+        output_root: Root directory (default: 'orgs').
+
+    Returns:
+        Canonical Path: orgs/<org_slug>/<team_slug>[/retired]/<dashboard_slug>__<uid>.json
+    """
+    filename = get_dashboard_filename(title, uid)
+    if retired:
+        return output_root / org_slug / team_slug / "retired" / filename
+    return output_root / org_slug / team_slug / filename
 
 
 def load_site_config(site_file: Path) -> dict[str, Any]:
@@ -84,9 +113,6 @@ def export_from_grafana(
             logger.warning("  [-] Skipping team %s: missing folder_uid", team_slug)
             continue
 
-        team_dir = output_root / org_slug / team_slug
-        team_dir.mkdir(parents=True, exist_ok=True)
-
         try:
             dashboards = client.get_dashboards_in_folder(org_id=org_id, folder_uid=folder_uid)
         except GrafanaAPIError as exc:
@@ -97,21 +123,33 @@ def export_from_grafana(
 
         for dash_summary in dashboards:
             uid = dash_summary["uid"]
-            title = dash_summary.get("title", uid)
+            summary_title = dash_summary.get("title", uid)
 
             try:
                 raw_dash = client.get_dashboard(org_id=org_id, uid=uid)
             except GrafanaAPIError as exc:
-                logger.error("    [-] Failed to fetch dashboard '%s' (uid: %s): %s", title, uid, exc)
+                logger.error("    [-] Failed to fetch dashboard '%s' (uid: %s): %s", summary_title, uid, exc)
                 continue
 
             # Normalize and serialize
             normalized = normalize_dashboard(raw_dash)
             content = serialize_dashboard(normalized)
 
-            filename = get_dashboard_filename(title, uid)
-            target_path = team_dir / filename
+            title = normalized.get("title") or summary_title
 
+            is_retired = bool(
+                normalized.get("retired")
+                or "retired" in normalized.get("tags", [])
+            )
+            target_path = get_dashboard_path(
+                org_slug=org_slug,
+                team_slug=team_slug,
+                title=title,
+                uid=uid,
+                retired=is_retired,
+                output_root=output_root,
+            )
+            target_path.parent.mkdir(parents=True, exist_ok=True)
             target_path.write_text(content, encoding="utf-8")
             logger.info("    -> Saved %s", target_path)
             exported_files.append(target_path)
@@ -175,11 +213,20 @@ def ingest_from_directory(
             logger.warning("  [-] Could not infer org/team from path %s; skipping", json_file)
             continue
 
-        target_dir = output_root / org_slug / team_slug
-        target_dir.mkdir(parents=True, exist_ok=True)
-
-        filename = get_dashboard_filename(title, uid)
-        target_path = target_dir / filename
+        is_retired = bool(
+            "retired" in rel_parts
+            or normalized.get("retired")
+            or "retired" in normalized.get("tags", [])
+        )
+        target_path = get_dashboard_path(
+            org_slug=org_slug,
+            team_slug=team_slug,
+            title=title,
+            uid=uid,
+            retired=is_retired,
+            output_root=output_root,
+        )
+        target_path.parent.mkdir(parents=True, exist_ok=True)
         content = serialize_dashboard(normalized)
 
         target_path.write_text(content, encoding="utf-8")
