@@ -21,7 +21,7 @@ from grafana_dashboards.tools.normalizer import (
 )
 
 
-def test_normalize_strips_volatile_fields():
+def test_normalize_strips_volatile_fields() -> None:
     raw = {
         "id": 123,
         "version": 45,
@@ -68,7 +68,7 @@ def test_normalize_strips_volatile_fields():
     assert normalized["uid"] == "plant-ov-01"
 
 
-def test_normalize_handles_api_envelope():
+def test_normalize_handles_api_envelope() -> None:
     raw_api_envelope = {
         "meta": {"canSave": True, "created": "2026-01-01"},
         "dashboard": {
@@ -88,7 +88,7 @@ def test_normalize_handles_api_envelope():
     assert normalized["tags"] == [MANAGED_TAG]
 
 
-def test_normalize_handles_string_input():
+def test_normalize_handles_string_input() -> None:
     raw_str = json.dumps(
         {
             "id": 10,
@@ -106,12 +106,12 @@ def test_normalize_handles_string_input():
     assert normalized["tags"] == [MANAGED_TAG]
 
 
-def test_normalize_invalid_string_input():
+def test_normalize_invalid_string_input() -> None:
     with pytest.raises(json.JSONDecodeError):
         normalize_dashboard("invalid-json-{")
 
 
-def test_normalize_deeply_nested_structures():
+def test_normalize_deeply_nested_structures() -> None:
     raw = {
         "title": "Deep Nested",
         "uid": "deep-01",
@@ -141,7 +141,7 @@ def test_normalize_deeply_nested_structures():
     assert normalized["nested_list"][0][0]["val"] == 1
 
 
-def test_normalize_tags_variations():
+def test_normalize_tags_variations() -> None:
     # Test duplicate tags and None / malformed tags
     raw = {
         "title": "Tags Test",
@@ -162,7 +162,7 @@ def test_normalize_tags_variations():
     assert normalized_invalid_tags["tags"] == ["managed-by-git"]
 
 
-def test_normalize_deterministic_byte_for_byte():
+def test_normalize_deterministic_byte_for_byte() -> None:
     data_a = {
         "z_field": "last",
         "a_field": "first",
@@ -183,7 +183,7 @@ def test_normalize_deterministic_byte_for_byte():
     assert str_a.endswith("\n")
 
 
-def test_serialize_dashboard_formatting_and_unicode():
+def test_serialize_dashboard_formatting_and_unicode() -> None:
     data = {
         "title": "Test Title – CBG \u00b0C",
         "uid": "unicode-01",
@@ -205,7 +205,9 @@ def test_serialize_dashboard_formatting_and_unicode():
         ("Meerut CBG \u2013 Data Health-1792127669456.json", "meerut-cbg-data-health"),
     ],
 )
-def test_normalize_against_real_exported_samples(sample_filename, expected_uid):
+def test_normalize_against_real_exported_samples(
+    sample_filename: str, expected_uid: str
+) -> None:
     sample_dir = Path(
         "C:/Users/Pradeep/Workspaces/EnsarasWorkspace/docs/grafana_dashboards_json/orgs/circle-cbg-india-pvt-ltd/meerut-cbg-plant"
     )

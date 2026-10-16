@@ -20,7 +20,7 @@ from grafana_dashboards.tools.client import GrafanaAPIError, GrafanaClient
 
 
 @pytest.fixture
-def client():
+def client() -> GrafanaClient:
     return GrafanaClient(
         base_url="https://grafana.example.com",
         token="glsa_test_token_12345",
@@ -30,14 +30,14 @@ def client():
 # --- Authentication & Initialization Tests ---
 
 
-def test_client_init_with_token(client):
+def test_client_init_with_token(client: GrafanaClient) -> None:
     assert client.base_url == "https://grafana.example.com"
     assert client.session.headers["Authorization"] == "Bearer glsa_test_token_12345"
     assert client.session.headers["Content-Type"] == "application/json"
     assert client.session.headers["Accept"] == "application/json"
 
 
-def test_client_init_with_basic_auth():
+def test_client_init_with_basic_auth() -> None:
     client_basic = GrafanaClient(
         base_url="https://grafana.example.com",
         auth=("admin_user", "secret_pass"),
@@ -46,14 +46,14 @@ def test_client_init_with_basic_auth():
     assert "Authorization" not in client_basic.session.headers
 
 
-def test_client_init_with_env_token(monkeypatch):
+def test_client_init_with_env_token(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("GRAFANA_ADMIN_TOKEN", "env_token_999")
     monkeypatch.delenv("GRAFANA_API_KEY", raising=False)
     client_env = GrafanaClient(base_url="https://grafana.example.com")
     assert client_env.session.headers["Authorization"] == "Bearer env_token_999"
 
 
-def test_client_init_with_env_basic_auth(monkeypatch):
+def test_client_init_with_env_basic_auth(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("GRAFANA_ADMIN_TOKEN", raising=False)
     monkeypatch.delenv("GRAFANA_API_KEY", raising=False)
     monkeypatch.setenv("GRAFANA_ADMIN_USER", "admin_env")
@@ -66,7 +66,9 @@ def test_client_init_with_env_basic_auth(monkeypatch):
 
 
 @patch.object(requests.Session, "request")
-def test_client_request_with_org_context(mock_request, client):
+def test_client_request_with_org_context(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 200
@@ -84,7 +86,9 @@ def test_client_request_with_org_context(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_request_without_org_context(mock_request, client):
+def test_client_request_without_org_context(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 200
@@ -100,7 +104,9 @@ def test_client_request_without_org_context(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_request_handles_204_no_content(mock_request, client):
+def test_client_request_handles_204_no_content(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 204
@@ -112,7 +118,9 @@ def test_client_request_handles_204_no_content(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_request_error_raises_grafana_api_error(mock_request, client):
+def test_client_request_error_raises_grafana_api_error(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = False
     mock_response.status_code = 404
@@ -128,7 +136,9 @@ def test_client_request_error_raises_grafana_api_error(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_request_network_exception(mock_request, client):
+def test_client_request_network_exception(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_request.side_effect = requests.ConnectionError("Connection refused")
 
     with pytest.raises(GrafanaAPIError) as exc_info:
@@ -141,7 +151,9 @@ def test_client_request_network_exception(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_folder_apis(mock_request, client):
+def test_client_folder_apis(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 200
@@ -181,7 +193,9 @@ def test_client_folder_apis(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_folder_permissions(mock_request, client):
+def test_client_folder_permissions(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 200
@@ -208,7 +222,9 @@ def test_client_folder_permissions(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_dashboard_apis(mock_request, client):
+def test_client_dashboard_apis(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 200
@@ -273,7 +289,9 @@ def test_client_dashboard_apis(mock_request, client):
 
 
 @patch.object(requests.Session, "request")
-def test_client_org_and_datasource_apis(mock_request, client):
+def test_client_org_and_datasource_apis(
+    mock_request: MagicMock, client: GrafanaClient
+) -> None:
     mock_response = MagicMock()
     mock_response.ok = True
     mock_response.status_code = 200
