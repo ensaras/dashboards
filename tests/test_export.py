@@ -34,7 +34,9 @@ def test_slugify():
     assert slugify("Riverview City 2000 KLD WTP") == "riverview-city-2000-kld-wtp"
     assert slugify("Meerut CBG - Data Health") == "meerut-cbg-data-health"
     assert slugify("Master Data Management") == "master-data-management"
-    assert slugify("  Special @#% Characters & Spaces!  ") == "special-characters-spaces"
+    assert (
+        slugify("  Special @#% Characters & Spaces!  ") == "special-characters-spaces"
+    )
     assert slugify("---Leading-and-Trailing---") == "leading-and-trailing"
     assert slugify("") == ""
 
@@ -64,7 +66,13 @@ def test_get_dashboard_path():
         retired=False,
         output_root=root,
     )
-    assert std_path == root / "circle-cbg-india-pvt-ltd" / "meerut-cbg-plant" / "digester-data__e5586707.json"
+    assert (
+        std_path
+        == root
+        / "circle-cbg-india-pvt-ltd"
+        / "meerut-cbg-plant"
+        / "digester-data__e5586707.json"
+    )
 
     # 2. Master Data Management folder
     mdm_path = get_dashboard_path(
@@ -75,7 +83,13 @@ def test_get_dashboard_path():
         retired=False,
         output_root=root,
     )
-    assert mdm_path == root / "global-scientific-inc" / "master-data-management" / "global-scientific-portfolio__port-gsi.json"
+    assert (
+        mdm_path
+        == root
+        / "global-scientific-inc"
+        / "master-data-management"
+        / "global-scientific-portfolio__port-gsi.json"
+    )
 
     # 3. Retired dashboard subdirectory
     retired_path = get_dashboard_path(
@@ -86,7 +100,14 @@ def test_get_dashboard_path():
         retired=True,
         output_root=root,
     )
-    assert retired_path == root / "circle-h2o-pvt-ltd" / "riverview-city-wtp" / "retired" / "legacy-flow-meter__leg-999.json"
+    assert (
+        retired_path
+        == root
+        / "circle-h2o-pvt-ltd"
+        / "riverview-city-wtp"
+        / "retired"
+        / "legacy-flow-meter__leg-999.json"
+    )
 
 
 def test_load_site_config(tmp_path: Path):
@@ -177,11 +198,18 @@ def test_export_from_grafana_with_mdm_and_retired(tmp_path: Path):
     assert len(files) == 3
 
     # Check MDM path
-    mdm_file = output_root / "test-org" / "master-data-management" / "portfolio-overview__uid-mdm.json"
+    mdm_file = (
+        output_root
+        / "test-org"
+        / "master-data-management"
+        / "portfolio-overview__uid-mdm.json"
+    )
     assert mdm_file.exists()
 
     # Check Active team path
-    active_file = output_root / "test-org" / "plant-alpha" / "active-overview__uid-active.json"
+    active_file = (
+        output_root / "test-org" / "plant-alpha" / "active-overview__uid-active.json"
+    )
     assert active_file.exists()
 
     # Check Retired team path
@@ -197,7 +225,9 @@ def test_export_from_grafana_with_mdm_and_retired(tmp_path: Path):
 
 def test_export_from_grafana_api_error_handling(tmp_path: Path):
     mock_client = MagicMock()
-    mock_client.get_dashboards_in_folder.side_effect = GrafanaAPIError("Folder 500 error", status_code=500)
+    mock_client.get_dashboards_in_folder.side_effect = GrafanaAPIError(
+        "Folder 500 error", status_code=500
+    )
 
     site_config = {
         "site": {"name": "Test Org", "slug": "test-org", "org_id": 10},
@@ -238,8 +268,12 @@ def test_ingest_from_directory_active_and_retired(tmp_path: Path):
         "retired": True,
     }
 
-    (active_dir / "Active-123.json").write_text(json.dumps(active_json), encoding="utf-8")
-    (retired_dir / "Retired-456.json").write_text(json.dumps(retired_json), encoding="utf-8")
+    (active_dir / "Active-123.json").write_text(
+        json.dumps(active_json), encoding="utf-8"
+    )
+    (retired_dir / "Retired-456.json").write_text(
+        json.dumps(retired_json), encoding="utf-8"
+    )
 
     output_root = tmp_path / "dest_orgs"
     files = ingest_from_directory(source_dir, {}, output_root=output_root)

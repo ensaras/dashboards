@@ -19,7 +19,12 @@ logger = logging.getLogger(__name__)
 class GrafanaAPIError(Exception):
     """Raised when a Grafana API request fails."""
 
-    def __init__(self, message: str, status_code: int | None = None, response_text: str | None = None):
+    def __init__(
+        self,
+        message: str,
+        status_code: int | None = None,
+        response_text: str | None = None,
+    ):
         super().__init__(message)
         self.status_code = status_code
         self.response_text = response_text
@@ -51,7 +56,9 @@ class GrafanaClient:
         self.session = requests.Session()
 
         # Configure Authentication
-        resolved_token = token or os.getenv("GRAFANA_ADMIN_TOKEN") or os.getenv("GRAFANA_API_KEY")
+        resolved_token = (
+            token or os.getenv("GRAFANA_ADMIN_TOKEN") or os.getenv("GRAFANA_API_KEY")
+        )
         if resolved_token:
             self.session.headers["Authorization"] = f"Bearer {resolved_token.strip()}"
         elif auth:
@@ -109,7 +116,9 @@ class GrafanaClient:
             )
         except requests.RequestException as exc:
             logger.error("Failed to execute request %s %s: %s", method, url, exc)
-            raise GrafanaAPIError(f"Connection error connecting to Grafana at {url}: {exc}") from exc
+            raise GrafanaAPIError(
+                f"Connection error connecting to Grafana at {url}: {exc}"
+            ) from exc
 
         if not response.ok:
             error_msg = (
@@ -117,7 +126,9 @@ class GrafanaClient:
                 f"{response.text}"
             )
             logger.error(error_msg)
-            raise GrafanaAPIError(error_msg, status_code=response.status_code, response_text=response.text)
+            raise GrafanaAPIError(
+                error_msg, status_code=response.status_code, response_text=response.text
+            )
 
         if response.status_code == 204 or not response.text.strip():
             return None
@@ -144,7 +155,9 @@ class GrafanaClient:
         """Get details for a specific folder by UID."""
         return self.request("GET", f"/api/folders/{folder_uid}", org_id=org_id)
 
-    def create_folder(self, org_id: int, title: str, uid: str | None = None) -> dict[str, Any]:
+    def create_folder(
+        self, org_id: int, title: str, uid: str | None = None
+    ) -> dict[str, Any]:
         """Create a new folder in an organization.
 
         Args:
@@ -205,7 +218,9 @@ class GrafanaClient:
             params["tag"] = tag
         return self.request("GET", "/api/search", org_id=org_id, params=params)
 
-    def get_dashboards_in_folder(self, org_id: int, folder_uid: str) -> list[dict[str, Any]]:
+    def get_dashboards_in_folder(
+        self, org_id: int, folder_uid: str
+    ) -> list[dict[str, Any]]:
         """List all dashboard summaries located within a specific folder."""
         return self.search_dashboards(org_id=org_id, folder_uid=folder_uid)
 
@@ -237,7 +252,9 @@ class GrafanaClient:
         }
         if folder_uid:
             payload["folderUid"] = folder_uid
-        return self.request("POST", "/api/dashboards/db", org_id=org_id, json_data=payload)
+        return self.request(
+            "POST", "/api/dashboards/db", org_id=org_id, json_data=payload
+        )
 
     def delete_dashboard(self, org_id: int, uid: str) -> dict[str, Any]:
         """Delete a dashboard by UID."""

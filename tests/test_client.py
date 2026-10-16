@@ -151,17 +151,29 @@ def test_client_folder_apis(mock_request, client):
 
     # Test get_folders
     client.get_folders(org_id=20)
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/folders"
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/folders"
+    )
     assert mock_request.call_args.kwargs["headers"]["X-Grafana-Org-Id"] == "20"
 
     # Test get_folder
     client.get_folder(org_id=20, folder_uid="fld_meerut")
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/folders/fld_meerut"
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/folders/fld_meerut"
+    )
 
     # Test create_folder with custom UID
     client.create_folder(org_id=20, title="Preview", uid="preview_uid")
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/folders"
-    assert mock_request.call_args.kwargs["json"] == {"title": "Preview", "uid": "preview_uid"}
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/folders"
+    )
+    assert mock_request.call_args.kwargs["json"] == {
+        "title": "Preview",
+        "uid": "preview_uid",
+    }
 
     # Test create_folder without UID
     client.create_folder(org_id=20, title="New Folder")
@@ -178,13 +190,18 @@ def test_client_folder_permissions(mock_request, client):
     mock_request.return_value = mock_response
 
     perms = [{"role": "Admin", "permission": 4}, {"role": "Editor", "permission": 2}]
-    client.set_folder_permissions(org_id=20, folder_uid="fld_preview", permissions=perms)
+    client.set_folder_permissions(
+        org_id=20, folder_uid="fld_preview", permissions=perms
+    )
 
     mock_request.assert_called_once()
     kwargs = mock_request.call_args.kwargs
     assert kwargs["headers"]["X-Grafana-Org-Id"] == "20"
     assert kwargs["json"] == {"items": perms}
-    assert kwargs["url"] == "https://grafana.example.com/api/folders/fld_preview/permissions"
+    assert (
+        kwargs["url"]
+        == "https://grafana.example.com/api/folders/fld_preview/permissions"
+    )
 
 
 # --- Dashboard APIs ---
@@ -200,8 +217,12 @@ def test_client_dashboard_apis(mock_request, client):
     mock_request.return_value = mock_response
 
     # Test search_dashboards
-    client.search_dashboards(org_id=20, folder_uid="fld_01", query="cbg", tag="managed-by-git")
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/search"
+    client.search_dashboards(
+        org_id=20, folder_uid="fld_01", query="cbg", tag="managed-by-git"
+    )
+    assert (
+        mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/search"
+    )
     assert mock_request.call_args.kwargs["params"] == {
         "type": "dash-db",
         "folderUids": "fld_01",
@@ -211,16 +232,27 @@ def test_client_dashboard_apis(mock_request, client):
 
     # Test get_dashboards_in_folder
     client.get_dashboards_in_folder(org_id=20, folder_uid="fld_01")
-    assert mock_request.call_args.kwargs["params"] == {"type": "dash-db", "folderUids": "fld_01"}
+    assert mock_request.call_args.kwargs["params"] == {
+        "type": "dash-db",
+        "folderUids": "fld_01",
+    }
 
     # Test get_dashboard
     client.get_dashboard(org_id=20, uid="cbg-01")
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/dashboards/uid/cbg-01"
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/dashboards/uid/cbg-01"
+    )
 
     # Test save_dashboard
     dash_payload = {"title": "Test Dashboard", "editable": False}
-    client.save_dashboard(org_id=20, dashboard=dash_payload, folder_uid="fld_01", message="Sync")
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/dashboards/db"
+    client.save_dashboard(
+        org_id=20, dashboard=dash_payload, folder_uid="fld_01", message="Sync"
+    )
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/dashboards/db"
+    )
     assert mock_request.call_args.kwargs["json"] == {
         "dashboard": dash_payload,
         "overwrite": True,
@@ -230,7 +262,10 @@ def test_client_dashboard_apis(mock_request, client):
 
     # Test delete_dashboard
     client.delete_dashboard(org_id=20, uid="cbg-01")
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/dashboards/uid/cbg-01"
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/dashboards/uid/cbg-01"
+    )
     assert mock_request.call_args.kwargs["method"] == "DELETE"
 
 
@@ -253,10 +288,15 @@ def test_client_org_and_datasource_apis(mock_request, client):
 
     # Test get_all_orgs
     client.get_all_orgs()
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/orgs"
+    assert (
+        mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/orgs"
+    )
     assert mock_request.call_args.kwargs["headers"]["X-Grafana-Org-Id"] == "1"
 
     # Test get_datasources
     client.get_datasources(org_id=20)
-    assert mock_request.call_args.kwargs["url"] == "https://grafana.example.com/api/datasources"
+    assert (
+        mock_request.call_args.kwargs["url"]
+        == "https://grafana.example.com/api/datasources"
+    )
     assert mock_request.call_args.kwargs["headers"]["X-Grafana-Org-Id"] == "20"

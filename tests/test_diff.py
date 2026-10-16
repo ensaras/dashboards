@@ -14,16 +14,18 @@ from grafana_dashboards.tools.normalizer import normalize_dashboard, serialize_d
 
 
 def test_parse_uid_from_filename():
-    assert parse_uid_from_filename("cbg-production__c53aefd4-413c.json") == "c53aefd4-413c"
+    assert (
+        parse_uid_from_filename("cbg-production__c53aefd4-413c.json") == "c53aefd4-413c"
+    )
     assert parse_uid_from_filename("dashboard-only.json") == "dashboard-only"
 
 
 def test_generate_diff():
-    a = "{\n  \"a\": 1\n}\n"
-    b = "{\n  \"a\": 2\n}\n"
+    a = '{\n  "a": 1\n}\n'
+    b = '{\n  "a": 2\n}\n'
     diff = generate_diff(a, b, "test.json")
-    assert "-  \"a\": 1" in diff
-    assert "+  \"a\": 2" in diff
+    assert '-  "a": 1' in diff
+    assert '+  "a": 2' in diff
 
 
 def test_diff_dashboard_identical(tmp_path: Path):
@@ -68,7 +70,9 @@ def test_run_diff_for_org_offline_mode(tmp_path: Path):
     # Reference dir with matching raw file
     ref_dir = tmp_path / "ref"
     ref_dir.mkdir()
-    (ref_dir / "raw-off-01.json").write_text(json.dumps(raw_dashboard), encoding="utf-8")
+    (ref_dir / "raw-off-01.json").write_text(
+        json.dumps(raw_dashboard), encoding="utf-8"
+    )
 
     site_config = {
         "site": {"name": "Test Org", "slug": "test-org", "org_id": 99},

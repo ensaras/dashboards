@@ -69,14 +69,20 @@ def diff_dashboard(
     return generate_diff(local_text, remote_text, local_path.name)
 
 
-def _find_reference_dashboard(reference_root: Path, uid: str, local_name: str) -> dict[str, Any] | None:
+def _find_reference_dashboard(
+    reference_root: Path, uid: str, local_name: str
+) -> dict[str, Any] | None:
     """Search for a reference dashboard matching either the filename or internal UID."""
-    candidates = list(reference_root.rglob(f"*{uid}*.json")) + list(reference_root.rglob(local_name))
+    candidates = list(reference_root.rglob(f"*{uid}*.json")) + list(
+        reference_root.rglob(local_name)
+    )
     for cand in candidates:
         try:
             with open(cand, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            cand_uid = data.get("uid") or (data.get("dashboard", {}).get("uid") if isinstance(data, dict) else None)
+            cand_uid = data.get("uid") or (
+                data.get("dashboard", {}).get("uid") if isinstance(data, dict) else None
+            )
             if cand_uid == uid:
                 return data
         except (json.JSONDecodeError, OSError):
@@ -87,7 +93,9 @@ def _find_reference_dashboard(reference_root: Path, uid: str, local_name: str) -
         try:
             with open(json_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            cand_uid = data.get("uid") or (data.get("dashboard", {}).get("uid") if isinstance(data, dict) else None)
+            cand_uid = data.get("uid") or (
+                data.get("dashboard", {}).get("uid") if isinstance(data, dict) else None
+            )
             if cand_uid == uid:
                 return data
         except (json.JSONDecodeError, OSError):
@@ -119,7 +127,9 @@ def run_diff_for_org(
 
     org_dir = orgs_root / org_slug
     if not org_dir.exists():
-        logger.warning("No local dashboards directory found for %s (%s)", org_slug, org_dir)
+        logger.warning(
+            "No local dashboards directory found for %s (%s)", org_slug, org_dir
+        )
         return 0, 0
 
     local_files = list(org_dir.rglob("*.json"))
@@ -127,7 +137,11 @@ def run_diff_for_org(
         logger.info("No local dashboards to diff for %s", org_slug)
         return 0, 0
 
-    logger.info("Checking diff for %s (found %d local dashboard(s))...", site_info["name"], len(local_files))
+    logger.info(
+        "Checking diff for %s (found %d local dashboard(s))...",
+        site_info["name"],
+        len(local_files),
+    )
 
     matches = 0
     diffs = 0
@@ -137,7 +151,9 @@ def run_diff_for_org(
         remote_data = None
 
         if reference_root:
-            remote_data = _find_reference_dashboard(reference_root, uid, local_file.name)
+            remote_data = _find_reference_dashboard(
+                reference_root, uid, local_file.name
+            )
         elif client:
             # Live Grafana API mode
             try:
@@ -146,7 +162,12 @@ def run_diff_for_org(
                 if exc.status_code == 404:
                     remote_data = None
                 else:
-                    logger.error("Error querying Grafana for %s (%s): %s", local_file.name, uid, exc)
+                    logger.error(
+                        "Error querying Grafana for %s (%s): %s",
+                        local_file.name,
+                        uid,
+                        exc,
+                    )
                     diffs += 1
                     continue
 
@@ -162,10 +183,14 @@ def run_diff_for_org(
 
 def main() -> int:
     """CLI Entry point for semantic diff engine."""
-    parser = argparse.ArgumentParser(description="Semantic diff engine comparing local Git JSON against Grafana.")
+    parser = argparse.ArgumentParser(
+        description="Semantic diff engine comparing local Git JSON against Grafana."
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--org", help="Run diff for a specific organization slug.")
-    group.add_argument("--all", action="store_true", help="Run diff for all organizations in sites/.")
+    group.add_argument(
+        "--all", action="store_true", help="Run diff for all organizations in sites/."
+    )
 
     parser.add_argument(
         "--sites-dir",
@@ -211,7 +236,11 @@ def main() -> int:
         targets = sorted(site_configs.keys())
     elif args.org:
         if args.org not in site_configs:
-            logger.error("Unknown org slug '%s'. Available: %s", args.org, list(site_configs.keys()))
+            logger.error(
+                "Unknown org slug '%s'. Available: %s",
+                args.org,
+                list(site_configs.keys()),
+            )
             return 1
         targets = [args.org]
 
@@ -231,7 +260,9 @@ def main() -> int:
         total_matches += matches
         total_diffs += diffs
 
-    logger.info("Diff completed: %d matching, %d difference(s).", total_matches, total_diffs)
+    logger.info(
+        "Diff completed: %d matching, %d difference(s).", total_matches, total_diffs
+    )
     if total_diffs > 0:
         logger.error("Semantic diff check FAILED with %d difference(s).", total_diffs)
         return 1

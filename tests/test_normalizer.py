@@ -89,13 +89,15 @@ def test_normalize_handles_api_envelope():
 
 
 def test_normalize_handles_string_input():
-    raw_str = json.dumps({
-        "id": 10,
-        "version": 2,
-        "title": "String Input Dashboard",
-        "uid": "str-01",
-        "editable": True,
-    })
+    raw_str = json.dumps(
+        {
+            "id": 10,
+            "version": 2,
+            "title": "String Input Dashboard",
+            "uid": "str-01",
+            "editable": True,
+        }
+    )
 
     normalized = normalize_dashboard(raw_str)
     assert "id" not in normalized
@@ -190,7 +192,7 @@ def test_serialize_dashboard_formatting_and_unicode():
     }
     serialized = serialize_dashboard(data)
 
-    assert "  \"editable\": false," in serialized
+    assert '  "editable": false,' in serialized
     assert "°C" in serialized
     assert serialized.endswith("\n")
 
@@ -204,7 +206,9 @@ def test_serialize_dashboard_formatting_and_unicode():
     ],
 )
 def test_normalize_against_real_exported_samples(sample_filename, expected_uid):
-    sample_dir = Path("C:/Users/Pradeep/Workspaces/EnsarasWorkspace/docs/grafana_dashboards_json/orgs/circle-cbg-india-pvt-ltd/meerut-cbg-plant")
+    sample_dir = Path(
+        "C:/Users/Pradeep/Workspaces/EnsarasWorkspace/docs/grafana_dashboards_json/orgs/circle-cbg-india-pvt-ltd/meerut-cbg-plant"
+    )
     sample_path = sample_dir / sample_filename
     if not sample_path.exists():
         pytest.skip(f"Sample file {sample_filename} not found")

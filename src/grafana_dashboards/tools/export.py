@@ -76,7 +76,9 @@ def load_site_config(site_file: Path) -> dict[str, Any]:
         config = yaml.safe_load(f)
 
     if not config or "site" not in config:
-        raise ValueError(f"Invalid site configuration in {site_file}: missing 'site' block")
+        raise ValueError(
+            f"Invalid site configuration in {site_file}: missing 'site' block"
+        )
 
     return config
 
@@ -101,7 +103,12 @@ def export_from_grafana(
     org_id = site_info["org_id"]
     team_folders = site_config.get("team_folders", {})
 
-    logger.info("Exporting organization: %s (slug: %s, org_id: %s)", site_info["name"], org_slug, org_id)
+    logger.info(
+        "Exporting organization: %s (slug: %s, org_id: %s)",
+        site_info["name"],
+        org_slug,
+        org_id,
+    )
 
     exported_files: list[Path] = []
 
@@ -114,12 +121,24 @@ def export_from_grafana(
             continue
 
         try:
-            dashboards = client.get_dashboards_in_folder(org_id=org_id, folder_uid=folder_uid)
+            dashboards = client.get_dashboards_in_folder(
+                org_id=org_id, folder_uid=folder_uid
+            )
         except GrafanaAPIError as exc:
-            logger.error("  [-] Failed to list dashboards in folder '%s' (%s): %s", folder_name, folder_uid, exc)
+            logger.error(
+                "  [-] Failed to list dashboards in folder '%s' (%s): %s",
+                folder_name,
+                folder_uid,
+                exc,
+            )
             continue
 
-        logger.info("  [+] Folder '%s' (%s): found %d dashboard(s)", folder_name, folder_uid, len(dashboards))
+        logger.info(
+            "  [+] Folder '%s' (%s): found %d dashboard(s)",
+            folder_name,
+            folder_uid,
+            len(dashboards),
+        )
 
         for dash_summary in dashboards:
             uid = dash_summary["uid"]
@@ -128,7 +147,12 @@ def export_from_grafana(
             try:
                 raw_dash = client.get_dashboard(org_id=org_id, uid=uid)
             except GrafanaAPIError as exc:
-                logger.error("    [-] Failed to fetch dashboard '%s' (uid: %s): %s", summary_title, uid, exc)
+                logger.error(
+                    "    [-] Failed to fetch dashboard '%s' (uid: %s): %s",
+                    summary_title,
+                    uid,
+                    exc,
+                )
                 continue
 
             # Normalize and serialize
@@ -138,8 +162,7 @@ def export_from_grafana(
             title = normalized.get("title") or summary_title
 
             is_retired = bool(
-                normalized.get("retired")
-                or "retired" in normalized.get("tags", [])
+                normalized.get("retired") or "retired" in normalized.get("tags", [])
             )
             target_path = get_dashboard_path(
                 org_slug=org_slug,
@@ -193,7 +216,9 @@ def ingest_from_directory(
         title = normalized.get("title", "dashboard")
 
         if not uid:
-            logger.warning("  [-] Skipping %s: no uid found in dashboard JSON", json_file)
+            logger.warning(
+                "  [-] Skipping %s: no uid found in dashboard JSON", json_file
+            )
             continue
 
         # Determine org_slug and team_slug from file path relative to source_dir
@@ -210,7 +235,9 @@ def ingest_from_directory(
 
         if not org_slug or not team_slug:
             # Fallback to searching site_configs if not in structured path
-            logger.warning("  [-] Could not infer org/team from path %s; skipping", json_file)
+            logger.warning(
+                "  [-] Could not infer org/team from path %s; skipping", json_file
+            )
             continue
 
         is_retired = bool(
@@ -238,11 +265,23 @@ def ingest_from_directory(
 
 def main() -> int:
     """CLI Entry point for export tool."""
-    parser = argparse.ArgumentParser(description="Export and normalize Grafana dashboards as code.")
+    parser = argparse.ArgumentParser(
+        description="Export and normalize Grafana dashboards as code."
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--org", help="Export dashboards for a specific organization slug.")
-    group.add_argument("--all", action="store_true", help="Export dashboards for all organizations in sites/.")
-    group.add_argument("--ingest", type=str, help="Ingest raw dashboard JSONs from a directory (e.g. docs/grafana_dashboards_json).")
+    group.add_argument(
+        "--org", help="Export dashboards for a specific organization slug."
+    )
+    group.add_argument(
+        "--all",
+        action="store_true",
+        help="Export dashboards for all organizations in sites/.",
+    )
+    group.add_argument(
+        "--ingest",
+        type=str,
+        help="Ingest raw dashboard JSONs from a directory (e.g. docs/grafana_dashboards_json).",
+    )
 
     parser.add_argument(
         "--sites-dir",
@@ -294,7 +333,11 @@ def main() -> int:
         targets = sorted(site_configs.keys())
     elif args.org:
         if args.org not in site_configs:
-            logger.error("Unknown org slug '%s'. Available: %s", args.org, list(site_configs.keys()))
+            logger.error(
+                "Unknown org slug '%s'. Available: %s",
+                args.org,
+                list(site_configs.keys()),
+            )
             return 1
         targets = [args.org]
 
@@ -308,7 +351,9 @@ def main() -> int:
             logger.error("Export failed for %s: %s", slug, exc)
             return 1
 
-    logger.info("Export completed successfully. Total dashboards exported: %d", total_exported)
+    logger.info(
+        "Export completed successfully. Total dashboards exported: %d", total_exported
+    )
     return 0
 
 
