@@ -1,0 +1,1882 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:12px;color:#9fa2a8;padding-top:4px\"><span style=\"color:#73BF69\">●</span> normal &nbsp;<span style=\"color:#D9B84A\">●</span> warning &nbsp;<span style=\"color:#E0707B\">●</span> alarm &nbsp;<span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; ⌀ 30-day avg &nbsp;·&nbsp; yesterday = from this morning's readings &nbsp;·&nbsp; ⓘ details &nbsp;·&nbsp; <b>New dashboard for review</b>: lab values and SV30 coloured by the limits in the existing Nafal dashboards</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Normal when there is no foaming, no smell, no solids at the clarifier outlet and no floating solids (latest daily check).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Daily check"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": " "
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Check": {
+                        "color": "#D9B84A",
+                        "text": "Check"
+                      },
+                      "Normal": {
+                        "color": "#73BF69",
+                        "text": "Normal"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT CASE WHEN is_aeration_tank_foaming = 'No' AND is_biomass_smell = 'No' AND is_suspended_solid_clarifier_outlet_water = 'No' AND is_solid_floating = 'No' THEN 'Normal' ELSE 'Check' END AS \"Daily check\" FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Daily Check%') ORDER BY date DESC LIMIT 1",
+          "refId": "q0"
+        }
+      ],
+      "title": "Daily check",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Outflow meter, latest day with a reading (normally yesterday). Design 250 m³/day.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Day"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Treated"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Treated"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "% of design"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 5,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char((SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days'), 'DD Mon') AS \"Day\", (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) AS \"Treated\", 100 * (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) / 250 AS \"% of design\"",
+          "refId": "q1"
+        }
+      ],
+      "title": "Treated flow",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "STP power meters (pumping stations separate), same day as treated flow.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "STP"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "STP meters"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kWh"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 11,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_power END) FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Power Meter - STP%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) AS \"STP\"",
+          "refId": "q2"
+        }
+      ],
+      "title": "Power",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "STP energy ÷ treated flow.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Latest day"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latest day"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kWh/m³"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "⌀ 30 days"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kWh/m³"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_power END) FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Power Meter - STP%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) / NULLIF((SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')), 0) AS \"Latest day\", (SELECT avg(p / NULLIF(f, 0)) FROM (SELECT d, (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_power END) FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Power Meter - STP%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = d) AS p, (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = d) AS f FROM generate_series((SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days') - 29, (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days'), interval '1 day') AS g(d0), LATERAL (SELECT g.d0::date AS d) x) s WHERE f > 0 AND p > 0) AS \"⌀ 30 days\"",
+          "refId": "q3"
+        }
+      ],
+      "title": "Specific energy",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Core forms with a reading for the latest day.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#D9B84A",
+                "value": 0
+              },
+              {
+                "color": "#73BF69",
+                "value": 4
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 2
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (CASE WHEN (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_power END) FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Power Meter - STP%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN EXISTS (SELECT 1 FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Daily Check%') AND (date AT TIME ZONE 'Asia/Muscat')::date >= (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) THEN 1 ELSE 0 END + CASE WHEN EXISTS (SELECT 1 FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND (time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date >= (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) THEN 1 ELSE 0 END) AS \"of 4\"",
+          "refId": "q4"
+        }
+      ],
+      "title": "Readings entered",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Latest daily check and aeration tank SV30. SV30 normal range 400–600 mL/L (existing Nafal dashboards).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Foaming"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Aeration tank foaming"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "No": {
+                        "color": "#73BF69",
+                        "text": "No"
+                      },
+                      "Yes": {
+                        "color": "#D9B84A",
+                        "text": "Yes"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Biomass colour"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Biomass colour"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Biomass smell"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Biomass smell"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "No": {
+                        "color": "#73BF69",
+                        "text": "No"
+                      },
+                      "Yes": {
+                        "color": "#D9B84A",
+                        "text": "Yes"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Clarifier solids"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Solids at clarifier outlet"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "No": {
+                        "color": "#73BF69",
+                        "text": "No"
+                      },
+                      "Yes": {
+                        "color": "#D9B84A",
+                        "text": "Yes"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Floating solids"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Floating solids"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "No": {
+                        "color": "#73BF69",
+                        "text": "No"
+                      },
+                      "Yes": {
+                        "color": "#D9B84A",
+                        "text": "Yes"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SV30 · aeration"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SV30 · aeration tank"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mL/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#D9B84A",
+                      "value": 0
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 400
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 600.001
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT is_aeration_tank_foaming AS \"Foaming\", biomass_color AS \"Biomass colour\", is_biomass_smell AS \"Biomass smell\", is_suspended_solid_clarifier_outlet_water AS \"Clarifier solids\", is_solid_floating AS \"Floating solids\", (SELECT round(avg(result)) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(type_of_lab_test) = 'Sludge Volume' AND (time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(type_of_lab_test) = 'Sludge Volume' AND time_of_sample_collection > now() - interval '7 days')) AS \"SV30 · aeration\" FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Daily Check%') ORDER BY date DESC LIMIT 1",
+          "refId": "q5"
+        }
+      ],
+      "title": "Daily check · SV30",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Latest treated wastewater results. Limits from the existing Nafal dashboards: ammonia nitrogen < 5 mg/L, residual chlorine 0.1–0.5 mg/L, nitrate < 50 mg/L, pH 6.5–8. Green within, amber outside.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ammonia"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Ammonia nitrogen"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 5
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Residual chlorine"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Residual chlorine"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#D9B84A",
+                      "value": 0
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 0.1
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 0.5001
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Nitrate"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Nitrate nitrogen"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pH"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "pH"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 14.0001,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": 1000000000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#D9B84A",
+                      "value": 0
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 6.5
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 8
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT avg(result) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND btrim(type_of_lab_test) = 'Ammonia Nitrogen' AND (time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND time_of_sample_collection > now() - interval '7 days')) AS \"Ammonia\", (SELECT avg(result) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND btrim(type_of_lab_test) = 'Free and Residual Chlorine' AND (time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND time_of_sample_collection > now() - interval '7 days')) AS \"Residual chlorine\", (SELECT avg(result) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND btrim(type_of_lab_test) = 'Nitrate Nitrogen' AND (time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND time_of_sample_collection > now() - interval '7 days')) AS \"Nitrate\", (SELECT avg(result) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND btrim(type_of_lab_test) = 'pH' AND (time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date) FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND time_of_sample_collection > now() - interval '7 days')) AS \"pH\"",
+          "refId": "q6"
+        }
+      ],
+      "title": "Treated wastewater · latest lab",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Same day as treated flow. Yellow tankers bring wastewater in; green tankers take treated water out.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Inflow · sewer"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Inflow · sewer"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Inflow · tankers"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Inflow · tanker offloading"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tankers in · trips"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Tankers in (yellow) · trips"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tankers out · trips"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Tankers out (green) · trips"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Backwash"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Backwash"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 6
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter(In)%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) + COALESCE((SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE '%Raw Sewage%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')),0) AS \"Inflow · sewer\", (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE '%Tanker Offloading%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) AS \"Inflow · tankers\", (SELECT sum((trip_time1 IS NOT NULL)::int+(trip_time2 IS NOT NULL)::int+(trip_time3 IS NOT NULL)::int+(trip_time4 IS NOT NULL)::int+(trip_time5 IS NOT NULL)::int+(trip_time6 IS NOT NULL)::int+(trip_time7 IS NOT NULL)::int+(trip_time8 IS NOT NULL)::int+(trip_time9 IS NOT NULL)::int+(trip_time10 IS NOT NULL)::int+(trip_time11 IS NOT NULL)::int+(trip_time12 IS NOT NULL)::int+(trip_time13 IS NOT NULL)::int+(trip_time14 IS NOT NULL)::int+(trip_time15 IS NOT NULL)::int+(trip_time16 IS NOT NULL)::int+(trip_time17 IS NOT NULL)::int+(trip_time18 IS NOT NULL)::int+(trip_time19 IS NOT NULL)::int+(trip_time20 IS NOT NULL)::int) FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Yellow%') AND date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) AS \"Tankers in · trips\", (SELECT sum((trip_time1 IS NOT NULL)::int+(trip_time2 IS NOT NULL)::int+(trip_time3 IS NOT NULL)::int+(trip_time4 IS NOT NULL)::int+(trip_time5 IS NOT NULL)::int+(trip_time6 IS NOT NULL)::int+(trip_time7 IS NOT NULL)::int+(trip_time8 IS NOT NULL)::int+(trip_time9 IS NOT NULL)::int+(trip_time10 IS NOT NULL)::int+(trip_time11 IS NOT NULL)::int+(trip_time12 IS NOT NULL)::int+(trip_time13 IS NOT NULL)::int+(trip_time14 IS NOT NULL)::int+(trip_time15 IS NOT NULL)::int+(trip_time16 IS NOT NULL)::int+(trip_time17 IS NOT NULL)::int+(trip_time18 IS NOT NULL)::int+(trip_time19 IS NOT NULL)::int+(trip_time20 IS NOT NULL)::int) FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Green%') AND date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) AS \"Tankers out · trips\", (SELECT sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE '%Backwash%') AND (datetime AT TIME ZONE 'Asia/Muscat')::date = (SELECT max((datetime AT TIME ZONE 'Asia/Muscat')::date) FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND daily_flow IS NOT NULL AND datetime > now() - interval '10 days')) AS \"Backwash\"",
+          "refId": "q7"
+        }
+      ],
+      "title": "Flows and tankers",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT (d::timestamp AT TIME ZONE 'Asia/Muscat') AS time, f AS \"Treated\" FROM (SELECT (datetime AT TIME ZONE 'Asia/Muscat')::date AS d, sum(CASE WHEN is_override THEN reset_value ELSE daily_flow END) AS f FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Flow Meter%Out%') AND $__timeFilter(datetime) GROUP BY 1) s ORDER BY 1",
+          "refId": "q8"
+        }
+      ],
+      "title": "Treated flow per day · m³",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: kWh"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 14
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT (d::timestamp AT TIME ZONE 'Asia/Muscat') AS time, p AS \"Power\" FROM (SELECT (datetime AT TIME ZONE 'Asia/Muscat')::date AS d, sum(CASE WHEN is_override THEN reset_value ELSE daily_power END) AS p FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Power Meter - STP%') AND $__timeFilter(datetime) GROUP BY 1) s ORDER BY 1",
+          "refId": "q9"
+        }
+      ],
+      "title": "STP power per day · kWh",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 14
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT ((time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date::timestamp AT TIME ZONE 'Asia/Muscat') AS time, avg(result) AS \"Ammonia\" FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18 AND is_enabled AND COALESCE(NULLIF(title_override,''),name) ILIKE 'Lab Test%') AND btrim(location) ILIKE 'Treated Wastewater' AND btrim(type_of_lab_test) = 'Ammonia Nitrogen' AND $__timeFilter(time_of_sample_collection) GROUP BY 1 ORDER BY 1",
+          "refId": "q10"
+        }
+      ],
+      "title": "Treated ammonia per day · mg/L",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "A daily form is one entered on at least 20 of the last 30 days (from its own history). Missed = no entry dated yesterday (IST).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "missed"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 0,
+        "y": 21
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_cbgcascadedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_chemicalstocktrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_coverprotectiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentflowaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentphaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipment WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentcurrentdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentnoisedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimemeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmenttemperaturedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvibrationdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvoltagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_farmersurveydata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_feedstockdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_fertilizersalestrackingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_gascompositiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_location WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_maintenancedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_mbrcleaninglogandchemicalconsumptiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacconsumptionaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacorderaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_poweroutagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pumpdischargepressuredata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_quantitativelimit WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_retailoutletmeterdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgecaketrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgewastagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankermerutdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tanklevelaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM weighment_data WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 18) GROUP BY form_id), s AS (SELECT COALESCE(NULLIF(f.title_override,''), f.name) AS form, COALESCE(e.entries_30d,0) AS entries_30d, COALESCE(e.days_30d,0) AS days_30d, e.last_ever, COALESCE(e.had_yday,false) AS had_yday FROM user_customform f LEFT JOIN e ON e.form_id = f.id WHERE f.is_enabled AND f.is_active AND f.team_id = 18) SELECT count(*) FILTER (WHERE days_30d >= 20 AND NOT had_yday) AS \"missed\", count(*) FILTER (WHERE days_30d >= 20) AS \"daily forms\" FROM s",
+          "refId": "A"
+        }
+      ],
+      "title": "Daily forms missed yesterday",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 16,
+        "x": 8,
+        "y": 21
+      },
+      "id": 14,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Dashboard · KPI Dashboard · Raw Meter Data · Tanker Trip Tables",
+        "mode": "markdown"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "Detail dashboards",
+      "type": "text"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "daily",
+    "managed-by-git",
+    "nafal",
+    "new",
+    "stp"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Muscat",
+  "title": "Al-Kamil Wafi – Daily Overview",
+  "uid": "al-kamil-wafi-daily-overview"
+}

@@ -1,0 +1,480 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.8,
+        "colorByField": "value",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\r\n    SELECT generate_series(\r\n        $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata',  \r\n        $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata',    \r\n        '1 day'::interval\r\n    )::date AS date\r\n),\r\ndaily_readings AS (\r\n    SELECT\r\n        (d.datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\r\n        d.form_id,\r\n        CASE\r\n            WHEN d.is_override THEN d.reset_value\r\n            ELSE d.daily_runtime\r\n        END AS runtime\r\n    FROM user_equipmentruntimemeterreadingdata d\r\n    WHERE\r\n        d.form_id IN (684, 686, 687, 688, 689)\r\n        AND $__timeFilter(d.datetime)\r\n)\r\nSELECT\r\n    ds.date::timestamp AS \"time\",\r\n    MAX(CASE WHEN dr.form_id = 684 THEN dr.runtime END) AS \"EPS Pump 1\",\r\n    MAX(CASE WHEN dr.form_id = 686 THEN dr.runtime END) AS \"EPS Pump 2\",\r\n    MAX(CASE WHEN dr.form_id = 687 THEN dr.runtime END) AS \"EPS Pump 3\",\r\n    MAX(CASE WHEN dr.form_id = 688 THEN dr.runtime END) AS \"EPS Pump 4\",\r\n    MAX(CASE WHEN dr.form_id = 689 THEN dr.runtime END) AS \"EPS Pump 5\"\r\nFROM date_series ds\r\nLEFT JOIN daily_readings dr ON ds.date = dr.date\r\nWHERE\r\n    ds.date >= (CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\n    AND ds.date <= (CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\nGROUP BY ds.date\r\nORDER BY ds.date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "EPS Pumps Daily Runtime",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0.7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 2,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.8,
+        "colorByField": "value",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\r\n    SELECT generate_series(\r\n        $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata',  \r\n        $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata',    \r\n        '1 day'::interval\r\n    )::date AS date\r\n),\r\ndaily_readings AS (\r\n    SELECT\r\n        (d.datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\r\n        d.form_id,\r\n        CASE\r\n            WHEN d.is_override THEN d.reset_value\r\n            ELSE d.daily_runtime\r\n        END AS runtime\r\n    FROM user_equipmentruntimemeterreadingdata d\r\n    WHERE\r\n        d.form_id IN (694, 695, 696)\r\n        AND $__timeFilter(d.datetime)\r\n)\r\nSELECT\r\n    ds.date::timestamp AS \"time\",\r\n    MAX(CASE WHEN dr.form_id = 694 THEN dr.runtime END) AS \"Equ Pump 1\",\r\n    MAX(CASE WHEN dr.form_id = 695 THEN dr.runtime END) AS \"Equ Pump 2\",\r\n    MAX(CASE WHEN dr.form_id = 696 THEN dr.runtime END) AS \"Equ Pump 3\"\r\nFROM date_series ds\r\nLEFT JOIN daily_readings dr ON ds.date = dr.date\r\nWHERE\r\n    ds.date >= (CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\n    AND ds.date <= (CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\nGROUP BY ds.date\r\nORDER BY ds.date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Equalization Pump Daily Runtime",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 3,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.8,
+        "colorByField": "value",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\r\n    SELECT generate_series(\r\n        $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata',  \r\n        $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata',    \r\n        '1 day'::interval\r\n    )::date AS date\r\n),\r\ndaily_readings AS (\r\n    SELECT\r\n        (d.datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\r\n        d.form_id,\r\n        CASE\r\n            WHEN d.is_override THEN d.reset_value\r\n            ELSE d.daily_runtime\r\n        END AS runtime\r\n    FROM user_equipmentruntimemeterreadingdata d\r\n    WHERE\r\n        d.form_id IN (690, 691, 692, 693)\r\n        AND $__timeFilter(d.datetime)\r\n)\r\nSELECT\r\n    ds.date::timestamp AS \"time\",\r\n    MAX(CASE WHEN dr.form_id = 690 THEN dr.runtime END) AS \"PSF Feed Pump 1\",\r\n    MAX(CASE WHEN dr.form_id = 691 THEN dr.runtime END) AS \"PSF Feed Pump 2\",\r\n    MAX(CASE WHEN dr.form_id = 692 THEN dr.runtime END) AS \"PSF Feed Pump 3\",\r\n    MAX(CASE WHEN dr.form_id = 693 THEN dr.runtime END) AS \"PSF Feed Pump 4\"\r\nFROM date_series ds\r\nLEFT JOIN daily_readings dr ON ds.date = dr.date\r\nWHERE\r\n    ds.date >= (CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\n    AND ds.date <= (CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\nGROUP BY ds.date\r\nORDER BY ds.date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "PSF Feed Pump Daily Runtime",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0.7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 4,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.8,
+        "colorByField": "value",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\r\n    SELECT generate_series(\r\n        $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata',  \r\n        $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata',    \r\n        '1 day'::interval\r\n    )::date AS date\r\n),\r\ndaily_readings AS (\r\n    SELECT\r\n        (d.datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\r\n        d.form_id,\r\n        CASE\r\n            WHEN d.is_override THEN d.reset_value\r\n            ELSE d.daily_runtime\r\n        END AS runtime\r\n    FROM user_equipmentruntimemeterreadingdata d\r\n    WHERE\r\n        d.form_id IN (697, 698, 699)\r\n        AND $__timeFilter(d.datetime)\r\n)\r\nSELECT\r\n    ds.date::timestamp AS \"time\",\r\n    MAX(CASE WHEN dr.form_id = 697 THEN dr.runtime END) AS \"VP Pump\",\r\n    MAX(CASE WHEN dr.form_id = 698 THEN dr.runtime END) AS \"Decanter 1\",\r\n    MAX(CASE WHEN dr.form_id = 699 THEN dr.runtime END) AS \"Decanter 2\"\r\nFROM date_series ds\r\nLEFT JOIN daily_readings dr ON ds.date = dr.date\r\nWHERE\r\n    ds.date >= (CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\n    AND ds.date <= (CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata')::date\r\nGROUP BY ds.date\r\nORDER BY ds.date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Dewatering Daily Runtime",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Equipment Daily Runtime",
+  "uid": "pr5smbw"
+}

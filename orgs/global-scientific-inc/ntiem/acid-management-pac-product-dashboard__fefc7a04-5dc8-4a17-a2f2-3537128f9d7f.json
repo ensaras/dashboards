@@ -1,0 +1,1228 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let result = [];\nlet total = 0;\n\ncontext.panel.data.series.forEach((s) => {\n  console.log(s)\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    result = s.fields.find(f => f.name === 'B')?.values ?? [];\n    total = result.reduce((sum, value) => sum + Number(value), 0);\n  }\n});\n\nif (!total) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'middle',\n      textStyle: {\n        fontSize: 18,\n        color: 'rgba(204, 204, 220, 0.65)',\n        fontWeight: 400,\n        fontFamily: 'Inter'\n      }\n    }\n  };\n}\n\nconst countOfValidValues = result.filter(v => v !== null && v !== undefined).length;\n\nconst seriesType = countOfValidValues > 1 ? 'line' : 'scatter';\nconst formattedDates = timeData.map((d, i) => {\n  const value = result[i];\n\n  if (value === null || value === undefined) {\n    // Force time to 00:00:00 in IST\n    const date = new Date(d);\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${month}/${day}/${year} 00:00:00`;\n  } else {\n    // Keep real timestamp with local conversion\n    return new Intl.DateTimeFormat(\"en-US\", {\n      timeZone: \"Asia/Kolkata\",\n      year: \"numeric\",\n      month: \"2-digit\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n      second: \"2-digit\",\n    }).format(new Date(d));\n  }\n});\n\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n    formatter: function (params) {\n      if (!params || !params.length) return '';\n      const point = params[0];\n      if (point.data === null || point.data === undefined || point.data === '') {\n        return '';\n      }\n      const dateStr = point.axisValueLabel;\n      const value = point.data;\n      return `${dateStr}<br/>${point.seriesName}: ${value}`;\n    }\n  },\n  legend: {\n    data: ['COD(mg/l)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    // min: \"dataMin\"\n  },\n  series: [\n    {\n      name: 'COD(mg/l)',\n      type: seriesType,\n      data: result,\n      connectNulls: true,\n      color: \"#73BF69\",\n      symbolSize: 5,\n    }\n  ]\n\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT generate_series(\n        $__timeFrom()::date,\n        $__timeTo()::date,\n        '1 day'::interval\n    ) AS day\n),\nfiltered_data AS (\n    SELECT \n        time_of_sample_collection AS time,\n        result AS \"COD(mg/l)\"\n    FROM \n        user_labtestdata \n    WHERE \n        form_id = 163\n        AND location = 'PAC (Product)'\n        AND type_of_lab_test LIKE 'COD%'\n        AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n        AND notes ILIKE ANY (\n            ARRAY(\n                SELECT '%' || trim(value) || '%'\n                FROM unnest(ARRAY[${PAC_Product}]) AS value\n            )\n        )\n),\nmissing_dates AS (\n    SELECT d.day AS time\n    FROM date_series d\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM filtered_data f\n        WHERE f.time::date = d.day\n    )\n)\nSELECT * FROM filtered_data\nUNION\nSELECT time, NULL AS \"COD(mg/l)\" FROM missing_dates\nORDER BY time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "PAC Product COD(mg/l)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    AVG(result) AS \"Average COD(mg/l):\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 163\n    AND location = 'PAC (Product)'\n    AND type_of_lab_test = 'COD(mg/l)'\n    AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n    AND notes ILIKE ANY (\n                    ARRAY(\n                    SELECT '%' || trim(value) || '%'\n                 FROM unnest(ARRAY[${PAC_Product}]) AS value\n                 )\n                 );",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 10,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let result = [];\nlet total = 0;\n\ncontext.panel.data.series.forEach((s) => {\n  console.log(s)\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    result = s.fields.find(f => f.name === 'B')?.values ?? [];\n    total = result.reduce((sum, value) => sum + Number(value), 0);\n  }\n});\n\nif (!total) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'middle',\n      textStyle: {\n        fontSize: 18,\n        color: 'rgba(204, 204, 220, 0.65)',\n        fontWeight: 400,\n        fontFamily: 'Inter'\n      }\n    }\n  };\n}\n\nconst countOfValidValues = result.filter(v => v !== null && v !== undefined).length;\n\nconst seriesType = countOfValidValues > 1 ? 'line' : 'scatter';\n// const formattedDates = timeData.map((d) => {\n//   return new Intl.DateTimeFormat(\"en-US\", {\n//     timeZone: \"Asia/Kolkata\",\n//     year: \"numeric\",\n//     month: \"2-digit\",\n//     day: \"2-digit\",\n//     hour: \"2-digit\",\n//     minute: \"2-digit\",\n//     second: \"2-digit\",\n//   }).format(new Date(d)); // Format directly to MM/DD/YYYY\n// });\n\nconst formattedDates = timeData.map((d, i) => {\n  const value = result[i];\n\n  if (value === null || value === undefined) {\n    // Force time to 00:00:00 in IST\n    const date = new Date(d);\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${month}/${day}/${year} 00:00:00`;\n  } else {\n    // Keep real timestamp with local conversion\n    return new Intl.DateTimeFormat(\"en-US\", {\n      timeZone: \"Asia/Kolkata\",\n      year: \"numeric\",\n      month: \"2-digit\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n      second: \"2-digit\",\n    }).format(new Date(d));\n  }\n});\n\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n    formatter: function (params) {\n      if (!params || !params.length) return '';\n      const point = params[0];\n      if (point.data === null || point.data === undefined || point.data === '') {\n        return '';\n      }\n      const dateStr = point.axisValueLabel;\n      const value = point.data;\n      return `${dateStr}<br/>${point.seriesName}: ${value}`;\n    }\n  },\n  legend: {\n    data: ['TDS(mg/l)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    // min: \"dataMin\"\n  },\n  series: [\n    {\n      name: 'TDS(mg/l)',\n      type: seriesType,\n      data: result,\n      connectNulls: true,\n      color: \"#73BF69\",\n      symbolSize: 5,\n    }\n  ]\n\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT generate_series(\n        $__timeFrom()::date,\n        $__timeTo()::date,\n        '1 day'::interval\n    ) AS day\n),\nfiltered_data AS (\n    SELECT \n        time_of_sample_collection AS time,\n        result AS \"TDS(mg/l)\"\n    FROM \n        user_labtestdata \n    WHERE \n        form_id = 163\n        AND location = 'PAC (Product)'\n        AND type_of_lab_test LIKE 'TDS%'\n        AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n        AND notes ILIKE ANY (\n            ARRAY(\n                SELECT '%' || trim(value) || '%'\n                FROM unnest(ARRAY[${PAC_Product}]) AS value\n            )\n        )\n),\nmissing_dates AS (\n    SELECT (d.day + interval '12 hours') AS time\n    FROM date_series d\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM filtered_data f\n        WHERE f.time::date = d.day\n    )\n)\nSELECT * FROM filtered_data\nUNION\nSELECT time, NULL AS \"TDS(mg/l)\" FROM missing_dates\nORDER BY time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "PAC Product TDS(mg/l)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    AVG(result) AS \"Average TDS(mg/l):\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 163\n    AND location = 'PAC (Product)'\n    AND type_of_lab_test = 'TDS(mg/l)'\n    AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n    AND notes ILIKE ANY (\n                    ARRAY(\n                    SELECT '%' || trim(value) || '%'\n                 FROM unnest(ARRAY[${PAC_Product}]) AS value\n                 )\n                 );",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 8,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let result = [];\nlet total = 0;\n\ncontext.panel.data.series.forEach((s) => {\n  console.log(s)\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    result = s.fields.find(f => f.name === 'B')?.values ?? [];\n    total = result.reduce((sum, value) => sum + Number(value), 0);\n  }\n});\n\nif (!total) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'middle',\n      textStyle: {\n        fontSize: 18,\n        color: 'rgba(204, 204, 220, 0.65)',\n        fontWeight: 400,\n        fontFamily: 'Inter'\n      }\n    }\n  };\n}\nconst countOfValidValues = result.filter(v => v !== null && v !== undefined).length;\n\nconst seriesType = countOfValidValues > 1 ? 'line' : 'scatter';\n\nconst formattedDates = timeData.map((d, i) => {\n  const value = result[i];\n\n  if (value === null || value === undefined) {\n    // Force time to 00:00:00 in IST\n    const date = new Date(d);\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${month}/${day}/${year} 00:00:00`;\n  } else {\n    // Keep real timestamp with local conversion\n    return new Intl.DateTimeFormat(\"en-US\", {\n      timeZone: \"Asia/Kolkata\",\n      year: \"numeric\",\n      month: \"2-digit\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n      second: \"2-digit\",\n    }).format(new Date(d));\n  }\n});\n\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n    formatter: function (params) {\n      if (!params || !params.length) return '';\n      const point = params[0];\n      if (point.data === null || point.data === undefined || point.data === '') {\n        return '';\n      }\n      const dateStr = point.axisValueLabel;\n      const value = point.data;\n      return `${dateStr}<br/>${point.seriesName}: ${value}`;\n    }\n  },\n  legend: {\n    data: ['pH(s.u.)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n  },\n  series: [\n    {\n      name: 'pH(s.u.)',\n      type: seriesType,\n      data: result,\n      connectNulls: true,\n      color: \"#73BF69\",\n      symbolSize: 5,\n    }\n  ]\n\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT generate_series(\n        $__timeFrom()::date,\n        $__timeTo()::date,\n        '1 day'::interval\n    ) AS day\n),\nfiltered_data AS (\n    SELECT \n        time_of_sample_collection AS time,\n        result AS \"pH(s.u.)\"\n    FROM \n        user_labtestdata \n    WHERE \n        form_id = 163\n        AND location = 'PAC (Product)'\n        AND type_of_lab_test LIKE 'pH%'\n        AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n        AND notes ILIKE ANY (\n            ARRAY(\n                SELECT '%' || trim(value) || '%'\n                FROM unnest(ARRAY[${PAC_Product}]) AS value\n            )\n        )\n),\nmissing_dates AS (\n    SELECT (d.day + interval '12 hours') AS time\n    FROM date_series d\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM filtered_data f\n        WHERE f.time::date = d.day\n    )\n)\nSELECT * FROM filtered_data\nUNION\nSELECT time, NULL AS \"pH(s.u.)\" FROM missing_dates\nORDER BY time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "PAC Product pH(s.u.)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s.u."
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    AVG(result) AS \"Average pH(s.u.):\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 163\n    AND location = 'PAC (Product)'\n    AND type_of_lab_test = 'pH(s.u.)'\n    AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n    AND notes ILIKE ANY (\n                    ARRAY(\n                    SELECT '%' || trim(value) || '%'\n                 FROM unnest(ARRAY[${PAC_Product}]) AS value\n                 )\n                 );",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "id": 6,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let result = [];\nlet total = 0;\n\ncontext.panel.data.series.forEach((s) => {\n  console.log(s)\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    result = s.fields.find(f => f.name === 'B')?.values ?? [];\n    total = result.reduce((sum, value) => sum + Number(value), 0);\n  }\n});\n\nif (!total) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'middle',\n      textStyle: {\n        fontSize: 18,\n        color: 'rgba(204, 204, 220, 0.65)',\n        fontWeight: 400,\n        fontFamily: 'Inter'\n      }\n    }\n  };\n}\nconst countOfValidValues = result.filter(v => v !== null && v !== undefined).length;\n\nconst seriesType = countOfValidValues > 1 ? 'line' : 'scatter';\n\nconst formattedDates = timeData.map((d, i) => {\n  const value = result[i];\n\n  if (value === null || value === undefined) {\n    // Force time to 00:00:00 in IST\n    const date = new Date(d);\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${month}/${day}/${year} 00:00:00`;\n  } else {\n    // Keep real timestamp with local conversion\n    return new Intl.DateTimeFormat(\"en-US\", {\n      timeZone: \"Asia/Kolkata\",\n      year: \"numeric\",\n      month: \"2-digit\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n      second: \"2-digit\",\n    }).format(new Date(d));\n  }\n});\n\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n    formatter: function (params) {\n      if (!params || !params.length) return '';\n      const point = params[0];\n      if (point.data === null || point.data === undefined || point.data === '') {\n        return '';\n      }\n      const dateStr = point.axisValueLabel;\n      const value = point.data;\n      return `${dateStr}<br/>${point.seriesName}: ${value}`;\n    }\n  },\n  legend: {\n    data: ['TSS(mg/l)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n  },\n  series: [\n    {\n      name: 'TSS(mg/l)',\n      type: seriesType,\n      data: result,\n      connectNulls: true,\n      color: \"#73BF69\",\n      symbolSize: 5,\n    }\n  ]\n\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT generate_series(\n        $__timeFrom()::date,\n        $__timeTo()::date,\n        '1 day'::interval\n    ) AS day\n),\nfiltered_data AS (\n    SELECT \n        time_of_sample_collection AS time,\n        result AS \"TSS(mg/l)\"\n    FROM \n        user_labtestdata \n    WHERE \n        form_id = 163\n        AND location = 'PAC (Product)'\n        AND type_of_lab_test LIKE 'TSS%'\n        AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n        AND notes ILIKE ANY (\n            ARRAY(\n                SELECT '%' || trim(value) || '%'\n                FROM unnest(ARRAY[${PAC_Product}]) AS value\n            )\n        )\n),\nmissing_dates AS (\n    SELECT (d.day + interval '12 hours') AS time\n    FROM date_series d\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM filtered_data f\n        WHERE f.time::date = d.day\n    )\n)\nSELECT * FROM filtered_data\nUNION\nSELECT time, NULL AS \"TSS(mg/l)\" FROM missing_dates\nORDER BY time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "PAC Product TSS(mg/l)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 52
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    AVG(result) AS \"Average TSS(mg/l):\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 163\n    AND location = 'PAC (Product)'\n    AND type_of_lab_test = 'TSS(mg/l)'\n    AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n   AND notes ILIKE ANY (\n                    ARRAY(\n                    SELECT '%' || trim(value) || '%'\n                 FROM unnest(ARRAY[${PAC_Product}]) AS value\n                 )\n                 );",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 54
+      },
+      "id": 4,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let result = [];\nlet total = 0;\n\ncontext.panel.data.series.forEach((s) => {\n  console.log(s)\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    result = s.fields.find(f => f.name === 'B')?.values ?? [];\n    total = result.reduce((sum, value) => sum + Number(value), 0);\n  }\n});\n\nif (!total) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'middle',\n      textStyle: {\n        fontSize: 18,\n        color: 'rgba(204, 204, 220, 0.65)',\n        fontWeight: 400,\n        fontFamily: 'Inter'\n      }\n    }\n  };\n}\n\nconst countOfValidValues = result.filter(v => v !== null && v !== undefined).length;\n\nconst seriesType = countOfValidValues > 1 ? 'line' : 'scatter';\nconst formattedDates = timeData.map((d, i) => {\n  const value = result[i];\n\n  if (value === null || value === undefined) {\n    // Force time to 00:00:00 in IST\n    const date = new Date(d);\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${month}/${day}/${year} 00:00:00`;\n  } else {\n    // Keep real timestamp with local conversion\n    return new Intl.DateTimeFormat(\"en-US\", {\n      timeZone: \"Asia/Kolkata\",\n      year: \"numeric\",\n      month: \"2-digit\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n      second: \"2-digit\",\n    }).format(new Date(d));\n  }\n});\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n    formatter: function (params) {\n      if (!params || !params.length) return '';\n      const point = params[0];\n      if (point.data === null || point.data === undefined || point.data === '') {\n        return '';\n      }\n      const dateStr = point.axisValueLabel;\n      const value = point.data;\n      return `${dateStr}<br/>${point.seriesName}: ${value}`;\n    }\n  },\n  legend: {\n    data: ['Alumina Content (%)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n  },\n  series: [\n    {\n      name: 'Alumina Content (%)',\n      type: seriesType,\n      data: result,\n      connectNulls: true,\n      color: \"#73BF69\",\n      symbolSize: 5,\n    }\n  ]\n\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT generate_series(\n        $__timeFrom()::date,\n        $__timeTo()::date,\n        '1 day'::interval\n    ) AS day\n),\nfiltered_data AS (\n    SELECT \n        time_of_sample_collection AS time,\n        result AS \"Alumina Content (%)\"\n    FROM \n        user_labtestdata \n    WHERE \n        form_id = 163\n        AND location = 'PAC (Product)'\n        AND type_of_lab_test LIKE 'Alumina Content%'\n        AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n        AND notes ILIKE ANY (\n            ARRAY(\n                SELECT '%' || trim(value) || '%'\n                FROM unnest(ARRAY[${PAC_Product}]) AS value\n            )\n        )\n),\nmissing_dates AS (\n    SELECT (d.day + interval '12 hours') AS time\n    FROM date_series d\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM filtered_data f\n        WHERE f.time::date = d.day\n    )\n)\nSELECT * FROM filtered_data\nUNION\nSELECT time, NULL AS \"Alumina Content (%)\" FROM missing_dates\nORDER BY time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "PAC Product Alumina Content (%)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "%"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 66
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    AVG(result) AS \"Average Alumina Content (%):\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 163\n    AND location = 'PAC (Product)'\n    AND type_of_lab_test = 'Alumina Content (%)'\n    AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n    AND notes ILIKE ANY (\n                    ARRAY(\n                    SELECT '%' || trim(value) || '%'\n                 FROM unnest(ARRAY[${PAC_Product}]) AS value\n                 )\n                 );",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 68
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let result = [];\nlet total = 0;\n\ncontext.panel.data.series.forEach((s) => {\n  console.log(s)\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    result = s.fields.find(f => f.name === 'B')?.values ?? [];\n    total = result.reduce((sum, value) => sum + Number(value), 0);\n  }\n});\n\nif (!total) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'middle',\n      textStyle: {\n        fontSize: 18,\n        color: 'rgba(204, 204, 220, 0.65)',\n        fontWeight: 400,\n        fontFamily: 'Inter'\n      }\n    }\n  };\n}\nconst countOfValidValues = result.filter(v => v !== null && v !== undefined).length;\n\nconst seriesType = countOfValidValues > 1 ? 'line' : 'scatter';\n\nconst formattedDates = timeData.map((d, i) => {\n  const value = result[i];\n\n  if (value === null || value === undefined) {\n    // Force time to 00:00:00 in IST\n    const date = new Date(d);\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0');\n    const day = String(date.getDate()).padStart(2, '0');\n    return `${month}/${day}/${year} 00:00:00`;\n  } else {\n    // Keep real timestamp with local conversion\n    return new Intl.DateTimeFormat(\"en-US\", {\n      timeZone: \"Asia/Kolkata\",\n      year: \"numeric\",\n      month: \"2-digit\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n      second: \"2-digit\",\n    }).format(new Date(d));\n  }\n});\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n    formatter: function (params) {\n      if (!params || !params.length) return '';\n      const point = params[0];\n      if (point.data === null || point.data === undefined || point.data === '') {\n        return '';\n      }\n      const dateStr = point.axisValueLabel;\n      const value = point.data;\n      return `${dateStr}<br/>${point.seriesName}: ${value}`;\n    }\n  },\n  legend: {\n    data: ['Copper(mg/l)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n  },\n  series: [\n    {\n      name: 'Copper(mg/l)',\n      type: seriesType,\n      data: result,\n      connectNulls: true,\n      color: \"#73BF69\",\n      symbolSize: 5,\n      showSymbol: true,\n      emphasis: {\n        focus: 'series'          // optional: highlight full series on hover\n      }\n    }\n  ]\n\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT generate_series(\n        $__timeFrom()::date,\n        $__timeTo()::date,\n        '1 day'::interval\n    ) AS day\n),\nfiltered_data AS (\n    SELECT \n        time_of_sample_collection AS time,\n        result AS \"Copper(mg/l)\"\n    FROM \n        user_labtestdata \n    WHERE \n        form_id = 163\n        AND location = 'PAC (Product)'\n        AND type_of_lab_test LIKE 'Copper%'\n        AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n        AND notes ILIKE ANY (\n            ARRAY(\n                SELECT '%' || trim(value) || '%'\n                FROM unnest(ARRAY[${PAC_Product}]) AS value\n            )\n        )\n),\nmissing_dates AS (\n    SELECT (d.day + interval '12 hours') AS time\n    FROM date_series d\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM filtered_data f\n        WHERE f.time::date = d.day\n    )\n)\nSELECT * FROM filtered_data\nUNION\nSELECT time, NULL AS \"Copper(mg/l)\" FROM missing_dates\nORDER BY time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "PAC Product Copper(mg/l)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 80
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    AVG(result) AS \"Average Copper(mg/l):\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 163\n    AND location = 'PAC (Product)'\n    AND type_of_lab_test = 'Copper(mg/l)'\n    AND time_of_sample_collection BETWEEN $__timeFrom() AND $__timeTo()\n    AND notes ILIKE ANY (\n                    ARRAY(\n                    SELECT '%' || trim(value) || '%'\n                 FROM unnest(ARRAY[${PAC_Product}]) AS value\n                 )\n                 );",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "stat"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": [
+            "AKSHERCHEM (INDIA)",
+            "DHRUV CHEMICALS",
+            "GAJANAN PIGMENTS",
+            "GREANSEA INDUSTRIES",
+            "GREENPARADISE PIGMENTS",
+            "GREENSEA INDUSTRIES",
+            "MEGHMANI ORGANICS",
+            "NARAYAN ORGANICS",
+            "PARSHWANATH DYECHEM INDUSTRIES",
+            "PAWANSOOT ENTERPRISE",
+            "SHREE SIDDHIVINAKAYK",
+            "SHREE SIDDHINAVAK",
+            "SHREE SIDDHI VINAYAK",
+            "SHREE SIDDHIVINAVAK",
+            "SUN FARBEN"
+          ],
+          "value": [
+            "AKSHERCHEM (INDIA)",
+            "DHRUV CHEMICALS",
+            "GAJANAN PIGMENTS",
+            "GREANSEA INDUSTRIES",
+            "GREENPARADISE PIGMENTS",
+            "GREENSEA INDUSTRIES",
+            "MEGHMANI ORGANICS",
+            "NARAYAN ORGANICS",
+            "PARSHWANATH DYECHEM INDUSTRIES",
+            "PAWANSOOT ENTERPRISE",
+            "SHREE SIDDHIVINAKAYK",
+            "SHREE SIDDHINAVAK",
+            "SHREE SIDDHI VINAYAK",
+            "SHREE SIDDHIVINAVAK",
+            "SUN FARBEN"
+          ]
+        },
+        "includeAll": false,
+        "multi": true,
+        "name": "PAC_Product",
+        "options": [
+          {
+            "selected": true,
+            "text": "AKSHERCHEM (INDIA)",
+            "value": "AKSHERCHEM (INDIA)"
+          },
+          {
+            "selected": true,
+            "text": "DHRUV CHEMICALS",
+            "value": "DHRUV CHEMICALS"
+          },
+          {
+            "selected": true,
+            "text": "GAJANAN PIGMENTS",
+            "value": "GAJANAN PIGMENTS"
+          },
+          {
+            "selected": true,
+            "text": "GREANSEA INDUSTRIES",
+            "value": "GREANSEA INDUSTRIES"
+          },
+          {
+            "selected": true,
+            "text": "GREENPARADISE PIGMENTS",
+            "value": "GREENPARADISE PIGMENTS"
+          },
+          {
+            "selected": true,
+            "text": "GREENSEA INDUSTRIES",
+            "value": "GREENSEA INDUSTRIES"
+          },
+          {
+            "selected": true,
+            "text": "MEGHMANI ORGANICS",
+            "value": "MEGHMANI ORGANICS"
+          },
+          {
+            "selected": true,
+            "text": "NARAYAN ORGANICS",
+            "value": "NARAYAN ORGANICS"
+          },
+          {
+            "selected": true,
+            "text": "PARSHWANATH DYECHEM INDUSTRIES",
+            "value": "PARSHWANATH DYECHEM INDUSTRIES"
+          },
+          {
+            "selected": true,
+            "text": "PAWANSOOT ENTERPRISE",
+            "value": "PAWANSOOT ENTERPRISE"
+          },
+          {
+            "selected": true,
+            "text": "SHREE SIDDHIVINAKAYK",
+            "value": "SHREE SIDDHIVINAKAYK"
+          },
+          {
+            "selected": true,
+            "text": "SHREE SIDDHINAVAK",
+            "value": "SHREE SIDDHINAVAK"
+          },
+          {
+            "selected": true,
+            "text": "SHREE SIDDHI VINAYAK",
+            "value": "SHREE SIDDHI VINAYAK"
+          },
+          {
+            "selected": true,
+            "text": "SHREE SIDDHIVINAVAK",
+            "value": "SHREE SIDDHIVINAVAK"
+          },
+          {
+            "selected": true,
+            "text": "SUN FARBEN",
+            "value": "SUN FARBEN"
+          }
+        ],
+        "query": "AKSHERCHEM (INDIA),\nDHRUV CHEMICALS,\nGAJANAN PIGMENTS,\nGREANSEA INDUSTRIES,\nGREENPARADISE PIGMENTS,\nGREENSEA INDUSTRIES,\nMEGHMANI ORGANICS,\nNARAYAN ORGANICS,\nPARSHWANATH DYECHEM INDUSTRIES,\nPAWANSOOT ENTERPRISE,\nSHREE SIDDHIVINAKAYK,\nSHREE SIDDHINAVAK,\nSHREE SIDDHI VINAYAK,\nSHREE SIDDHIVINAVAK,\nSUN FARBEN",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Acid Management PAC Product dashboard",
+  "uid": "fefc7a04-5dc8-4a17-a2f2-3537128f9d7f"
+}

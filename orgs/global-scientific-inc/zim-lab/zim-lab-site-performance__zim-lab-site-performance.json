@@ -1,0 +1,1275 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:13px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> on target &nbsp; <span style=\"color:#D9B84A\">●</span> below target &nbsp; <span style=\"color:#E0707B\">●</span> well below target &nbsp; <span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; white = no limit set &nbsp;·&nbsp; ⌀ 30-day average &nbsp;·&nbsp; days are midnight to midnight IST &nbsp;·&nbsp; For plant and project managers · charts follow the time picker</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "description": "RO permeate and RO reject (m³) for yesterday, from the flow totalizers (302-FIT-02, 302-FIT-01): last reading minus first reading of the IST day, ignoring readings of 0. The 30-day average is of RO permeate. Always the last 30 complete days, whatever range is selected.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RO permeate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RO reject"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Day"
+              },
+              {
+                "id": "unit",
+                "value": "time:DD MMM"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 2
+      },
+      "hideTimeOverride": true,
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\") AS \"RO permeate\", last(\"302_fit_01_ro_reject_flow_totalizer\") - first(\"302_fit_01_ro_reject_flow_totalizer\") AS \"RO reject\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 AND \"302_fit_01_ro_reject_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT mean(\"p\") AS \"⌀ 30 days\" FROM (SELECT last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\") AS \"p\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none))",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"302_fit_02_ro_permeate_flow_totalizer\") AS \"x\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "now-29d/d",
+      "timeShift": "1d/d",
+      "title": "RO permeate yesterday",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "description": "Inlet flow (m³/day) from the inlet totalizer (100-FIT-01). Design capacity 250 m³/day. Always the last 30 complete days, whatever range is selected.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Day"
+              },
+              {
+                "id": "unit",
+                "value": "time:DD MMM"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 2
+      },
+      "hideTimeOverride": true,
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$|% of design$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"100_fit_01_inlet_flow_totalizer\") - first(\"100_fit_01_inlet_flow_totalizer\") AS \"Yesterday\", 100 * (last(\"100_fit_01_inlet_flow_totalizer\") - first(\"100_fit_01_inlet_flow_totalizer\")) / 250 AS \"% of design\" FROM \"plc\" WHERE $timeFilter AND \"100_fit_01_inlet_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT mean(\"i\") AS \"⌀ 30 days\" FROM (SELECT last(\"100_fit_01_inlet_flow_totalizer\") - first(\"100_fit_01_inlet_flow_totalizer\") AS \"i\" FROM \"plc\" WHERE $timeFilter AND \"100_fit_01_inlet_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none))",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"100_fit_01_inlet_flow_totalizer\") AS \"x\" FROM \"plc\" WHERE $timeFilter AND \"100_fit_01_inlet_flow_totalizer\" > 0",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "now-29d/d",
+      "timeShift": "1d/d",
+      "title": "Inlet treated yesterday",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "description": "RO permeate ÷ (RO permeate + RO reject). Target ≥ 98 %: green at or above, amber below. Always the last 30 complete days, whatever range is selected.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#D9B84A",
+                "value": 0
+              },
+              {
+                "color": "#73BF69",
+                "value": 98
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Day"
+              },
+              {
+                "id": "unit",
+                "value": "time:DD MMM"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 2
+      },
+      "hideTimeOverride": true,
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT 100 * (last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) / ((last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) + (last(\"302_fit_01_ro_reject_flow_totalizer\") - first(\"302_fit_01_ro_reject_flow_totalizer\"))) AS \"RO recovery\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 AND \"302_fit_01_ro_reject_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT mean(\"x\") AS \"⌀ 30 days\" FROM (SELECT 100 * (last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) / ((last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) + (last(\"302_fit_01_ro_reject_flow_totalizer\") - first(\"302_fit_01_ro_reject_flow_totalizer\"))) AS \"x\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 AND \"302_fit_01_ro_reject_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none))",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"302_fit_02_ro_permeate_flow_totalizer\") AS \"x\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "now-29d/d",
+      "timeShift": "1d/d",
+      "title": "RO recovery yesterday",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "description": "Plant energy (900-MFM-01) ÷ inlet treated (kWh per m³ of inlet). Always the last 30 complete days, whatever range is selected.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kWh/m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Day"
+              },
+              {
+                "id": "unit",
+                "value": "time:DD MMM"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 2
+      },
+      "hideTimeOverride": true,
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT (last(\"900_mfm_01_mcc_main_energy_total\") - first(\"900_mfm_01_mcc_main_energy_total\")) / (last(\"100_fit_01_inlet_flow_totalizer\") - first(\"100_fit_01_inlet_flow_totalizer\")) AS \"Yesterday\" FROM \"plc\" WHERE $timeFilter AND \"900_mfm_01_mcc_main_energy_total\" > 0 AND \"100_fit_01_inlet_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT mean(\"x\") AS \"⌀ 30 days\" FROM (SELECT (last(\"900_mfm_01_mcc_main_energy_total\") - first(\"900_mfm_01_mcc_main_energy_total\")) / (last(\"100_fit_01_inlet_flow_totalizer\") - first(\"100_fit_01_inlet_flow_totalizer\")) AS \"x\" FROM \"plc\" WHERE $timeFilter AND \"900_mfm_01_mcc_main_energy_total\" > 0 AND \"100_fit_01_inlet_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none))",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"900_mfm_01_mcc_main_energy_total\") AS \"x\" FROM \"plc\" WHERE $timeFilter AND \"900_mfm_01_mcc_main_energy_total\" > 0",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "now-29d/d",
+      "timeShift": "1d/d",
+      "title": "Specific energy yesterday",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Daily lab results through the treatment train for the selected period. No limits set yet. Latest and days outside are coloured by the limit: green within, amber/red outside, purple impossible value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#ccccdc",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "pattern": "^(.*)\\|ok$",
+                "result": {
+                  "color": "#73BF69",
+                  "index": 0,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|amber$",
+                "result": {
+                  "color": "#FADE2A",
+                  "index": 1,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|red$",
+                "result": {
+                  "color": "#F2495C",
+                  "index": 2,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|purple$",
+                "result": {
+                  "color": "#B877D9",
+                  "index": 3,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|muted$",
+                "result": {
+                  "color": "#8e8e8e",
+                  "index": 4,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Parameter"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 190
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Range"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e8e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Limit"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e8e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH x AS (WITH lim(param, test, ord, unit, dec, warn, alarm, lo, hi, sev) AS (VALUES\n('MBR permeate COD','MBR Permeate|COD',1,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('MBR permeate pH','MBR Permeate|pH',2,'',1,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('RO permeate TDS','RO Combined Permeate|TDS',3,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('RO permeate COD','RO Combined Permeate|COD',4,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Final TDS (IX polishing outlet)','IX-Polishing Outlet|TDS',5,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Final hardness (IX polishing outlet)','IX-Polishing Outlet|Total hardness',6,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber')),\nd0 AS (SELECT btrim(l.location) AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 396 AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now() GROUP BY 1, 2, 3),\nd AS (SELECT loc || '|' || t AS test, day, v FROM d0)\nSELECT lim.param, lim.ord, lim.unit, lim.dec, lim.warn, lim.alarm, lim.lo, lim.hi, lim.sev, to_char(d.day,'YYYY-MM-DD') AS day, d.v FROM lim LEFT JOIN d ON d.test = lim.test ORDER BY lim.ord, d.day),\nv AS (SELECT param, ord, unit, dec, warn, alarm, lo, hi, sev, NULL::text AS limtxt, day, v, (v < 0 OR (param ~* '\\mph\\M' AND v > 14)) AS bad FROM x),\np AS (SELECT param, min(ord) AS ord, max(unit) AS unit, max(dec) AS dec, max(warn) AS warn, max(alarm) AS alarm, max(lo) AS lo, max(hi) AS hi, max(sev) AS sev, max(limtxt) AS limtxt,\n  avg(v) FILTER (WHERE NOT bad) AS av, min(v) FILTER (WHERE NOT bad) AS mn, max(v) FILTER (WHERE NOT bad) AS mx, count(v) FILTER (WHERE NOT bad) AS n, count(v) FILTER (WHERE bad) AS nbad,\n  (array_agg(v ORDER BY day DESC) FILTER (WHERE v IS NOT NULL))[1] AS latest FROM v GROUP BY param),\nq AS (SELECT p.*, (SELECT count(*) FROM v WHERE v.param = p.param AND NOT v.bad AND ((p.lo IS NOT NULL AND (v.v < p.lo OR (CASE WHEN p.sev LIKE '%excl' THEN v.v >= p.hi ELSE v.v > p.hi END))) OR (p.lo IS NULL AND p.warn IS NOT NULL AND v.v >= p.warn))) AS nout FROM p)\nSELECT param || CASE WHEN unit <> '' THEN ' (' || unit || ')' ELSE '' END || CASE WHEN nbad > 0 THEN ' · ' || nbad || ' impossible|purple' ELSE '' END AS \"Parameter\",\n CASE WHEN latest IS NULL THEN '—' ELSE round(latest::numeric, dec)::text ||\n  CASE WHEN latest < 0 OR (param ~* '\\mph\\M' AND latest > 14) THEN '|purple'\n       WHEN lo IS NOT NULL THEN CASE WHEN latest < lo OR (CASE WHEN sev LIKE '%excl' THEN latest >= hi ELSE latest > hi END) THEN '|' || CASE WHEN sev LIKE 'red%' THEN 'red' ELSE 'amber' END ELSE '|ok' END\n       WHEN alarm IS NOT NULL AND latest >= alarm THEN '|red' WHEN warn IS NOT NULL AND latest >= warn THEN '|amber' WHEN warn IS NOT NULL THEN '|ok' ELSE '' END END AS \"Latest\",\n COALESCE(round(av::numeric, dec)::text, '—') AS \"⌀ period\",\n COALESCE(round(mn::numeric, dec)::text || ' – ' || round(mx::numeric, dec)::text, '—') AS \"Range\",\n COALESCE(limtxt, CASE WHEN lo IS NOT NULL THEN lo::text || ' – ' || hi::text WHEN warn IS NOT NULL THEN '< ' || warn::text || CASE WHEN alarm IS NOT NULL AND alarm <> warn THEN ' · alarm ' || alarm::text ELSE '' END ELSE '—' END) AS \"Limit\",\n CASE WHEN (lo IS NULL AND warn IS NULL) OR n = 0 THEN '—' ELSE nout || ' of ' || n || CASE WHEN nout = 0 THEN '|ok' WHEN nout < n / 2.0 THEN '|amber' ELSE '|red' END END AS \"Days outside\"\nFROM q ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "title": "Treated water quality · summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "One row per parameter, one cell per day, coloured by that parameter's own limit: green within, amber above warning, red above alarm or outside range, blue no limit set, purple impossible value. Tap a cell for its value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 85,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "MBR permeate COD"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "MBR permeate pH"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    },
+                    {
+                      "color": "#B877D9",
+                      "value": 14.0001
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RO permeate TDS"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RO permeate COD"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Final TDS (IX polishing outlet)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Final hardness (IX polishing outlet)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 9,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.85,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH x AS (WITH lim(param, test, ord, unit, dec, warn, alarm, lo, hi, sev) AS (VALUES\n('MBR permeate COD','MBR Permeate|COD',1,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('MBR permeate pH','MBR Permeate|pH',2,'',1,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('RO permeate TDS','RO Combined Permeate|TDS',3,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('RO permeate COD','RO Combined Permeate|COD',4,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Final TDS (IX polishing outlet)','IX-Polishing Outlet|TDS',5,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Final hardness (IX polishing outlet)','IX-Polishing Outlet|Total hardness',6,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber')),\nd0 AS (SELECT btrim(l.location) AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 396 AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now() GROUP BY 1, 2, 3),\nd AS (SELECT loc || '|' || t AS test, day, v FROM d0)\nSELECT lim.param, lim.ord, lim.unit, lim.dec, lim.warn, lim.alarm, lim.lo, lim.hi, lim.sev, to_char(d.day,'YYYY-MM-DD') AS day, d.v FROM lim LEFT JOIN d ON d.test = lim.test ORDER BY lim.ord, d.day) SELECT (day::date)::timestamp AS time, param AS metric, v AS value FROM x WHERE day IS NOT NULL ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Each day against its limit",
+      "type": "status-history"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "description": "Daily RO permeate and RO reject (m³) from the flow totalizers.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RO reject"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fb8c9",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\") AS \"RO permeate\", last(\"302_fit_01_ro_reject_flow_totalizer\") - first(\"302_fit_01_ro_reject_flow_totalizer\") AS \"RO reject\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 AND \"302_fit_01_ro_reject_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "RO permeate and RO reject per day",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "description": "Daily RO recovery. Blue at or above the 98 % target, amber below.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 100,
+            "axisSoftMin": 80,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#D9B84A",
+                "value": 0
+              },
+              {
+                "color": "#5d7fb3",
+                "value": 98
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 7,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT 100 * (last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) / ((last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) + (last(\"302_fit_01_ro_reject_flow_totalizer\") - first(\"302_fit_01_ro_reject_flow_totalizer\"))) AS \"RO recovery\" FROM \"plc\" WHERE $timeFilter AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 AND \"302_fit_01_ro_reject_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "RO recovery per day · dashed line: target 98 %",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git",
+    "new",
+    "performance",
+    "zim-lab",
+    "zld"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d/d",
+    "to": "now-1d/d"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Zim Lab – Site Performance",
+  "uid": "zim-lab-site-performance"
+}

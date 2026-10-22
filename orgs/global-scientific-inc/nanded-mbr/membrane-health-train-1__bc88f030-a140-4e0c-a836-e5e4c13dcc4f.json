@@ -1,0 +1,3046 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "enable": true,
+        "filter": {
+          "exclude": false,
+          "ids": [
+            26,
+            30,
+            18,
+            24,
+            60,
+            22
+          ]
+        },
+        "hide": false,
+        "iconColor": "light-blue",
+        "mappings": {
+          "time": {
+            "source": "field",
+            "value": "time"
+          },
+          "timeEnd": {
+            "source": "field",
+            "value": "timeEnd"
+          },
+          "title": {
+            "source": "field",
+            "value": "tags"
+          }
+        },
+        "name": "MC Acid Clean (Light Blue) [Train 1]",
+        "query": "SELECT now FROM (SELECT \"Cleaning Start Time\" AS now FROM \"MBR MC Log\" WHERE $timeFilter AND  (\"Cleaning Type         ( Acid/Alkaline )\"  = 'ACID' OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'Acid' OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Acid')), (SELECT \"Cleaning Start Date/Time\" AS now FROM \"MBR RC Log\" WHERE $timeFilter AND (\"Cleaning Type             ( Acid/Alkaline)\" = 'ACID' OR \"Cleaning Type             ( Acid/Alkaline)\" = 'Acid'))",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "fromAnnotations": true,
+          "name": "Acid Clean (Blue)",
+          "query": "SELECT * FROM (     SELECT \"Cleaning Start Time\" AS now     FROM \"MBR MC Log\"     WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND (             \"Cleaning Type         ( Acid/Alkaline )\"  = 'ACID'             OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'Acid'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Acid'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'RC ACID'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'RC Acid'         ) ), (SELECT \"Cleaning Start Time\" AS time, \"Cleaning Stop Time\" AS timeEnd, \"Cleaning Type         ( Acid/Alkaline )\" AS tags FROM \"cleaning\" WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND \"Cleaning Type         ( Acid/Alkaline )\"  = 'acid')",
+          "queryType": "tags",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  * \nFROM \n  (\n    SELECT \n      cleaning_start_datetime AS now \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata\n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Acid MC' \n  ) ct, \n  (\n    SELECT \n      cleaning_start_datetime AS time, \n      cleaning_stop_datetime AS timeEnd, \n      cleaning_type AS tags \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata \n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Acid MC'\n  ) pt\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "tagsColumn": "tags",
+          "textColumn": "",
+          "textEditor": true,
+          "timeEndColumn": "timeEnd",
+          "titleColumn": ""
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "enable": true,
+        "filter": {
+          "exclude": false,
+          "ids": [
+            26,
+            30,
+            18,
+            24,
+            60,
+            22
+          ]
+        },
+        "hide": false,
+        "iconColor": "light-purple",
+        "mappings": {
+          "time": {
+            "source": "field",
+            "value": "time"
+          },
+          "timeEnd": {
+            "source": "field",
+            "value": "timeEnd"
+          },
+          "title": {
+            "source": "field",
+            "value": "tags"
+          }
+        },
+        "name": "MC Alkaline Clean (Light Purple) [Train 1]",
+        "query": "SELECT now FROM (SELECT \"Cleaning Start Time\" AS now FROM \"MBR MC Log\" WHERE $timeFilter AND (\"Cleaning Type         ( Acid/Alkaline )\"  = 'Alkaline' OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'Alkali') AND \"timestamp\" <> '2022-06-03 00:00:00'), (SELECT \"Cleaning Start Date/Time\" AS now FROM \"MBR RC Log\" WHERE $timeFilter AND (\"Cleaning Type             ( Acid/Alkaline)\" = 'Alaline' OR \"Cleaning Type             ( Acid/Alkaline)\" = 'Alkaline'))",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "fromAnnotations": true,
+          "query": "SELECT * FROM (     SELECT \"Cleaning Start Time\" AS now     FROM \"MBR MC Log\"     WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND (             \"Cleaning Type         ( Acid/Alkaline )\"  = 'ALKALINE'             OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'Alkaline'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Alkaline'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'RC ALKALINE'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'RC Alkaline'         ) ), (SELECT \"Cleaning Start Time\" AS time, \"Cleaning Stop Time\" AS timeEnd, \"Cleaning Type         ( Acid/Alkaline )\" AS tags FROM \"cleaning\" WHERE $timeFilter AND \"MBR Train (1- 2- 3)\" = 1 AND \"Cleaning Type         ( Acid/Alkaline )\"  = 'alkaline')",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  * \nFROM \n  (\n    SELECT \n      cleaning_start_datetime AS now \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata\n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline MC' \n  ) ct, \n  (\n    SELECT \n      cleaning_start_datetime AS time, \n      cleaning_stop_datetime AS timeEnd, \n      cleaning_type AS tags \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata \n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline MC'\n  ) pt\n",
+          "refId": "Anno",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "tagsColumn": "tags",
+          "textColumn": "",
+          "textEditor": true,
+          "timeEndColumn": "timeEnd"
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "enable": true,
+        "filter": {
+          "exclude": false,
+          "ids": [
+            26,
+            30,
+            18,
+            24,
+            60,
+            22
+          ]
+        },
+        "hide": false,
+        "iconColor": "light-red",
+        "mappings": {
+          "time": {
+            "source": "field",
+            "value": "time"
+          },
+          "timeEnd": {
+            "source": "field",
+            "value": "timeEnd"
+          },
+          "title": {
+            "source": "field",
+            "value": "tags"
+          }
+        },
+        "name": "MC Alkaline & Acid Clean (Light Red) [Train 1]",
+        "query": "SELECT now FROM (SELECT \"Cleaning Start Time\" AS now FROM \"MBR MC Log\" WHERE $timeFilter AND \"Cleaning Type         ( Acid/Alkaline )\" = 'Alkaline & Acid'), (SELECT \"Cleaning Start Date/Time\" FROM \"MBR RC Log\" WHERE $timeFilter AND \"Cleaning Type             ( Acid/Alkaline)\" = 'Alkaline & Acid')",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "fromAnnotations": true,
+          "name": "Alkaline & Acid MC Clean (Green) [Train 1]",
+          "query": "SELECT * FROM (     SELECT \"Cleaning Start Time\" AS now     FROM \"MBR MC Log\"     WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND (             \"Cleaning Type         ( Acid/Alkaline )\"  = 'ALKALINE & ACID'             OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'Alkaline & Acid'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Alkaline & Acid'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'RC ALKALINE & ACID'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'RC Alkaline & Acid'             OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'RC Alkaline & Acid'         ) ), (SELECT \"Cleaning Start Time\" AS time, \"Cleaning Stop Time\" AS timeEnd, \"Cleaning Type         ( Acid/Alkaline )\" AS tags FROM \"cleaning\" WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND \"Cleaning Type         ( Acid/Alkaline )\"  = 'alkaline & acid')",
+          "queryType": "tags",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  * \nFROM \n  (\n    SELECT \n      cleaning_start_datetime AS now \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata\n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline + Acid MC' \n  ) ct, \n  (\n    SELECT \n      cleaning_start_datetime AS time, \n      cleaning_stop_datetime AS timeEnd, \n      cleaning_type AS tags \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata \n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline + Acid MC'\n  ) pt\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "tagsColumn": "tags",
+          "textColumn": "",
+          "textEditor": true,
+          "timeEndColumn": "timeEnd",
+          "titleColumn": ""
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "enable": true,
+        "filter": {
+          "exclude": false,
+          "ids": [
+            26,
+            30,
+            18,
+            69,
+            71,
+            72,
+            73,
+            74,
+            24,
+            60,
+            22
+          ]
+        },
+        "hide": false,
+        "iconColor": "dark-blue",
+        "mappings": {
+          "title": {
+            "source": "field",
+            "value": "tags"
+          }
+        },
+        "name": "RC Acid Clean (Dark Blue) [Train 1]",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "fromAnnotations": true,
+          "query": "SELECT * FROM (     SELECT \"Cleaning Start Time\" AS now     FROM \"MBR MC Log\"     WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND (\"Cleaning Type       ( Acid/Alkaline )\"  = 'ACID RC'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Acid RC'         ) ), (SELECT \"Cleaning Start Time\" AS time, \"Cleaning Stop Time\" AS timeEnd, \"Cleaning Type         ( Acid/Alkaline )\" AS tags FROM \"cleaning\" WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND  \"Cleaning Type         ( Acid/Alkaline )\"  = 'acid rc'         )",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  * \nFROM \n  (\n    SELECT \n      cleaning_start_datetime AS now \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata\n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Acid RC' \n  ) ct, \n  (\n    SELECT \n      cleaning_start_datetime AS time, \n      cleaning_stop_datetime AS timeEnd, \n      cleaning_type AS tags \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata \n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Acid RC'\n  ) pt\n",
+          "refId": "Anno",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "tagsColumn": "tags",
+          "textEditor": true,
+          "timeEndColumn": "timeEnd"
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "enable": true,
+        "filter": {
+          "exclude": false,
+          "ids": [
+            26,
+            30,
+            18,
+            69,
+            71,
+            72,
+            73,
+            74,
+            24,
+            60,
+            22
+          ]
+        },
+        "hide": false,
+        "iconColor": "dark-purple",
+        "mappings": {
+          "title": {
+            "source": "field",
+            "value": "tags"
+          }
+        },
+        "name": "RC Alkaline Clean (Dark Purple) [Train 1]",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "fromAnnotations": true,
+          "query": "SELECT * FROM (     SELECT \"Cleaning Start Time\" AS now     FROM \"MBR MC Log\"     WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND (\"Cleaning Type       ( Acid/Alkaline )\"  = 'ALKALINE RC'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Alkaline RC'         ) ), (     SELECT \"Cleaning Start Time\" AS time, \"Cleaning Stop Time\" AS timeEnd, \"Cleaning Type         ( Acid/Alkaline )\" AS tags FROM \"cleaning\" WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND \"Cleaning Type         ( Acid/Alkaline )\"  = 'alkaline rc'         )",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  * \nFROM \n  (\n    SELECT \n      cleaning_start_datetime AS now \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata\n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline RC' \n  ) ct, \n  (\n    SELECT \n      cleaning_start_datetime AS time, \n      cleaning_stop_datetime AS timeEnd, \n      cleaning_type AS tags \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata \n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline RC'\n  ) pt\n",
+          "refId": "Anno",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "tagsColumn": "tags",
+          "textEditor": true,
+          "timeEndColumn": "timeEnd"
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "enable": true,
+        "filter": {
+          "exclude": false,
+          "ids": [
+            26,
+            30,
+            18,
+            69,
+            71,
+            72,
+            73,
+            74,
+            24,
+            60
+          ]
+        },
+        "hide": false,
+        "iconColor": "dark-red",
+        "mappings": {
+          "title": {
+            "source": "field",
+            "value": "tags"
+          }
+        },
+        "name": "RC Alkaline & Acid Clean (Dark Red) [Train 1]",
+        "target": {
+          "editorMode": "code",
+          "format": "table",
+          "fromAnnotations": true,
+          "query": "SELECT * FROM (     SELECT \"Cleaning Start Time\" AS now     FROM \"MBR MC Log\"     WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND (\"Cleaning Type       ( Acid/Alkaline )\"  = 'ALKALINE & ACID RC'             OR \"Cleaning Type       ( Acid/Alkaline )\"  = 'Alkaline & Acid RC'             OR \"Cleaning Type         ( Acid/Alkaline )\"  = 'Alkaline & Acid RC'         ) ), (     SELECT \"Cleaning Start Time\" AS time, \"Cleaning Stop Time\" AS timeEnd, \"Cleaning Type         ( Acid/Alkaline )\" AS tags FROM \"cleaning\" WHERE $timeFilter         AND \"MBR Train (1- 2- 3)\" = 1         AND \"Cleaning Type         ( Acid/Alkaline )\"  = 'alkaline & acid rc'         )",
+          "rawQuery": true,
+          "rawSql": "SELECT \n  * \nFROM \n  (\n    SELECT \n      cleaning_start_datetime AS now \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata\n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline + Acid RC' \n  ) ct, \n  (\n    SELECT \n      cleaning_start_datetime AS time, \n      cleaning_stop_datetime AS timeEnd, \n      cleaning_type AS tags \n    FROM \n      user_mbrcleaninglogandchemicalconsumptiondata \n    WHERE $__timeFilter(cleaning_start_datetime) \n      AND mbr_train = '1' \n      AND cleaning_type = 'Alkaline + Acid RC'\n  ) pt\n",
+          "refId": "Anno",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "tagsColumn": "tags",
+          "textEditor": true,
+          "timeEndColumn": "timeEnd"
+        }
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "mbar",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TMP"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 60,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-CalcParameters-TMP20200mqtt\") AS A\nFROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMP20200mqtt"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "A",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT MEDIAN(A) - 1.5 * (PERCENTILE(A, 75) - PERCENTILE(A, 25)) \nFROM \n(SELECT \"MBR-CalcParameters-TMP20200mqtt\" + 32.323529 AS A\nFROM \"mqtt_consumer\" \nWHERE time < '2022-05-27 14:30:00'),\n(SELECT \"MBR-CalcParameters-TMP20200mqtt\" AS A\nFROM \"mqtt_consumer\" \nWHERE time >= '2022-05-27 14:30:00' AND \"MBR-Instruments-FIT20211mqtt\" > 1)\nWHERE time >= now() - 60d",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Real-time TMP - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "mbar",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TMP"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-CalcParameters-TMP20200mqtt\")\nFROM \"mqtt_consumer\" \nWHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5\nGROUP BY time(15m) fill(null) ",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cage 1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage1mqtt\") \nFROM \"mqtt_consumer\" \nWHERE \"MBR-Instruments-FIT20211mqtt\" > 5 AND $timeFilter \nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Cage 2",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage2mqtt\") \nFROM \"mqtt_consumer\" \nWHERE \"MBR-Instruments-FIT20211mqtt\" > 5 AND $timeFilter \nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Cage 3",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage3mqtt\") \nFROM \"mqtt_consumer\" \nWHERE \"MBR-Instruments-FIT20211mqtt\" > 5 AND $timeFilter \nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Cage 4",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage4mqtt\") \nFROM \"mqtt_consumer\" \nWHERE \"MBR-Instruments-FIT20211mqtt\" > 5 AND $timeFilter \nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "15 min Average TMP (permeation mode) - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "mbar",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TMP"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cage 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 69,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-CalcParameters-TMP20200mqtt\")\nFROM \"mqtt_consumer\" \nWHERE $timeFilter AND (\"MBR-Instruments-FIT20211mqtt\" >= 0 AND \"MBR-Instruments-FIT20211mqtt\" <= 5)\nGROUP BY time(15m) fill(null) ",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cage 1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage1mqtt\") \nFROM \"mqtt_consumer\" \nWHERE  $timeFilter AND (\"MBR-Instruments-FIT20211mqtt\" >= 0 AND \"MBR-Instruments-FIT20211mqtt\" <= 5)\nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Cage 2",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage2mqtt\") \nFROM \"mqtt_consumer\" \nWHERE  $timeFilter AND (\"MBR-Instruments-FIT20211mqtt\" >= 0 AND \"MBR-Instruments-FIT20211mqtt\" <= 5)\nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Cage 3",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage3mqtt\") \nFROM \"mqtt_consumer\" \nWHERE $timeFilter AND (\"MBR-Instruments-FIT20211mqtt\" >= 0 AND \"MBR-Instruments-FIT20211mqtt\" <= 5)\nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Cage 4",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"MBR-CalcParameters-TMPTrain1Cage4mqtt\") \nFROM \"mqtt_consumer\" \nWHERE  $timeFilter AND (\"MBR-Instruments-FIT20211mqtt\" >= 0 AND \"MBR-Instruments-FIT20211mqtt\" <= 5)\nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-TMPTrain1Cage1mqtt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "15 min Average TMP (relaxation mode) - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/prob.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-orange",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "scheme"
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.axisSoftMin",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hour-avg.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 82,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT \"MBR-CalcParameters-TMP20200mqtt\" AS TMP1\nFROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "TMP-hour-avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT \"TMP_t1_h-anomaly-TMP1\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "anomaly-prob",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT \"TMP_t1_h-anomaly-prob\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TMP Anomaly Score (permeation mode)  - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/prob.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-orange",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "scheme"
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.axisSoftMin",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hour-avg.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 16
+      },
+      "id": 83,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT \"MBR-CalcParameters-TMPTrain1Cage1mqtt\" AS TMP1\nFROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "TMP-hour-avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT \"TMP_t1_c1-anomaly-TMP1\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "anomaly-prob",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT \"TMP_t1_c1-anomaly-prob\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Anomaly - Cage 1 [Train 1]",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/prob.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-orange",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "scheme"
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.axisSoftMin",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hour-avg.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 16
+      },
+      "id": 84,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT \"MBR-CalcParameters-TMPTrain1Cage2mqtt\" AS TMP1\nFROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "TMP-hour-avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT \"TMP_t1_c2-anomaly-TMP1\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "anomaly-prob",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT \"TMP_t1_c2-anomaly-prob\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Anomaly - Cage 2 [Train 1]",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/prob.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-orange",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "scheme"
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.axisSoftMin",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hour-avg.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 16
+      },
+      "id": 85,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT \"MBR-CalcParameters-TMPTrain1Cage3mqtt\" AS TMP1\nFROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "TMP-hour-avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT \"TMP_t1_c3-anomaly-TMP1\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "anomaly-prob",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT \"TMP_t1_c3-anomaly-prob\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Anomaly - Cage 3 [Train 1]",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/prob.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-orange",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "scheme"
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.axisSoftMin",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hour-avg.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 16
+      },
+      "id": 86,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT \"MBR-CalcParameters-TMPTrain1Cage4mqtt\" AS TMP1\nFROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "TMP-hour-avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT \"TMP_t1_c4-anomaly-TMP1\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "anomaly-prob",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT \"TMP_t1_c4-anomaly-prob\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Anomaly - Cage 4 [Train 1]",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "LMH",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Flux",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-CalcParameters-FluxTrain1\")\nFROM \"mqtt_consumer\" \nWHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5\nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-FluxTrain1"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "TC Flux",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-CalcParameters-FluxTrain1TC\")\nFROM \"mqtt_consumer\" \nWHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5\nGROUP BY time(15m) fill(null) ",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "15 min Average MBR Flux (LMH) - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "LMH/mbar",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TC Permeability"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TC Permeability",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-CalcParameters-PermeabilityTrain1TC\")\nFROM \"mqtt_consumer\" \nWHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5\nGROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-CalcParameters-PermeabilityTrain1TC"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [],
+          "tz": ""
+        }
+      ],
+      "title": "15 min Average MBR Temperature Corrected Permeability - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "%",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "axisWidth": 40,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Acid MC"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Alkaline MC"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Alkaline RC"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Alkaline & Acid MC"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Alkaline & Acid RC"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Acid RC"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "id": 88,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "Monthly Clean Recovery",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"acidmc_t1\", \"acidrc_t1\", \"alkacidmc_t1\", \"alkmc_t1\", \"alkrc_t1\", \"alkacidrc_t1\"\nFROM \"gsi_nandedmbr_cleanrecovery\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs",
+          "select": [
+            [
+              {
+                "params": [
+                  "Acid MC"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Monthly Clean Recovery - Train 1",
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/prob.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent"
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 0.8
+                    },
+                    {
+                      "color": "dark-orange",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "scheme"
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 1
+              },
+              {
+                "id": "custom.axisSoftMin",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/avg.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 10
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
+      "id": 89,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT mean(\"MBR-CalcParameters-TMP20200mqtt\") AS TMP1\nFROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(1h)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "TMP-period-avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT \"TMP_t1_h-stdev-TMP1\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "anomaly-prob",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT \"TMP_t1_h-stdev-prob\" FROM \"gsi_nandedmbr_anomaly\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TMP Sensor Faults - Train 1",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 68,
+      "options": {
+        "limit": 1000,
+        "navigateAfter": "10m",
+        "navigateBefore": "10m",
+        "navigateToPanel": true,
+        "onlyFromThisDashboard": true,
+        "onlyInTimeRange": true,
+        "showTags": true,
+        "showTime": true,
+        "showUser": true
+      },
+      "title": "Annotations",
+      "transparent": true,
+      "type": "annolist"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Membrane Health [Train 1]",
+  "uid": "bc88f030-a140-4e0c-a836-e5e4c13dcc4f"
+}

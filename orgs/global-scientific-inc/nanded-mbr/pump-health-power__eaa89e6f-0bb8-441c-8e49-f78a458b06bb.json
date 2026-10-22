@@ -1,0 +1,842 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "KW",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 1.9
+              },
+              {
+                "color": "red",
+                "value": 2.2
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "101-P-01",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10101_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphph"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "101-P-02",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10102_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "101-P-03",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10103_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "101-P-04",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10104_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Power Consumption 101-P-01/02/03/04",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "KW",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 4.8
+              },
+              {
+                "color": "red",
+                "value": 5.5
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "101-P-05",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10105_PowerFeedback\") * 5.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphph"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "101-P-06",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10106_PowerFeedback\") * 5.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Power Consumption 101-P-05/06",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "KW",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 6.7
+              },
+              {
+                "color": "red",
+                "value": 7.5
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "201-P-01",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20101_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphph"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "201-P-02",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20102_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "201-P-03",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20103_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "201-P-04",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20104_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Power Consumption 201-P-01/02/03/04",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "KW",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 8.2
+              },
+              {
+                "color": "red",
+                "value": 9.2
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "202-P-01",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20201_PowerFeedback\") * 9.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphph"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "202-P-05",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20205_PowerFeedback\") * 9.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "202-P-07",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20207_PowerFeedback\") * 9.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Power Consumption 202-P-01/05/07",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "KW",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "orange",
+                "value": 8
+              },
+              {
+                "color": "red",
+                "value": 9
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "202-P-03",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20203_PowerFeedback\") * 9 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphph"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "202-P-06",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20206_PowerFeedback\") * 9 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "202-P-08",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20208_PowerFeedback\") * 9 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)\n",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Power Consumption 202-P-03/06/08",
+      "transparent": true,
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Pump Health - Power",
+  "uid": "eaa89e6f-0bb8-441c-8e49-f78a458b06bb"
+}

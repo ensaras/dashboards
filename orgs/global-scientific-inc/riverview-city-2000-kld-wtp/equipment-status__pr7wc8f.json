@@ -1,0 +1,349 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT \n  non_negative_difference(last(/_runtime_hr_total|_running_hour/)) \nFROM \"plc\" \nWHERE $timeFilter \nGROUP BY time(1d) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Daily Runtime Hours",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "non_negative_difference_100_p_01_lift_station_pump_runtime_hr_total": "Lift Station Pump 01",
+              "non_negative_difference_100_p_02_lift_station_pump_runtime_hr_total": "Lift Station Pump 02",
+              "non_negative_difference_101_p_01_equalization_transfer_pump_runtime_hr_total": "Eq Transfer Pump 01",
+              "non_negative_difference_201_p_01_coagulant_dosing_pump_runtime_hr_total": "Coagulant Dosing Pump 01",
+              "non_negative_difference_201_p_02_flocculant_dosing_pump_runtime_hr_total": "Flocculant Dosing Pump 02",
+              "non_negative_difference_202_ag_01_anaerobic_agitator_runtime_hr_total": "Anaerobic Agitator 01",
+              "non_negative_difference_202_ag_02_anoxic_agitator_runtime_hr_total": "Anoxic Agitator 02",
+              "non_negative_difference_202_b_01_mbr_blower_runtime_hr_total": "MBR Blower 01",
+              "non_negative_difference_202_b_01_suf_blower_runtime_hr_total": "SUF Blower 01",
+              "non_negative_difference_202_b_02_mbr_blower_runtime_hr_total": "MBR Blower 02",
+              "non_negative_difference_202_b_02_suf_blower_runtime_hr_total": "SUF Blower 02",
+              "non_negative_difference_202_fs_01_finescreen_runtime_hr_total": "Finescreen 01",
+              "non_negative_difference_202_fs_02_finescreen_runtime_hr_total": "Finescreen 02",
+              "non_negative_difference_202_p_01_mbr_permeate_pump_running_hour": "MBR Permeate Pump 01",
+              "non_negative_difference_202_p_05_cip_pump_runtime_hr_total": "CIP Pump 05",
+              "non_negative_difference_202_p_05_suf_cip_pump_runtime_hr_total": "SUF CIP Pump 05",
+              "non_negative_difference_203_ag_01_flash_mixer_runtime_hr_total": "Flash Mixer 01",
+              "non_negative_difference_203_ag_02_flocculation_tank_mixer_runtime_hr_total": "Flocculation Tank Mixer 02",
+              "non_negative_difference_301_p_01_ro_mcf_feed_pump_runtime_hr_total": "RO MCF Feed Pump 01",
+              "non_negative_difference_301_p_02_ro_mcf_feed_pump_runtime_hr_total": "RO MCF Feed Pump 02",
+              "non_negative_difference_301_p_03_ro_cip_pump_runtime_hr_total": "RO CIP Pump 03",
+              "non_negative_difference_301_p_04_acid_dosing_pump_runtime_hr_total": "Acid Dosing Pump 04",
+              "non_negative_difference_301_p_04_ro_cip_pump_runtime_hr_total": "RO CIP Pump 04",
+              "non_negative_difference_301_p_05_smbs_dosing_pump_runtime_hr_total": "SMBS Dosing Pump 05",
+              "non_negative_difference_301_p_06_antiscalant_dosing_pump_runtime_hr_total": "Antiscalant Dosing Pump 06",
+              "non_negative_difference_301_p_07_ro_hp_pump_runtime_hr_total": "RO HP Pump 07",
+              "non_negative_difference_401_ag_01_dwpe_prepration_tank_agitator_runtime_hr_total": "DWPE Preparation Tank Agitator 01",
+              "non_negative_difference_401_p_01_dwpe_dosing_pump_runtime_hr_total": "DWPE Dosing Pump 01",
+              "non_negative_difference_501_p_01_dewatering_feed_pump_runtime_hr_total": "Dewatering Feed Pump 01",
+              "non_negative_difference_501_p_02_dewatering_feed_pump_runtime_hr_total": "Dewatering Feed Pump 02"
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT \n  last(\"202_b_01_suf_blower_runtime_hr_total\") AS \"SUF Blower\",\n  last(\"202_p_05_suf_cip_pump_runtime_hr_total\") AS \"SUF CIP Pump\",\n  last(\"301_p_01_ro_mcf_feed_pump_runtime_hr_total\") AS \"RO MCF Feed Pump\",\n  last(\"301_p_02_ro_cip_pump_runtime_hr_total\") AS \"RO CIP Pump 1\",\n  last(\"301_p_03_ro_cip_pump_runtime_hr_total\") AS \"RO CIP Pump 2\",\n  last(\"203_ag_01_flash_mixer_runtime_hr_total\") AS \"Flash Mixer\",\n  last(\"203_ag_02_flocculation_tank_mixer_runtime_hr_total\") AS \"Flocculation Mixer\",\n  last(\"201_p_01_coagulant_dosing_pump_runtime_hr_total\") AS \"Coagulant Pump\",\n  last(\"201_p_02_flocculant_dosing_pump_runtime_hr_total\") AS \"Flocculant Pump\",\n  last(\"301_p_04_acid_dosing_pump_runtime_hr_total\") AS \"Acid Pump\",\n  last(\"301_p_05_smbs_dosing_pump_runtime_hr_total\") AS \"SMBS Pump\",\n  last(\"301_p_06_antiscalant_dosing_pump_runtime_hr_total\") AS \"Antiscalant Pump\"\nFROM \"plc\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Runtime Hours",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#808080",
+                  "index": 0,
+                  "text": "Stopped"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Running"
+                },
+                "2": {
+                  "color": "dark-red",
+                  "index": 2,
+                  "text": "Tripped"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "always",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT \n  (last(\"202_b_01_suf_blower_run_fb\") * 1) + (last(\"202_b_01_suf_blower_trip_fb\") * 2) AS \"SUF Blower\",\n  (last(\"202_p_05_suf_cip_pump_run_fb\") * 1) + (last(\"202_p_05_suf_cip_pump_trip_fb\") * 2) AS \"SUF CIP Pump\",\n  \n  (last(\"301_p_01_ro_mcf_feed_pump_run_fb\") * 1) + (last(\"301_p_01_ro_mcf_feed_pump_trip_fb\") * 2) AS \"RO MCF Feed Pump\",\n  (last(\"301_p_02_ro_cip_pump_run_fb\") * 1) + (last(\"301_p_02_ro_cip_pump_trip_fb\") * 2) AS \"RO CIP Pump 1\",\n  (last(\"301_p_03_ro_cip_pump_run_fb\") * 1) + (last(\"301_p_03_ro_cip_pump_trip_fb\") * 2) AS \"RO CIP Pump 2\",\n  \n  (last(\"203_ag_01_flash_mixer_run_fb\") * 1) + (last(\"203_ag_01_flash_mixer_trip_fb\") * 2) AS \"Flash Mixer\",\n  (last(\"203_ag_01_flocculation_tank_mixer_run_fb\") * 1) + (last(\"203_ag_01_flocculation_tank_mixer_trip_fb\") * 2) AS \"Flocculation Mixer\",\n  \n  (last(\"201_p_01_coagulant_dosing_pump_run_fb\") * 1) + (last(\"201_p_01_coagulant_dosing_pump_trip_fb\") * 2) AS \"Coagulant Pump\",\n  (last(\"201_p_02_flocculant_dosing_pump_run_fb\") * 1) + (last(\"201_p_02_flocculant_dosing_pump_trip_fb\") * 2) AS \"Flocculant Pump\",\n  (last(\"301_p_04_acid_dosing_pump_run_fb\") * 1) + (last(\"301_p_04_acid_dosing_pump_trip_fb\") * 2) AS \"Acid Pump\",\n  (last(\"301_p_05_smbs_dosing_pump_run_fb\") * 1) + (last(\"301_p_05_smbs_dosing_pump_trip_fb\") * 2) AS \"SMBS Pump\",\n  (last(\"301_p_06_antiscalant_dosing_pump_run_fb\") * 1) + (last(\"301_p_06_antiscalant_dosing_pump_trip_fb\") * 2) AS \"Antiscalant Pump\"\nFROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Equipment Run Status",
+      "type": "state-timeline"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Equipment Status",
+  "uid": "pr7wc8f"
+}

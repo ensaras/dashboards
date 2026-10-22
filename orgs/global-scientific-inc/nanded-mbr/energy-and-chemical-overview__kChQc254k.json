@@ -1,0 +1,1673 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 23,
+      "panels": [],
+      "title": "MFM Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "V",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Voltage Phase to Phase",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MFM_Data-AvgVphph\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphph"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Voltage Phase to Neutral",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MFM_Data-AvgVphn\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgVphn"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "MFM Average Voltage",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "A",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Average Current",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MFM_Data-AvgCurrent\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MFM_Data-AvgCurrent"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "MFM Average Current",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Chemical Consumption",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "liters",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "axisWidth": 40,
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 27,
+      "options": {
+        "barRadius": 0.1,
+        "barWidth": 0.85,
+        "fullHighlight": false,
+        "groupWidth": 0.5,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "always",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "month",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    DATE_TRUNC('month', cleaning_start_datetime) AS month,\n    SUM(nocl_used_10_perc) AS \"NaOCL\"\nFROM\n    public.user_mbrcleaninglogandchemicalconsumptiondata\nwhere mbr_train = '1' and  \n$__timeFilter(cleaning_start_datetime) \nGROUP BY\n    DATE_TRUNC('month', cleaning_start_datetime)\nORDER BY\n    month;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n    DATE_TRUNC('month', cleaning_start_datetime) AS month,\n    SUM(naoh_used_48_perc) AS \"NaOH\"\nFROM\n    public.user_mbrcleaninglogandchemicalconsumptiondata\nwhere mbr_train = '1' and  \n$__timeFilter(cleaning_start_datetime) \nGROUP BY\n    DATE_TRUNC('month', cleaning_start_datetime)\nORDER BY\n    month;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n    DATE_TRUNC('month', cleaning_start_datetime) AS month,\n    SUM(hcl_used_33_perc) AS \"HCL\"\nFROM\n    public.user_mbrcleaninglogandchemicalconsumptiondata\nwhere mbr_train = '1' and  \n$__timeFilter(cleaning_start_datetime)\nGROUP BY\n    DATE_TRUNC('month', cleaning_start_datetime)\nORDER BY\n    month;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Monthly Chemical Consumption [Train 1]",
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "liters",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "axisWidth": 40,
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 34,
+      "options": {
+        "barRadius": 0.1,
+        "barWidth": 0.85,
+        "fullHighlight": false,
+        "groupWidth": 0.5,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "always",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "month",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    DATE_TRUNC('month', cleaning_start_datetime) AS month,\n    SUM(nocl_used_10_perc) AS \"NaOCL\"\nFROM\n    public.user_mbrcleaninglogandchemicalconsumptiondata\nwhere mbr_train = '2' and  \n$__timeFilter(cleaning_start_datetime) \nGROUP BY\n    DATE_TRUNC('month', cleaning_start_datetime)\nORDER BY\n    month;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n    DATE_TRUNC('month', cleaning_start_datetime) AS month,\n    SUM(naoh_used_48_perc) AS \"NaOH\"\nFROM\n    public.user_mbrcleaninglogandchemicalconsumptiondata\nwhere mbr_train = '2' and  \n$__timeFilter(cleaning_start_datetime) \nGROUP BY\n    DATE_TRUNC('month', cleaning_start_datetime)\nORDER BY\n    month;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n    DATE_TRUNC('month', cleaning_start_datetime) AS month,\n    SUM(hcl_used_33_perc) AS \"HCL\"\nFROM\n    public.user_mbrcleaninglogandchemicalconsumptiondata\nwhere mbr_train = '2' and  \n$__timeFilter(cleaning_start_datetime)\nGROUP BY\n    DATE_TRUNC('month', cleaning_start_datetime)\nORDER BY\n    month;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Monthly Chemical Consumption [Train 2]",
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Energy Overview",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "kW",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 9,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "MFM",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT ABS(MEAN(\"MFM_Data-TotalActivePower\")) / 1000 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval)",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "MFM Power Consumption",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "kwatt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 32,
+      "options": {
+        "displayLabels": [
+          "value"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "MFM",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": true,
+          "query": "SELECT ABS(MEAN(\"MFM_Data-TotalActivePower\")) / 1000 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Converted Aeration Tank Blower [201-B-01]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"Pre_Aeration-Blower_Ctrl-B20101_kW\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-Blower_Ctrl-B20206_kW"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Common Standby Blower [202-B-01]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"Anoxic_Aeration-Blower_Ctrl-B20201_kW\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-Blower_Ctrl-B20206_kW"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "MBR Tank Blower [202-B-03]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT MEAN(\"MBR-Blower_Ctrl-B20203_kW\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "MBR-Blower_Ctrl-B20204_kW"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "MBR Tank Blower [202-B-04]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-Blower_Ctrl-B20204_kW\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "MBR Tank Blower [202-B-05]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-Blower_Ctrl-B20205_kW\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Aeration Tank Blower [202-B-06]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-Blower_Ctrl-B20206_kW\") FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Wastewater Transfer Pump [101-P-01]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10101_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "H",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Wastewater Transfer Pump [101-P-02]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10102_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "I",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Wastewater Transfer Pump [101-P-03]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10103_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "J",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Wastewater Transfer Pump [101-P-04]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10104_PowerFeedback\") * 2.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "K",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Wastewater Transfer Pump [101-P-05]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10105_PowerFeedback\") * 5.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "L",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Wastewater Transfer Pump [101-P-06]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"SewageReceiving-PumpCtrl-P10106_PowerFeedback\") * 5.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "M",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Mixed Liquor Transfer Pump [201-P-01]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20101_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "N",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Mixed Liquor Transfer Pump [201-P-02]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20102_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "O",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Mixed Liquor Transfer Pump [201-P-03]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20103_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "P",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Mixed Liquor Transfer Pump [201-P-04]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"Pre_Aeration-PumpCtrl-P20104_PowerFeedback\") * 7.5 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "Q",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "MBR Permeate Pump [202-P-01]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20201_PowerFeedback\") * 9.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "R",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Internal Recycle Pump [202-P-03]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20203_PowerFeedback\") * 9 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "S",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "MBR Permeate Pump [202-P-05]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20205_PowerFeedback\") * 9.2 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "T",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Internal Recycle Pump [202-P-06]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20206_PowerFeedback\") * 9 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "U",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "MBR Permeate Pump [202-P-07]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20207_PowerFeedback\") * 10 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "V",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Internal Recycle Pump [202-P-08]",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT MEAN(\"MBR-PumpCtrl-P20208_PowerFeedback\") * 9 / 100 FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time(30d)",
+          "rawQuery": true,
+          "refId": "W",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Power Consumption by Equipment",
+      "transparent": true,
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "m3/d",
+            "axisPlacement": "auto",
+            "axisWidth": 40,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 3,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Electricity Intensity"
+            },
+            "properties": [
+              {
+                "id": "custom.axisLabel",
+                "value": "kwh/m3"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH train1_daily AS (\n    SELECT\n        DISTINCT ON (datetime::date) datetime::date AS date,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_flow\n        END AS daily_flow\n    FROM\n        public.user_flowmeterreadingdata\n    WHERE $__timeFilter(datetime) AND form_id = 218\n    ORDER BY datetime::date, time_of_data_entry DESC\n), \ntrain2_daily AS (\n    SELECT\n        DISTINCT ON (datetime::date) datetime::date AS date,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_flow\n        END AS daily_flow\n    FROM\n        public.user_flowmeterreadingdata\n    WHERE $__timeFilter(datetime) AND form_id = 219\n    ORDER BY datetime::date, time_of_data_entry DESC\n),\ntrain3_daily AS (\n    SELECT\n        DISTINCT ON (datetime::date) datetime::date AS date,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_flow\n        END AS daily_flow\n    FROM\n        public.user_flowmeterreadingdata\n    WHERE $__timeFilter(datetime) AND form_id = 220\n    ORDER BY datetime::date, time_of_data_entry DESC\n),\ntrain1_diff AS (\n    SELECT\n        date,\n        GREATEST(daily_flow, 0) AS daily_consumption\n    FROM train1_daily\n),\ntrain2_diff AS (\n    SELECT\n        date,\n        GREATEST(daily_flow, 0) AS daily_consumption\n    FROM train2_daily\n),\ntrain3_diff AS (\n    SELECT\n        date,\n        GREATEST(daily_flow, 0) AS daily_consumption\n    FROM train3_daily\n)\nSELECT\n    COALESCE(t1.date, t2.date, t3.date) AS date,\n    COALESCE(t1.daily_consumption, 0) + COALESCE(t2.daily_consumption, 0) + COALESCE(t3.daily_consumption, 0) AS \"Total Daily Flow\"\nFROM\n    train1_diff t1\nFULL OUTER JOIN\n    train2_diff t2 ON t1.date = t2.date\nFULL OUTER JOIN\n    train3_diff t3 ON t1.date = t3.date\nWHERE\n    COALESCE(t1.daily_consumption, 0) + COALESCE(t2.daily_consumption, 0) + COALESCE(t3.daily_consumption, 0) > 0\nORDER BY\n    date;\n",
+          "refId": "Daily Flow",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH train1_daily AS (\n  SELECT\n    DISTINCT ON (datetime :: date) datetime :: date AS date,\n    CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_flow\n        END AS daily_flow\n  FROM\n    public.user_flowmeterreadingdata\n  WHERE\n    $__timeFilter(datetime) AND form_id = 218\n  ORDER BY\n    datetime :: date, time_of_data_entry DESC\n),\ntrain2_daily AS (\n  SELECT\n    DISTINCT ON (datetime :: date) datetime :: date AS date,\n    CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_flow\n        END AS daily_flow\n  FROM\n    public.user_flowmeterreadingdata\n  WHERE\n    $__timeFilter(datetime) AND form_id = 219\n  ORDER BY\n    datetime :: date, time_of_data_entry DESC\n),\ntrain3_daily AS (\n  SELECT\n    DISTINCT ON (datetime :: date) datetime :: date AS date,\n    CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_flow\n        END AS daily_flow\n  FROM\n    public.user_flowmeterreadingdata\n  WHERE\n    $__timeFilter(datetime) AND form_id = 220\n  ORDER BY\n    datetime :: date, time_of_data_entry DESC\n),\ntrain1_diff AS (\n  SELECT\n    date,\n    GREATEST(daily_flow, 0) AS daily_consumption\n  FROM\n    train1_daily\n),\ntrain2_diff AS (\n  SELECT\n    date,\n    GREATEST(daily_flow, 0) AS daily_consumption\n  FROM\n    train2_daily\n),\ntrain3_diff AS (\n  SELECT\n    date,\n    GREATEST(daily_flow, 0) AS daily_consumption\n  FROM\n    train3_daily\n),\ntotal_flow_consumption AS (\n  SELECT\n    COALESCE(t1.date, t2.date, t3.date) AS date,\n    COALESCE(t1.daily_consumption, 0) + COALESCE(t2.daily_consumption, 0) + COALESCE(t3.daily_consumption, 0) AS total_daily_consumption_flow\n  FROM\n    train1_diff t1\n    FULL OUTER JOIN train2_diff t2 ON t1.date = t2.date\n    FULL OUTER JOIN train3_diff t3 ON t1.date = t3.date\n),\nnew_panel_daily AS (\n  SELECT\n    DISTINCT ON (datetime :: date) datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_power\n    END AS daily_power\n  FROM\n    public.user_powermeterreadingdata\n  WHERE\n    $__timeFilter(datetime) AND form_id = 216\n  ORDER BY\n    datetime :: date, time_of_data_entry DESC\n),\noriginal_panel_daily AS (\n  SELECT\n    DISTINCT ON (datetime :: date) datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_power\n    END AS daily_power\n  FROM\n    public.user_powermeterreadingdata\n  WHERE\n    $__timeFilter(datetime) AND form_id = 217\n  ORDER BY\n    datetime :: date, time_of_data_entry DESC\n),\nnew_panel_diff AS (\n  SELECT\n    date,\n    GREATEST(daily_power, 0) AS daily_consumption\n  FROM\n    new_panel_daily\n),\noriginal_panel_diff AS (\n  SELECT\n    date,\n    GREATEST(daily_power, 0) AS daily_consumption\n  FROM\n    original_panel_daily\n),\ntotal_power_consumption AS (\n  SELECT\n    COALESCE(np.date, op.date) AS date,\n    COALESCE(np.daily_consumption, 0) + COALESCE(op.daily_consumption, 0) AS total_daily_consumption_power\n  FROM\n    new_panel_diff np\n    FULL OUTER JOIN original_panel_diff op ON np.date = op.date\n)\nSELECT\n  COALESCE(tf.date, tp.date) AS date,\n  tp.total_daily_consumption_power / tf.total_daily_consumption_flow AS \"Electricity Intensity\"\nFROM\n  total_flow_consumption tf\n  FULL OUTER JOIN total_power_consumption tp ON tf.date = tp.date\nWHERE\n  tf.total_daily_consumption_flow <> 0\nORDER BY\n  date;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Daily Energy Intensity VS. Totalizer Flow ",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "id": 37,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let newPanelValues = [], originalPanelValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'C') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    newPanelValues = s.fields.find(f => f.name === 'C')?.values ?? [];\n  } else if (s.refId === 'D') {\n    originalPanelValues = s.fields.find(f => f.name === 'D')?.values ?? [];\n  }\n});\n\n// Calculate total daily consumption\nlet totalMonthlyPowerConsumption = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += newPanelValues[i] || 0;\n  total += originalPanelValues[i] || 0;\n  totalMonthlyPowerConsumption.push(total);\n}\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY'\n  return `${month}/${day}/${year}`;\n});\n\n// Check if the time range exceeds one year\nconst firstDate = new Date(timeData[0]);\nconst lastDate = new Date(timeData[timeData.length - 1]);\nconst oneYearInMs = 365 * 24 * 60 * 60 * 1000; // Approximate milliseconds in one year\nconst timeRangeExceedsOneYear = (lastDate - firstDate) > oneYearInMs;\n\n// If time range exceeds one year, don't display values on top of bars\nconst showLabel = !timeRangeExceedsOneYear;\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['New Panel', 'Original Panel']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Monthly Power Consumption',\n    nameLocation: 'middle',\n    nameGap: 70,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'New Panel',\n      type: 'bar',\n      stack: 'total',\n      data: newPanelValues,\n      itemStyle: {\n        color: '#5fb4f5' // Set the color to blue\n      }\n    },\n    {\n      name: 'Original Panel',\n      type: 'bar',\n      stack: 'total',\n      data: originalPanelValues,\n      itemStyle: {\n        color: '#f5de49' // Set the color to yellow\n      },\n      // Only show label if the time range is within one year\n      label: showLabel ? {\n        show: true,\n        position: 'top',\n        formatter: function (params) {\n          return totalMonthlyPowerConsumption[params.dataIndex].toFixed(2); // Format to 2 decimal places\n        },\n      } : {}\n    }\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH monthly_data AS (\n    SELECT \n        date_trunc('month', datetime) AS month,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_power\n        END AS consumption\n    FROM \n        public.user_powermeterreadingdata\n    WHERE\n        form_id = 216 \n)\nSELECT \n    month,\n    SUM(consumption) AS \"New Panel\"\nFROM \n    monthly_data\nWHERE \n    consumption IS NOT NULL AND\n    consumption > 0 AND\n    $__timeFilter(month)\nGROUP BY \n    month\nORDER BY \n    month;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH monthly_data AS (\n    SELECT \n        date_trunc('month', datetime) AS month,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_power\n        END AS consumption\n    FROM \n        public.user_powermeterreadingdata\n    WHERE \n        form_id = 217 \n)\nSELECT \n    month,\n    SUM(consumption) AS \"Original Panel\"\nFROM \n    monthly_data\nWHERE \n    consumption IS NOT NULL AND\n    consumption > 0 AND \n    $__timeFilter(month)\nGROUP BY \n    month\nORDER BY \n    month;\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$B",
+          "hide": false,
+          "refId": "D",
+          "type": "math"
+        }
+      ],
+      "title": "Monthly Power Consumption",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time: MM-DD"
+              },
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "id": 36,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n    datetime::date AS \"Time\",  -- Keep the datetime field for time series functionality\n    TO_CHAR(datetime::date, 'MM-DD-YYYY') AS \"date\",  -- Format the date as string\n    CASE\n        WHEN reset_value != 0 THEN \n            GREATEST(reset_value, 0)\n        ELSE\n            CASE\n                WHEN daily_power IS NOT NULL AND daily_power > 0 THEN daily_power\n                ELSE NULL\n            END\n    END AS daily_consumption\nFROM\n    public.user_powermeterreadingdata\nWHERE $__timeFilter(datetime)\n      AND form_id=216\nORDER BY\n    \"Time\";",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "alias": "Integral",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Daily Totals Log",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT res\nFROM (SELECT ABS(SUM(\"MFM_Data-TotalActivePower\")) / 1000 * 5 / 60 AS res FROM \"mqtt_consumer\" WHERE $timeFilter AND  time < '2023-07-28T00:00:00Z'GROUP BY time(1d)), (SELECT ABS(SUM(\"MFM_Data-TotalActivePower\")) / 1000 * 1 / 60 AS res FROM \"mqtt_consumer\" WHERE $timeFilter AND time >= '2023-07-28T00:00:00Z' GROUP BY time(1d))",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "Total Daily Electricity (KWH).1"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Daily Power Consumption [New Panel]",
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "id": 31,
+      "options": {
+        "limit": 1000,
+        "navigateAfter": "10m",
+        "navigateBefore": "10m",
+        "navigateToPanel": true,
+        "onlyFromThisDashboard": true,
+        "onlyInTimeRange": true,
+        "showTags": true,
+        "showTime": true,
+        "showUser": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "Energy and Chemical Overview Annotations",
+      "transparent": true,
+      "type": "annolist"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Energy and Chemical Overview",
+  "uid": "kChQc254k"
+}

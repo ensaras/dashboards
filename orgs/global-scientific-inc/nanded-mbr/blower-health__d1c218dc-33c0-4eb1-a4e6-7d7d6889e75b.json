@@ -1,0 +1,3869 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-Current/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "amp"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-DiffP/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "mmAq"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-InletP/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "mmAq"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-InletT/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-MotorT/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-OutletT/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-VFDRPM/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "rotrpm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-kW/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "kwatt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-VFDHz/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "rothz"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-FIT/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "m3/min"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-PIT/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "mmAq"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last($vars) AS $vars FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Blower Details",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(?:Pre_Aeration|Anoxic_Aeration|MBR)-Blower_Ctrl-B(\\d{3})(\\d{2})_(.+)$",
+            "renamePattern": "$1-B-$2-$3"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-DiffP$",
+            "renamePattern": "$1-Differential Pressure"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-InletP$",
+            "renamePattern": "$1-Inlet Pressure"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-InletT$",
+            "renamePattern": "$1-Inlet Temperature"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-OutletT$",
+            "renamePattern": "$1-Outlet Temperature"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-MotorT$",
+            "renamePattern": "$1-Motor Temperature"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-InvInTemp$",
+            "renamePattern": "$1-Inverter Input Temperature"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-VFDHz$",
+            "renamePattern": "$1-VFD Frequency"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-VFDRPM$",
+            "renamePattern": "$1-VFD RPM"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-A$",
+            "renamePattern": "$1-Current"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-kW$",
+            "renamePattern": "$1-Power"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "201-B-01-Current"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 127
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 143,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 9999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 128,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 142
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-01-Current"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 127
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 143,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 128,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 142
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-03-Current"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 101,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 90,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-04-Current"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 101,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 90,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-05-Current"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 101,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 90,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-06-Current"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 64
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 73,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 65,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 72
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 30,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "text": {},
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n   LAST(\"Pre_Aeration-Blower_Ctrl-B20101_A\") AS \"201-B-01-Current\", \n   LAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_A\") AS \"202-B-01-Current\", \n   LAST(\"MBR-Blower_Ctrl-B20203_A\") AS \"202-B-03-Current\", \n   LAST(\"MBR-Blower_Ctrl-B20204_A\") AS \"202-B-04-Current\",\n    LAST(\"MBR-Blower_Ctrl-B20205_A\") AS \"202-B-05-Current\", \n    LAST(\"MBR-Blower_Ctrl-B20206_A\") AS \"202-B-06-Current\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Current",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 26
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 30,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 27,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 29
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mmAq"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 31,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    LAST(\"Pre_Aeration-Blower_Ctrl-B20101_DiffP\") AS \"201-B-01-DiffP\", \n    LAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_DiffP\") AS \"202-B-01-DiffP\", \n    LAST(\"MBR-Blower_Ctrl-B20203_DiffP\") AS \"202-B-03-DiffP\", \n    LAST(\"MBR-Blower_Ctrl-B20204_DiffP\") AS \"202-B-04-DiffP\",\n    LAST(\"MBR-Blower_Ctrl-B20205_DiffP\") AS \"202-B-05-DiffP\", \n    LAST(\"MBR-Blower_Ctrl-B20206_DiffP\") AS \"202-B-06-DiffP\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Filter Drop",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mmAq"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 32,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    LAST(\"Pre_Aeration-Blower_Ctrl-B20101_InletP\") AS \"201-B-01-InletP\", \n    LAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_InletP\") AS \"202-B-01-InletP\", \n    LAST(\"MBR-Blower_Ctrl-B20203_InletP\") AS \"202-B-03-InletP\", \n    LAST(\"MBR-Blower_Ctrl-B20204_InletP\") AS \"202-B-04-InletP\",\n    LAST(\"MBR-Blower_Ctrl-B20205_InletP\") AS \"202-B-05-InletP\", \n    LAST(\"MBR-Blower_Ctrl-B20206_InletP\") AS \"202-B-06-InletP\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Inlet Pressure",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 10,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 35
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 41,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 10000
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "dark-red",
+                  "index": 2
+                },
+                "to": 9
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 36,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 3
+                },
+                "to": 40
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 33,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    LAST(\"Pre_Aeration-Blower_Ctrl-B20101_InletT\") AS \"201-B-01-InletT\", \n    LAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_InletT\") AS \"202-B-01-InletT\", \n    LAST(\"MBR-Blower_Ctrl-B20203_InletT\") AS \"202-B-03-InletT\", \n    LAST(\"MBR-Blower_Ctrl-B20204_InletT\") AS \"202-B-04-InletT\",\n    LAST(\"MBR-Blower_Ctrl-B20205_InletT\") AS \"202-B-05-InletT\", \n    LAST(\"MBR-Blower_Ctrl-B20206_InletT\") AS \"202-B-06-InletT\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Inlet Temperature",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 34,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n        LAST(\"Pre_Aeration-Blower_Ctrl-B20101_MotorT\") AS \"201-B-01-MotorT\", \n\tLAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_MotorT\") AS \"202-B-01-MotorT\", \n\tLAST(\"MBR-Blower_Ctrl-B20203_MotorT\") AS \"202-B-03-MotorT\", \n\tLAST(\"MBR-Blower_Ctrl-B20204_MotorT\") AS \"202-B-04-MotorT\",\n        LAST(\"MBR-Blower_Ctrl-B20205_MotorT\") AS \"202-B-05-MotorT\", \n\tLAST(\"MBR-Blower_Ctrl-B20206_MotorT\") AS \"202-B-06-MotorT\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Motor Temperature",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 35,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n        LAST(\"Pre_Aeration-Blower_Ctrl-B20101_OutletT\") AS \"201-B-01-OutletT\", \n\tLAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_OutletT\") AS \"202-B-01-OutletT\", \n\tLAST(\"MBR-Blower_Ctrl-B20203_OutletT\") AS \"202-B-03-OutletT\", \n\tLAST(\"MBR-Blower_Ctrl-B20204_OutletT\") AS \"202-B-04-OutletT\",\n        LAST(\"MBR-Blower_Ctrl-B20205_OutletT\") AS \"202-B-05-OutletT\", \n\tLAST(\"MBR-Blower_Ctrl-B20206_OutletT\") AS \"202-B-06-OutletT\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Outlet Temperature",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "rotrpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "id": 36,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n        LAST(\"Pre_Aeration-Blower_Ctrl-B20101_VFDRPM\") AS \"201-B-01-VFDRPM\", \n\tLAST(\"Anoxic_Aeration-Blower_Ctrl-B20201_VFDRPM\") AS \"202-B-01-VFDRPM\", \n\tLAST(\"MBR-Blower_Ctrl-B20203_VFDRPM\") AS \"202-B-03-VFDRPM\", \n\tLAST(\"MBR-Blower_Ctrl-B20204_VFDRPM\") AS \"202-B-04-VFDRPM\",\n        LAST(\"MBR-Blower_Ctrl-B20205_VFDRPM\") AS \"202-B-05-VFDRPM\", \n\tLAST(\"MBR-Blower_Ctrl-B20206_VFDRPM\") AS \"202-B-06-VFDRPM\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Inverter RPM ",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 53
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 60,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 54,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 59
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "kwatt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-06-kW"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 37
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 43,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 38,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 42
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "201-B-01-kW"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 75
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 85,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 76,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 84
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-01-kW"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 75
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 85,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 76,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 84
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "id": 37,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"Pre_Aeration-Blower_Ctrl-B20101_kW\")   AS \"201-B-01-kW\",\n    last(\"Anoxic_Aeration-Blower_Ctrl-B20201_kW\") AS \"202-B-01-kW\",\n    last(\"MBR-Blower_Ctrl-B20203_kW\")            AS \"202-B-03-kW\",\n    last(\"MBR-Blower_Ctrl-B20204_kW\")            AS \"202-B-04-kW\",\n    last(\"MBR-Blower_Ctrl-B20205_kW\")            AS \"202-B-05-kW\",\n    last(\"MBR-Blower_Ctrl-B20206_kW\")            AS \"202-B-06-kW\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Power",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 9999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "rothz"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      },
+      "id": 38,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"Pre_Aeration-Blower_Ctrl-B20101_VFDHz\")   / 10 AS \"201-B-01-Hz\",\n    last(\"Anoxic_Aeration-Blower_Ctrl-B20201_VFDHz\") / 10 AS \"202-B-01-Hz\",\n    last(\"MBR-Blower_Ctrl-B20203_VFDHz\")            / 10 AS \"202-B-03-Hz\",\n    last(\"MBR-Blower_Ctrl-B20204_VFDHz\")            / 10 AS \"202-B-04-Hz\",\n    last(\"MBR-Blower_Ctrl-B20205_VFDHz\")            / 10 AS \"202-B-05-Hz\",\n    last(\"MBR-Blower_Ctrl-B20206_VFDHz\")            / 10 AS \"202-B-06-Hz\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Inverter Frequency",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 3959
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 4400,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 99999999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 3960,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 4399
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "mmAq"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-06-PIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 5669
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 6300,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 9999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5670,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 6299
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "201-B-01-PIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4049
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4500,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 99999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4050,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 4499
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-01-PIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4049
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4500,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4050,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 4499
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 44
+      },
+      "id": 39,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"Pre_Aeration-Instruments-PIT20166\") AS \"201-B-01-PIT\",\n    last(\"Anoxic_Aeration-Instruments-PIT20267\") AS \"202-B-01-PIT\",\n    last(\"MBR-Instruments-PIT20268\") AS \"202-B-03-PIT\",\n    last(\"MBR-Instruments-PIT20269\") AS \"202-B-04-PIT\",\n    last(\"MBR-Instruments-PIT20270\") AS \"202-B-05-PIT\",\n    last(\"MBR-Instruments-PIT20271\") AS \"202-B-06-PIT\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Outlet Pressure",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "m3/min"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "201-B-01-FIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 62.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 70,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 63,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 69.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-01-FIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 62.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 70,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 63,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 69.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-03-FIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 45.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 52,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 46,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 51.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-04-FIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 45.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 52,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 46,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 51.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-05-FIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 45.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 52,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 46,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 51.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202-B-06-FIT"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 23.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 27,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 999999
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 24,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 26.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 53
+      },
+      "id": 40,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"Pre_Aeration-Instruments-FIT20160\") / 60 AS \"201-B-01-FIT\",\n    last(\"Anoxic_Aeration-Instruments-FIT20261\") / 60 AS \"202-B-01-FIT\",\n    last(\"MBR-Instruments-FIT20262\") / 60 AS \"202-B-03-FIT\",\n    last(\"MBR-Instruments-FIT20263\") / 60 AS \"202-B-04-FIT\",\n    last(\"MBR-Instruments-FIT20264\") / 60 AS \"202-B-05-FIT\",\n    last(\"MBR-Instruments-FIT20265\") / 60 AS \"202-B-06-FIT\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Flow Rate",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 80
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 90,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 81,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 89
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 53
+      },
+      "id": 41,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"Pre_Aeration-Blower_Ctrl-B20101_InvInTemp\") AS \"201-B-01-InvInTemp\",\n    last(\"Anoxic_Aeration-Blower_Ctrl-B20201_InvInTemp\") AS \"202-B-01-InvInTemp\",\n    last(\"MBR-Blower_Ctrl-B20203_InvInTemp\") AS \"202-B-03-InvInTemp\",\n    last(\"MBR-Blower_Ctrl-B20204_InvInTemp\") AS \"202-B-04-InvInTemp\",\n    last(\"MBR-Blower_Ctrl-B20205_InvInTemp\") AS \"202-B-05-InvInTemp\",\n    last(\"MBR-Blower_Ctrl-B20206_InvInTemp\") AS \"202-B-06-InvInTemp\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Inverter-in Temperature",
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {}
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 62
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "OutletPressure (mmAq)"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT\n    last(\"Pre_Aeration-Instruments-FIT20160\") / 60 AS \"FlowRate (m3/min)\",\n    last(\"Pre_Aeration-Instruments-PIT20166\") / 60 AS \"OutletPressure (mmAq)\"\nFROM \"autogen\".\"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "202-B-04-FIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "202-B-04-PIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "[201-B-01] Flow Rate vs. Pressure",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "rothz"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 62
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"Pre_Aeration-Blower_Ctrl-B20101_VFDHz\")   / 10 AS \"201-B-01-Hz\",\n    last(\"Anoxic_Aeration-Blower_Ctrl-B20201_VFDHz\") / 10 AS \"202-B-01-Hz\",\n    last(\"MBR-Blower_Ctrl-B20203_VFDHz\")            / 10 AS \"202-B-03-Hz\",\n    last(\"MBR-Blower_Ctrl-B20204_VFDHz\")            / 10 AS \"202-B-04-Hz\",\n    last(\"MBR-Blower_Ctrl-B20205_VFDHz\")            / 10 AS \"202-B-05-Hz\",\n    last(\"MBR-Blower_Ctrl-B20206_VFDHz\")            / 10 AS \"202-B-06-Hz\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Inverter Frequency (Time Series)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 70
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "x": {
+              "matcher": {
+                "id": "byType",
+                "options": "number"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byType",
+                "options": "number"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last(\"Anoxic_Aeration-Instruments-FIT20261\") / 60 AS \"FlowRate (m3/min)\", last(\"Anoxic_Aeration-Instruments-PIT20267\") / 60 AS \"OutletPressure (mmAq)\"\nFROM \"autogen\".\"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "202-B-04-FIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "202-B-04-PIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "[202-B-01] Flow Rate vs. Pressure",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 71
+      },
+      "id": 25,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "x": {
+              "matcher": {
+                "id": "byType",
+                "options": "number"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byType",
+                "options": "number"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last(\"MBR-Instruments-FIT20262\") / 60 AS \"FlowRate (m3/min)\", last(\"MBR-Instruments-PIT20268\") / 60 AS \"OutletPressure (mmAq)\"\nFROM \"autogen\".\"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "202-B-04-FIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "202-B-04-PIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "[202-B-03] Flow Rate vs. Pressure",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 79
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "FlowRate (m3/min)"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "OutletPressure (mmAq)"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last(\"MBR-Instruments-FIT20263\") / 60 AS \"FlowRate (m3/min)\", last(\"MBR-Instruments-PIT20269\") / 60 AS \"OutletPressure (mmAq)\"\nFROM \"autogen\".\"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "202-B-04-FIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "202-B-04-PIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "[202-B-04] Flow Rate vs. Pressure",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 80
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "FlowRate (m3/min)"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "OutletPressure (mmAq)"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT LAST(\"MBR-Instruments-FIT20264\") / 60 AS \"FlowRate (m3/min)\", LAST(\"MBR-Instruments-PIT20270\") / 60 AS \"OutletPressure (mmAq)\"\nFROM \"autogen\".\"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "202-B-04-FIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "202-B-04-PIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "[202-B-05] Flow Rate vs. Pressure",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 5
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 88
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mapping": "auto",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "FlowRate (m3/min)"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "OutletPressure (mmAq)"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last(\"MBR-Instruments-FIT20265\") / 60 AS \"FlowRate (m3/min)\", last(\"MBR-Instruments-PIT20271\") / 60 AS \"OutletPressure (mmAq)\"\nFROM \"autogen\".\"mqtt_consumer\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "202-B-04-FIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "202-B-04-PIT"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "[202-B-06] Flow Rate vs. Pressure",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": []
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "xychart"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "\"Pre_Aeration-Blower_Ctrl-B20101_A\"",
+          "value": "\"Pre_Aeration-Blower_Ctrl-B20101_A\""
+        },
+        "includeAll": false,
+        "name": "vars",
+        "options": [
+          {
+            "selected": true,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_A\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_A\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_A\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_A\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_A\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_A\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_A\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_A\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_A\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_A\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_A\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_A\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_DiffP\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_DiffP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_DiffP\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_DiffP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_DiffP\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_DiffP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_DiffP\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_DiffP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_DiffP\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_DiffP\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_InletP\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_InletP\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_InletP\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_InletP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_InletP\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_InletP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_InletP\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_InletP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_InletP\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_InletP\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_InletP\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_InletP\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_InletT\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_InletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_InletT\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_InletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_InletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_InletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_InletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_InletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_InletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_InletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_InletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_InletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_MotorT\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_MotorT\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_MotorT\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_MotorT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_MotorT\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_MotorT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_MotorT\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_MotorT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_MotorT\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_MotorT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_MotorT\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_MotorT\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_OutletT\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_OutletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_OutletT\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_OutletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_OutletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_OutletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_OutletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_OutletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_OutletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_OutletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_OutletT\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_OutletT\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_VFDRPM\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_VFDRPM\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_VFDRPM\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_VFDRPM\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_VFDRPM\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_VFDRPM\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_VFDRPM\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_VFDRPM\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_VFDRPM\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_VFDRPM\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_VFDRPM\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_VFDRPM\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_kW\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_kW\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_kW\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_kW\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_kW\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_kW\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_kW\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_kW\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_kW\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_kW\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_kW\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_kW\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Blower_Ctrl-B20101_InvInTemp\"",
+            "value": "\"Pre_Aeration-Blower_Ctrl-B20101_InvInTemp\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Blower_Ctrl-B20201_InvInTemp\"",
+            "value": "\"Anoxic_Aeration-Blower_Ctrl-B20201_InvInTemp\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20203_InvInTemp\"",
+            "value": "\"MBR-Blower_Ctrl-B20203_InvInTemp\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20204_InvInTemp\"",
+            "value": "\"MBR-Blower_Ctrl-B20204_InvInTemp\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20205_InvInTemp\"",
+            "value": "\"MBR-Blower_Ctrl-B20205_InvInTemp\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Blower_Ctrl-B20206_InvInTemp\"",
+            "value": "\"MBR-Blower_Ctrl-B20206_InvInTemp\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Instruments-PIT20166\"",
+            "value": "\"Pre_Aeration-Instruments-PIT20166\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Instruments-PIT20267\"",
+            "value": "\"Anoxic_Aeration-Instruments-PIT20267\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-PIT20268\"",
+            "value": "\"MBR-Instruments-PIT20268\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-PIT20269\"",
+            "value": "\"MBR-Instruments-PIT20269\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-PIT20270\"",
+            "value": "\"MBR-Instruments-PIT20270\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-PIT20271\"",
+            "value": "\"MBR-Instruments-PIT20271\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-Instruments-FIT20160\"",
+            "value": "\"Pre_Aeration-Instruments-FIT20160\""
+          },
+          {
+            "selected": false,
+            "text": "\"Anoxic_Aeration-Instruments-FIT20261\"",
+            "value": "\"Anoxic_Aeration-Instruments-FIT20261\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-FIT20262\"",
+            "value": "\"MBR-Instruments-FIT20262\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-FIT20263\"",
+            "value": "\"MBR-Instruments-FIT20263\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-FIT20264\"",
+            "value": "\"MBR-Instruments-FIT20264\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-FIT20265\"",
+            "value": "\"MBR-Instruments-FIT20265\""
+          }
+        ],
+        "query": "\"Pre_Aeration-Blower_Ctrl-B20101_A\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_A\",\n\"MBR-Blower_Ctrl-B20203_A\",\n\"MBR-Blower_Ctrl-B20204_A\",\n\"MBR-Blower_Ctrl-B20205_A\",\n\"MBR-Blower_Ctrl-B20206_A\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_DiffP\",\n\"MBR-Blower_Ctrl-B20203_DiffP\",\n\"MBR-Blower_Ctrl-B20204_DiffP\",\n\"MBR-Blower_Ctrl-B20205_DiffP\",\n\"MBR-Blower_Ctrl-B20206_DiffP\",\n\"Pre_Aeration-Blower_Ctrl-B20101_InletP\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_InletP\",\n\"MBR-Blower_Ctrl-B20203_InletP\",\n\"MBR-Blower_Ctrl-B20204_InletP\",\n\"MBR-Blower_Ctrl-B20205_InletP\",\n\"MBR-Blower_Ctrl-B20206_InletP\",\n\"Pre_Aeration-Blower_Ctrl-B20101_InletT\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_InletT\",\n\"MBR-Blower_Ctrl-B20203_InletT\",\n\"MBR-Blower_Ctrl-B20204_InletT\",\n\"MBR-Blower_Ctrl-B20205_InletT\",\n\"MBR-Blower_Ctrl-B20206_InletT\",\n\"Pre_Aeration-Blower_Ctrl-B20101_MotorT\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_MotorT\",\n\"MBR-Blower_Ctrl-B20203_MotorT\",\n\"MBR-Blower_Ctrl-B20204_MotorT\",\n\"MBR-Blower_Ctrl-B20205_MotorT\",\n\"MBR-Blower_Ctrl-B20206_MotorT\",\n\"Pre_Aeration-Blower_Ctrl-B20101_OutletT\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_OutletT\",\n\"MBR-Blower_Ctrl-B20203_OutletT\",\n\"MBR-Blower_Ctrl-B20204_OutletT\",\n\"MBR-Blower_Ctrl-B20205_OutletT\",\n\"MBR-Blower_Ctrl-B20206_OutletT\",\n\"Pre_Aeration-Blower_Ctrl-B20101_VFDRPM\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_VFDRPM\",\n\"MBR-Blower_Ctrl-B20203_VFDRPM\",\n\"MBR-Blower_Ctrl-B20204_VFDRPM\",\n\"MBR-Blower_Ctrl-B20205_VFDRPM\",\n\"MBR-Blower_Ctrl-B20206_VFDRPM\",\n\"Pre_Aeration-Blower_Ctrl-B20101_kW\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_kW\",\n\"MBR-Blower_Ctrl-B20203_kW\",\n\"MBR-Blower_Ctrl-B20204_kW\",\n\"MBR-Blower_Ctrl-B20205_kW\",\n\"MBR-Blower_Ctrl-B20206_kW\",\n\"Pre_Aeration-Blower_Ctrl-B20101_InvInTemp\",\n\"Anoxic_Aeration-Blower_Ctrl-B20201_InvInTemp\",\n\"MBR-Blower_Ctrl-B20203_InvInTemp\",\n\"MBR-Blower_Ctrl-B20204_InvInTemp\",\n\"MBR-Blower_Ctrl-B20205_InvInTemp\",\n\"MBR-Blower_Ctrl-B20206_InvInTemp\",\n\"Pre_Aeration-Instruments-PIT20166\",\n\"Anoxic_Aeration-Instruments-PIT20267\",\n\"MBR-Instruments-PIT20268\",\n\"MBR-Instruments-PIT20269\",\n\"MBR-Instruments-PIT20270\",\n\"MBR-Instruments-PIT20271\",\n\"Pre_Aeration-Instruments-FIT20160\",\n\"Anoxic_Aeration-Instruments-FIT20261\",\n\"MBR-Instruments-FIT20262\",\n\"MBR-Instruments-FIT20263\",\n\"MBR-Instruments-FIT20264\",\n\"MBR-Instruments-FIT20265\"",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Blower Health ",
+  "uid": "d1c218dc-33c0-4eb1-a4e6-7d7d6889e75b"
+}

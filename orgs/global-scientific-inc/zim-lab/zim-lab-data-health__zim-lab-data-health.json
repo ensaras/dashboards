@@ -1,0 +1,1083 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 30,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:13px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> fine &nbsp; <span style=\"color:#D9B84A\">●</span> needs attention &nbsp; <span style=\"color:#B877D9\">●</span> data problem &nbsp; <span style=\"color:#8E8E8E\">●</span> not applicable &nbsp;·&nbsp; ⓘ limits and definitions &nbsp;·&nbsp; For engineering and Ensaras support</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 1,
+      "panels": [],
+      "title": "Sensor data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${ds_influx}"
+      },
+      "description": "Fresh = readings in the last 5 minutes; Late = last reading 5–15 minutes ago; Stale = nothing for 15 minutes.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 11,
+                "result": {
+                  "color": "#73BF69",
+                  "text": "Fresh"
+                },
+                "to": 100000
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "#D9B84A",
+                  "text": "Late (5–15 min)"
+                },
+                "to": 10
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "#B877D9",
+                  "text": "Stale (> 15 min)"
+                },
+                "to": 0
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "Stale: nothing in 15 min",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#B877D9",
+                "value": 0
+              },
+              {
+                "color": "#D9B84A",
+                "value": 1
+              },
+              {
+                "color": "#73BF69",
+                "value": 11
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 3
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT count(*) FROM \"${measurement}\" WHERE time > now() - 15m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Data feed",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "readings",
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "max"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${ds_influx}"
+      },
+      "description": "Time of the most recent reading stored in InfluxDB.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "dateTimeFromNow"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 3
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Time$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT * FROM \"${measurement}\" WHERE time > now() - 30d ORDER BY time DESC LIMIT 1",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Last reading",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${ds_influx}"
+      },
+      "description": "Readings stored in the last 24 hours ÷ 1,440 (one per minute). Healthy ≥ 98 %, attention 90–98 %, problem below 90 %. Sites that send more than one reading a minute show 100 %+; use the hourly chart on the site view to spot their gaps.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "from": 100,
+                "result": {
+                  "color": "#73BF69",
+                  "text": "100 %+"
+                },
+                "to": 1000000
+              },
+              "type": "range"
+            }
+          ],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#B877D9",
+                "value": 0
+              },
+              {
+                "color": "#D9B84A",
+                "value": 90
+              },
+              {
+                "color": "#73BF69",
+                "value": 98
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 3
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT count(*) FROM \"${measurement}\" WHERE time > now() - 24h GROUP BY time(1h) fill(0)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Completeness, last 24 h",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "readings",
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "max"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "completeness",
+            "binary": {
+              "left": "readings",
+              "operator": "/",
+              "right": "14.4"
+            },
+            "mode": "binary",
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "A daily form is one entered on at least 20 of the last 30 days (from its own history). Missed = no entry dated yesterday (IST).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "missed"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 3
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_cbgcascadedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_chemicalstocktrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_coverprotectiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentflowaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentphaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipment WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentcurrentdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentnoisedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimemeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmenttemperaturedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvibrationdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvoltagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_farmersurveydata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_feedstockdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_fertilizersalestrackingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_gascompositiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_location WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_maintenancedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_mbrcleaninglogandchemicalconsumptiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacconsumptionaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacorderaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_poweroutagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pumpdischargepressuredata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_quantitativelimit WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_retailoutletmeterdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgecaketrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgewastagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankermerutdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tanklevelaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM weighment_data WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id), s AS (SELECT COALESCE(NULLIF(f.title_override,''), f.name) AS form, COALESCE(e.entries_30d,0) AS entries_30d, COALESCE(e.days_30d,0) AS days_30d, e.last_ever, COALESCE(e.had_yday,false) AS had_yday FROM user_customform f LEFT JOIN e ON e.form_id = f.id WHERE f.is_enabled AND f.is_active AND f.team_id = ${team}) SELECT count(*) FILTER (WHERE days_30d >= 20 AND NOT had_yday) AS \"missed\", count(*) FILTER (WHERE days_30d >= 20) AS \"daily forms\" FROM s",
+          "refId": "A"
+        }
+      ],
+      "title": "Daily forms missed yesterday",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${ds_influx}"
+      },
+      "description": "Most readings received for any tag in each hour. 60 = one per minute; lower bars show gaps.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "readings",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 60,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              },
+              {
+                "color": "#9fa2a8",
+                "value": 60
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT count(*) FROM \"${measurement}\" WHERE $timeFilter GROUP BY time(1h) fill(0)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Readings stored per hour · expected 60",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "readings",
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "max"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${ds_influx}"
+      },
+      "description": "Tags seen in the last 7 days with no reading in the last 60 minutes. A renamed tag also appears here for up to 7 days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "None",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT count(*) FROM \"${measurement}\" WHERE time > now() - 60m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT count(*) FROM \"${measurement}\" WHERE time > now() - 7d",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Stopped arriving · no reading for 60 min",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(count)_(.*)$",
+            "renamePattern": "$2"
+          }
+        },
+        {
+          "filter": {
+            "id": "byRefId",
+            "options": "A"
+          },
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "seriesToRows",
+            "reducers": [
+              "max"
+            ]
+          }
+        },
+        {
+          "filter": {
+            "id": "byRefId",
+            "options": "B"
+          },
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "seriesToRows",
+            "reducers": [
+              "lastNotNull"
+            ]
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Field",
+            "mode": "outerTabular"
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "Last *"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "Max"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Last *"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "isNull",
+                  "options": {}
+                },
+                "fieldName": "Max"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Max"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Max": true
+            },
+            "renameByName": {
+              "Field": "Tag",
+              "Last *": "Readings, 7 days"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${ds_influx}"
+      },
+      "description": "Counters and totalizers (found by name: total, totalizer, runtime, running hours) whose hourly minimum dropped below the previous hour. Catches resets and zero glitches. The largest drop is shown.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "None",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Largest drop"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#B877D9",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 16,
+        "x": 8,
+        "y": 14
+      },
+      "id": 31,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${ds_influx}"
+          },
+          "query": "SELECT min(*) FROM (SELECT difference(min(/(?i)(total|totlyzer|FIQ|runtime|running_hours_hr)/)) FROM \"${measurement}\" WHERE time > now() - 7d GROUP BY time(1h) fill(none)) WHERE time > now() - 7d",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Went backwards · last 7 days",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^min_difference_(.*)$",
+            "renamePattern": "$1"
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "seriesToRows",
+            "reducers": [
+              "lastNotNull"
+            ]
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "lower",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Last *"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "renameByName": {
+              "Field": "Tag",
+              "Last *": "Largest drop"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Form entry",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Every enabled form for this site. Status is worked out from each form's own history.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Daily, up to date": {
+                        "color": "#73BF69"
+                      },
+                      "Missed yesterday": {
+                        "color": "#D9B84A"
+                      },
+                      "Never used": {
+                        "color": "#d8d9da"
+                      },
+                      "No entries in 30 days": {
+                        "color": "#d8d9da"
+                      },
+                      "Occasional": {
+                        "color": "#d8d9da"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Last entry ever"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY, HH:mm"
+              },
+              {
+                "id": "noValue",
+                "value": "—"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 16,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_cbgcascadedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_chemicalstocktrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_coverprotectiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentflowaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentphaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipment WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentcurrentdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentnoisedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimemeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmenttemperaturedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvibrationdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvoltagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_farmersurveydata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_feedstockdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_fertilizersalestrackingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_gascompositiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_location WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_maintenancedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_mbrcleaninglogandchemicalconsumptiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacconsumptionaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacorderaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_poweroutagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pumpdischargepressuredata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_quantitativelimit WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_retailoutletmeterdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgecaketrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgewastagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankermerutdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tanklevelaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM weighment_data WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = ${team}) GROUP BY form_id), s AS (SELECT COALESCE(NULLIF(f.title_override,''), f.name) AS form, COALESCE(e.entries_30d,0) AS entries_30d, COALESCE(e.days_30d,0) AS days_30d, e.last_ever, COALESCE(e.had_yday,false) AS had_yday FROM user_customform f LEFT JOIN e ON e.form_id = f.id WHERE f.is_enabled AND f.is_active AND f.team_id = ${team}) SELECT form AS \"Form\", entries_30d AS \"Entries, 30 days\", days_30d AS \"Days with entries\", last_ever AS \"Last entry ever\", CASE WHEN last_ever IS NULL THEN 'Never used' WHEN entries_30d = 0 THEN 'No entries in 30 days' WHEN days_30d >= 20 AND NOT had_yday THEN 'Missed yesterday' WHEN days_30d >= 20 THEN 'Daily, up to date' ELSE 'Occasional' END AS \"Status\" FROM s ORDER BY last_ever ASC NULLS FIRST",
+          "refId": "A"
+        }
+      ],
+      "title": "Forms · longest without an entry first",
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "5m",
+  "schemaVersion": 42,
+  "tags": [
+    "data-health",
+    "managed-by-git",
+    "zim-lab",
+    "zld"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "ZimLab",
+          "value": "bfj8ahkh4ketce"
+        },
+        "label": "Sensor data",
+        "name": "ds_influx",
+        "options": [],
+        "query": "influxdb",
+        "refresh": 1,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "text": "plc",
+          "value": "plc"
+        },
+        "hide": 2,
+        "name": "measurement",
+        "query": "plc",
+        "skipUrlSync": true,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "text": "396",
+          "value": "396"
+        },
+        "hide": 2,
+        "name": "team",
+        "query": "396",
+        "skipUrlSync": true,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Zim Lab – Data Health",
+  "uid": "zim-lab-data-health"
+}

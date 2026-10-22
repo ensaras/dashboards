@@ -1,0 +1,2467 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 15,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let inlet = [];\nlet outlet = [];\n\ncontext.panel.data.series.forEach((s) => {\n  timeData = s.fields.find((f) => f.name === \"Time\")?.values ?? [];\n  console.info(s);\n  if (s.name === 'mqtt.Inlet') {\n    inlet = s.fields.find((f) => f.name === \"Value\")?.values ?? [];\n  }\n  if (s.name === 'mqtt.Outlet') {\n    outlet = s.fields.find((f) => f.name === \"Value\")?.values ?? [];\n  }\n});\n\nlet totalDailyFlow = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += inlet[i] || 0;\n  total += outlet[i] || 0;\n  totalDailyFlow.push(total);\n}\n\n// Format dates for x-axis with Asia/Kolkata timezone\nconst formattedDates = timeData.map((d) => {\n  const date = new Date(d);\n  const kolkataDate = new Intl.DateTimeFormat(\"en-US\", {\n    timeZone: \"Asia/Kolkata\",\n    year: \"numeric\",\n    month: \"2-digit\",\n    day: \"2-digit\",\n  }).formatToParts(date);\n\n  const month = kolkataDate.find((part) => part.type === \"month\").value;\n  const day = kolkataDate.find((part) => part.type === \"day\").value;\n  const year = kolkataDate.find((part) => part.type === \"year\").value;\n\n  return `${month}/${day}/${year}`;\n});\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'shadow',\n    },\n    formatter: function (params) {\n      let tooltipText = `${params[0].axisValueLabel}<br/>`;\n      params.forEach((item) => {\n        let value = item.data === '-' ? '-' : `${item.data} m³`;\n        tooltipText += `${item.marker} ${item.seriesName}: ${value} <br/>`;\n      });\n      return tooltipText;\n    },\n  },\n  legend: {\n    data: [\"Daily Membrane Inlet Flow\", \"Daily Membrane Outlet Flow\"],\n  },\n  grid: {\n    left: \"5%\",\n    right: \"4%\",\n    bottom: \"10%\",\n    containLabel: true,\n  },\n  xAxis: {\n    type: \"category\",\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1;\n        const day = date.getDate();\n        return `${month}/${day}`;\n      },\n    },\n  },\n  yAxis: {\n    type: \"value\",\n    axisLabel: {\n      formatter: function (val) {\n        return `${val} m³`;\n      },\n    },\n  },\n  series: [\n    {\n      name: \"Daily Membrane Inlet Flow\",\n      type: \"bar\",\n      data: inlet.map(value => (value == null || value <= 0 ? \"-\" : Math.round(value))),\n    },\n    {\n      name: \"Daily Membrane Outlet Flow\",\n      type: \"bar\",\n      data: outlet.map(value => (value == null || value <= 0 ? \"-\" : Math.round(value))),\n    },\n  ],\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  SUM(\"FT-0303 Inlet Flow\") / 60 AS \"Inlet\",\n  SUM(\"FT-0306 Outlet Flow\") / 60 AS \"Outlet\"\nFROM \"mqtt\"\nWHERE $timeFilter\nGROUP BY time(1d,18h30m)\nfill(0)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Membrane Daily Inlet and Outlet Flows",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "interval": "1h",
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (!context.panel.data?.series?.length) {\n  return {\n    title: {\n      text: \"No Data Available\",\n      left: \"center\"\n    }\n  };\n}\n\nconst inletFrame = context.panel.data.series.find(\n  s => s.name === \"mqtt.Inlet\"\n);\n\nconst outletFrame = context.panel.data.series.find(\n  s => s.name === \"mqtt.Outlet\"\n);\n\nif (!inletFrame || !outletFrame) {\n  return {\n    title: {\n      text: \"Inlet/Outlet data not found\",\n      left: \"center\"\n    }\n  };\n}\n\nconst inletTimes = Array.from(inletFrame.fields[0].values);\nconst inletValues = Array.from(inletFrame.fields[1].values);\n\nconst outletTimes = Array.from(outletFrame.fields[0].values);\nconst outletValues = Array.from(outletFrame.fields[1].values);\n\nconst inletSeries = inletTimes.map((t, i) => [\n  t,\n  inletValues[i] == null ? null : Number(inletValues[i].toFixed(0))\n]);\n\nconst outletSeries = outletTimes.map((t, i) => [\n  t,\n  outletValues[i] == null ? null : Number(outletValues[i].toFixed(0))\n]);\n\nreturn {\n  animation: false,\n\n  tooltip: {\n    trigger: \"axis\",\n    axisPointer: {\n      type: \"shadow\"\n    },\n    formatter: function (params) {\n      if (!params.length) return \"\";\n\n      const timestamp = params[0].value[0];\n\n      const date = new Intl.DateTimeFormat(\"en-IN\", {\n        timeZone: \"Asia/Kolkata\",\n        year: \"numeric\",\n        month: \"2-digit\",\n        day: \"2-digit\",\n        hour: \"2-digit\",\n        minute: \"2-digit\",\n        hour12: false\n      }).format(new Date(timestamp));\n\n      let html = `<b>${date}</b><br/>`;\n\n      params.forEach(item => {\n        const value = item.value?.[1];\n\n        html +=\n          `${item.marker} ${item.seriesName}: ` +\n          `${value == null ? \"-\" : value.toLocaleString()} m³<br/>`;\n      });\n\n      return html;\n    }\n  },\n\n  legend: {\n    top: 0,\n    data: [\n      \"Membrane Inlet Flow\",\n      \"Membrane Outlet Flow\"\n    ]\n  },\n\n  grid: {\n    left: \"5%\",\n    right: \"3%\",\n    top: \"12%\",\n    bottom: \"15%\",\n    containLabel: true\n  },\n\n  xAxis: {\n    type: \"time\",\n    axisLabel: {\n      rotate: 45,\n      formatter: function (value) {\n        return new Intl.DateTimeFormat(\"en-IN\", {\n          timeZone: \"Asia/Kolkata\",\n          month: \"2-digit\",\n          day: \"2-digit\",\n          hour: \"2-digit\",\n          hour12: false\n        }).format(new Date(value));\n      }\n    }\n  },\n\n  yAxis: {\n    type: \"value\",\n    name: \"m³\",\n    nameLocation: \"middle\",\n    nameGap: 50\n  },\n\n  series: [\n    {\n      name: \"Membrane Inlet Flow\",\n      type: \"bar\",\n      data: inletSeries,\n      barGap: \"0%\"\n    },\n    {\n      name: \"Membrane Outlet Flow\",\n      type: \"bar\",\n      data: outletSeries\n    }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  SUM(\"FT-0303 Inlet Flow\") / 60 AS \"Inlet\",\n  SUM(\"FT-0306 Outlet Flow\") / 60 AS \"Outlet\"\nFROM \"mqtt\"\nWHERE $timeFilter\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Membrane Hourly Inlet and Outlet Flows",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 1,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \n\tmean(\"FT-0303 Inlet Flow\") AS \"FT0303 Inlet Flow (m3/h)\",\n\tmean(\"FT-0306 Outlet Flow\") AS \"FT0306 Outlet Flow (m3/h)\"\nFROM \"mqtt\" \nWHERE $timeFilter \nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Membrane Inlet and Outlet Flow Rates (m3/h)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "pressurebar"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 4,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \n\tmean(\"PT-0121 Instrument Air Inlet Pressure\") AS \"PT-0121 Instrument Air Inlet Pressure\",\n\tmean(\"PT-0302 Inlet Pressure of H2S Removal Vessels (V-400 A/B)\") AS \"PT-0302 Inlet Pressure of H2S Removal Vessels (V-400 A/B)\",\n\tmean(\"PT-0314 Outlet Pressure of Second Stage Mem\") AS \"PT-0314 Outlet Pressure of Second Stage Mem\",\n\tmean(\"PT-0317 Outlet Pressure of Second Stage Mem\") AS \"PT-0317 Outlet Pressure of Second Stage Mem\",\n\tmean(\"PT-0707 Inlet Pressure of First Stage Mem\") AS \"PT-0707 Inlet Pressure of First Stage Mem\"\nFROM \"mqtt\" \nWHERE $timeFilter \nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Membrane PT Readings",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 5,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \n\tmean(\"TT-0212 Inlet Temp of Low Pressure Cooler (E-201)\") AS \"TT-0212 Inlet Temp of Low Pressure Cooler (E-201)\",\n\tmean(\"TT-0307 Inlet Temp of H2S Removal Vessels (V-400 A/B)\") AS \"TT-0307 Inlet Temp of H2S Removal Vessels (V-400 A/B)\",\n\tmean(\"TT-0313 Outlet Temp of Second Stage Mem\") AS \"TT-0313 Outlet Temp of Second Stage Mem\",\n\tmean(\"TT-0415 Upstream Temp of Dig Gas Filter (F-401)\") AS \"TT-0415 Upstream Temp of Dig Gas Filter (F-401)\",\n\tmean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\") AS \"TT-0605 Inlet Temp of High Pressure Separator (V-600)\",\n\tmean(\"TT-0708 Inlet Temp  of First Stage Mem\") AS \"TT-0708 Inlet Temp  of First Stage Mem\",\n\tmean(\"TT-0918 Inlet Temp of Second Stage Mem\") AS \"TT-0918 Inlet Temp of Second Stage Mem\"\nFROM \"mqtt\" \nWHERE $timeFilter \nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Membrane TT Readings",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Difference: TT0708 - TT0605 (1m Avg)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Difference: TT0708 - TT0605 (1h Avg)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Difference: TT0708 - TT0605 (24h Avg)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TT-0918 Inlet Temp of Second Stage Mem"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 7,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TT-0918 Inlet Temp of Second Stage Mem",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"TT-0918 Inlet Temp of Second Stage Mem\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\nAS \"Difference: TT0708 - TT0605 (1m Avg)\"\nFROM \"mqtt\"\nWHERE $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 0\nGROUP BY time($__interval)\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\nAS \"Difference: TT0708 - TT0605 (1h Avg)\"\nFROM \"mqtt\"\nWHERE $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 0\nGROUP BY time(1h)\nfill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\nAS \"Difference: TT0708 - TT0605 (24h Avg)\"\nFROM \"mqtt\"\nWHERE $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 0\nGROUP BY time(24h)\nfill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TT Difference Readings (When Inlet FIT>0)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TT-0918 Inlet Temp of Second Stage Mem"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Difference: TT0708 - TT0605 (1m Avg)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Difference: TT0708 - TT0605 (1h Avg)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Difference: TT0708 - TT0605 (24h Avg)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 8,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TT-0918 Inlet Temp of Second Stage Mem",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"TT-0918 Inlet Temp of Second Stage Mem\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (1m Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 100\nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (1h Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 100\nGROUP BY time(1h) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (24h Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 100\nGROUP BY time(24h) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TT Difference Readings (When Inlet FIT>100)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 9,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (1m Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND (\"FT-0303 Inlet Flow\" > 500)\nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (1h Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND (\"FT-0303 Inlet Flow\" > 500)\nGROUP BY time(1h) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (24h Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 500\nGROUP BY time(24h) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TT Difference Readings (When Inlet FIT>500)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 11,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (1m Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 900\nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (1h Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 900\nGROUP BY time(1h) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference: TT0708 - TT0605 (24h Avg)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 900\nGROUP BY time(24h) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TT Difference Readings (When Inlet FIT>900)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0605 Inlet Temp of High Pressure Separator (V-600)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TT-0708 Inlet Temp  of First Stage Mem"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "id": 13,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Difference: TT0708 - TT0605 (1m Avg)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference (1m)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 1200\nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Difference: TT0708 - TT0605 (1h Avg)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference (1h)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 1200\nGROUP BY time(1h) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Difference: TT0708 - TT0605 (24h Avg)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  mean(\"TT-0708 Inlet Temp  of First Stage Mem\")\n  -\n  mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\")\n  AS \"Difference (24h)\"\nFROM mqtt\nWHERE\n  $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 1200\nGROUP BY time(24h) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TT Difference Readings (When Inlet FIT>1200)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "lengthmm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "id": 3,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "LT0208 - Level Low Pressure Separator",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"LT-0208 Low Pressure Separator (V-200) Level\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "LT0614 - Level High Pressure Separator",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"LT-0614 High Pressure Separator (V-600) Level\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Membrane LT Readings",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bar"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 50
+      },
+      "id": 14,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT \n\tmean(\"PT-101 Vilter Suction Pressure\") AS \"PT-101 Vilter Suction Pressure\",\n\tmean(\"PT-0314 Outlet Pressure of Second Stage Mem\") AS \"PT-0314 Outlet Pressure of Second Stage Mem\"\nFROM \"mqtt\" \nWHERE $timeFilter \nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "PT-101 and PT-0314",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1m Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (1h Avg)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Difference: TT0708 - TT0605 (24h Avg)"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 60
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TT-0605 Inlet Temp of High Pressure Separator (V-600)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"TT-0605 Inlet Temp of High Pressure Separator (V-600)\") FROM \"mqtt\"\nWHERE $timeFilter AND (\"FT-0303 Inlet Flow\" > 500)\nGROUP BY time($__interval) fill(null) ",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "TT-0708 Inlet Temp  of First Stage Mem",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"TT-0708 Inlet Temp  of First Stage Mem\") FROM \"mqtt\" \nWHERE $timeFilter AND (\"FT-0303 Inlet Flow\" > 500)\nGROUP BY time($__interval) fill(null) ",
+          "rawQuery": true,
+          "refId": "J",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "TT 0708 and TT-0605 (When Inlet FIT>500)",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Membrane Operations Data",
+  "uid": "dbb838a8-423d-44b5-8012-6044af944232"
+}

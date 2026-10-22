@@ -1,0 +1,774 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "CH4 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "query": "SELECT mean(\"ANALYZER-1 Methane (CH4)\") AS \"CH4 (%)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(1d) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "CO2 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Carbon Dioxide (CO2)\") AS \"CO2 (%)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(1d) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "O2 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Oxygen (O2)\") AS \"O2 (%)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(1d) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "N2 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT \n  100 \n  - mean(\"ANALYZER-1 Oxygen (O2)\") \n  - mean(\"ANALYZER-1 Carbon Dioxide (CO2)\") \n  - mean(\"ANALYZER-1 Methane (CH4)\") \nAS \"Balance Gas (%)\"\nFROM \"mqtt\"\nWHERE $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 1100\nGROUP BY time(1d) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "H2S (ppm)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Hydrogen Sulfide (H2S)\") AS \"H2S (ppm)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(1d) fill(null) tz('Asia/Kolkata') ",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Gas Quality Monitor - Daily Averages",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "CH4 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "query": "SELECT mean(\"ANALYZER-1 Methane (CH4)\") AS \"CH4 (%)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(15m) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "CO2 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Carbon Dioxide (CO2)\") AS \"CO2 (%)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(15m) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "O2 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Oxygen (O2)\") AS \"O2 (%)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(15m) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "N2 (%)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT \n  100 \n  - mean(\"ANALYZER-1 Oxygen (O2)\") \n  - mean(\"ANALYZER-1 Carbon Dioxide (CO2)\") \n  - mean(\"ANALYZER-1 Methane (CH4)\") \nAS \"Balance Gas (%)\"\nFROM \"mqtt\"\nWHERE $timeFilter\n  AND \"FT-0303 Inlet Flow\" > 1100\nGROUP BY time(15m) fill(null) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "H2S (ppm)",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Hydrogen Sulfide (H2S)\") AS \"H2S (ppm)\" FROM \"mqtt\" WHERE $timeFilter AND \"FT-0303 Inlet Flow\" > 1100 GROUP BY time(15m) fill(null) tz('Asia/Kolkata') ",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Gas Quality Monitor - 15 Minute Averages",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 8,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 4
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 4,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "CO2 - 1hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT mean(\"ANALYZER-1 Carbon Dioxide (CO2)\")\nFROM \"mqtt\"\nWHERE time > now() - 1h \n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "CO2 - 24hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Carbon Dioxide (CO2)\")\nFROM \"mqtt\"\nWHERE time > now() - 24h \n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "CO2 Reading While Raw Gas Flow > 1100 m3/hr",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 11
+      },
+      "id": 2,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "CH4 - 1hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT mean(\"ANALYZER-1 Methane (CH4)\") AS \"CH4 (%)\"\nFROM \"mqtt\"\nWHERE time > now() - 1h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "CH4 - 24hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Methane (CH4)\") AS \"CH4 (%)\"\nFROM \"mqtt\"\nWHERE time > now() - 24h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "CH4 Reading While Raw Gas Flow > 1100 m3/hr",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 0.5
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 11,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "N2 - 1hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT \n  100 \n  - mean(\"ANALYZER-1 Oxygen (O2)\") \n  - mean(\"ANALYZER-1 Carbon Dioxide (CO2)\") \n  - mean(\"ANALYZER-1 Methane (CH4)\") \nAS \"Balance Gas (%)\"\nFROM \"mqtt\"\nWHERE time > now() - 1h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "N2 - 24hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT \n  100 \n  - mean(\"ANALYZER-1 Oxygen (O2)\") \n  - mean(\"ANALYZER-1 Carbon Dioxide (CO2)\") \n  - mean(\"ANALYZER-1 Methane (CH4)\") \nAS \"Balance Gas (%)\"\nFROM \"mqtt\"\nWHERE time > now() - 24h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "N2 Reading While Raw Gas Flow > 1100 m3/hr",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 0.5
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 6,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "O2 - 1hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT mean(\"ANALYZER-1 Oxygen (O2)\") AS \"O2 (%)\"\nFROM \"mqtt\"\nWHERE time > now() - 1h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "O2 - 24hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"ANALYZER-1 Oxygen (O2)\") AS \"O2 (%)\"\nFROM \"mqtt\"\nWHERE time > now() - 24h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "O2 Reading While Raw Gas Flow > 1100 m3/hr",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 10,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "ppm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 8,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "H2S - 1hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT mean(\"ANALYZER-1 Hydrogen Sulfide (H2S)\") AS \"H2S\"\nFROM \"mqtt\"\nWHERE time > now() - 1h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "H2S - 24hr Avg",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"ANALYZER-1 Hydrogen Sulfide (H2S)\") AS \"H2S\"\nFROM \"mqtt\"\nWHERE time > now() - 24h\n  AND \"FT-0303 Inlet Flow\" > 1100",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "H2S Reading While Raw Gas Flow > 1100 m3/hr",
+      "type": "gauge"
+    }
+  ],
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Meerut CBG Plant - Gas Quality Monitor Dashboard",
+  "uid": "e6a26aab-7941-47dd-b0e4-28a58d13071d"
+}

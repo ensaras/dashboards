@@ -1,0 +1,539 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let yellowTankerValues = [], insdustrialTankerValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'D') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    yellowTankerValues = s.fields.find(f => f.name === 'D')?.values ?? [];\n  } else if (s.refId === 'E') {\n    insdustrialTankerValues = s.fields.find(f => f.name === 'E')?.values ?? [];\n  }\n});\n\n// Calculate total daily consumption\nlet totalDailyTankerRevenue = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += yellowTankerValues[i] || 0;\n  total += insdustrialTankerValues[i] || 0;\n  totalDailyTankerRevenue.push(total);\n}\n\n// Calculate the average total daily consumption\nconst averageTotalDailyTankerRevenue = totalDailyTankerRevenue.reduce((sum, value) => sum + value, 0) / totalDailyTankerRevenue.length;\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  title: {\n    text: `Average Daily Tanker Revenue: {value|${averageTotalDailyTankerRevenue.toFixed(2)} OMR/day}`,\n    left: 'center',\n    bottom: 0,\n    textStyle: {\n      fontSize: 20, // Increased the font size of the title text\n      rich: {\n        value: {\n          color: '#00ff00',\n          fontSize: 24, // Increased the font size of the value\n          fontWeight: 'bold'\n        }\n      }\n    }\n  },\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['Yellow Tanker', 'Industrial Tanker', 'Total Tanker Revenue']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Daily Tanker Revnue',\n    nameLocation: 'middle',\n    nameGap: 70,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'Yellow Tanker',\n      type: 'bar',\n      stack: 'total',\n      data: yellowTankerValues,\n      itemStyle: {\n        color: '#f5de49' // Set the color to yellow\n      }\n    },\n    {\n      name: 'Industrial Tanker',\n      type: 'bar',\n      stack: 'total',\n      data: insdustrialTankerValues,\n      itemStyle: {\n        color: '#5fb4f5' // Set the color to blue\n      }\n\n    }\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT \n        generate_series(\n            $__timeFrom()::date, \n            $__timeTo()::date, \n            '1 day'::interval\n        )::date AS date\n),\ntanker_data AS (\n    SELECT \n        \"date\"::date AS date, \n        SUM(\n            (\n                CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n            ) * tanker_capacity\n        ) / 1000 AS \"Yellow Tanker\"\n    FROM \n        user_tankerdata \n    WHERE \n        form_id = 75\n        AND $__timeFilter(\"date\")\n        AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\n    GROUP BY \n        \"date\"\n)\nSELECT \n    DATE_TRUNC('day', ds.date) AS \"Month\", \n    COALESCE(SUM(td.\"Yellow Tanker\"), 0) AS \"Monthly Yellow Tanker\"\nFROM \n    date_series ds\nLEFT JOIN \n    tanker_data td ON ds.date = td.date\nWHERE\n        $__timeFilter(ds.date)\n        AND ds.date >= CAST($__timeFrom() AS timestamp) \n        AND ds.date < CAST($__timeTo() AS timestamp)\nGROUP BY \n    DATE_TRUNC('day', ds.date)\nORDER BY \n    \"Month\";\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    \"date\" AS \"Date\", \n    (SUM(\n        (\n            CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n        ) * tanker_capacity\n    )/1000) AS \"Green Tanker\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 169\nAND\n  $__timeFilter(\"date\")\n  AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\nGROUP BY \n    \"date\"\nORDER BY\n    \"date\" ;\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    SELECT \n        generate_series(\n            $__timeFrom()::date, \n            $__timeTo()::date, \n            '1 day'::interval\n        )::date AS date\n),\ntanker_data AS (\n    SELECT \n        \"date\"::date AS date, \n        (SUM(\n            (\n                CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n            ) * tanker_capacity\n        ) / 1000)*1.5 AS \"Industrial Tanker\"\n    FROM \n        user_tankerdata \n    WHERE \n        form_id = 205\n        AND $__timeFilter(\"date\")\n        AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\n    GROUP BY \n        \"date\"\n)\nSELECT \n    DATE_TRUNC('day', ds.date) AS \"Month\", \n    COALESCE(SUM(td.\"Industrial Tanker\"), 0) AS \"Monthly Industrial Tanker\"\nFROM \n    date_series ds\nLEFT JOIN \n    tanker_data td ON ds.date = td.date\nWHERE\n        $__timeFilter(ds.date)\n        AND ds.date >= CAST($__timeFrom() AS timestamp) \n        AND ds.date < CAST($__timeTo() AS timestamp)\nGROUP BY \n    DATE_TRUNC('day', ds.date)\nORDER BY \n    \"Month\";\n",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "D",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$C",
+          "hide": false,
+          "refId": "E",
+          "type": "math"
+        }
+      ],
+      "title": "Daily Tanker Revenue (OMR)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 1,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let yellowTankerValues = [], insdustrialTankerValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'C') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    yellowTankerValues = s.fields.find(f => f.name === 'C')?.values ?? [];\n  } else if (s.refId === 'D') {\n    insdustrialTankerValues = s.fields.find(f => f.name === 'D')?.values ?? [];\n  }\n});\n\n// Calculate total daily consumption\nlet totalMonthlyTankerRevenue = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += yellowTankerValues[i] || 0;\n  total += insdustrialTankerValues[i] || 0;\n  totalMonthlyTankerRevenue.push(total);\n}\n\n// Calculate the average total daily consumption\nconst averageTotalMonthlyTankerRevenue = totalMonthlyTankerRevenue.reduce((sum, value) => sum + value, 0) / totalMonthlyTankerRevenue.length;\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['Yellow Tanker', 'Industrial Tanker', 'Total Tanker Revenue']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Monthly Tanker Revnue (OMR)',\n    nameLocation: 'middle',\n    nameGap: 70,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'Yellow Tanker',\n      type: 'bar',\n      stack: 'total',\n      data: yellowTankerValues,\n      itemStyle: {\n        color: '#f5de49' // Set the color to yellow\n      },\n    },\n    {\n      name: 'Industrial Tanker',\n      type: 'bar',\n      stack: 'total',\n      data: insdustrialTankerValues,\n      itemStyle: {\n        color: '#5fb4f5' // Set the color to blue\n      },\n      label: {\n        show: true,\n        position: 'top',\n        formatter: function (params) {\n          return totalMonthlyTankerRevenue[params.dataIndex].toFixed(2); // Format to 2 decimal places\n        },\n      }\n    }\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    -- Generate series for the months in the range of time_from to time_to\n    SELECT \n        generate_series(\n            date_trunc('month', $__timeFrom()::timestamp)::date,  -- Start of the month for $__timeFrom\n            date_trunc('month', $__timeTo()::timestamp)::date,      -- Start of the month for $__timeTo\n            '1 month'::interval\n        )::date AS month_start\n),\ntanker_data AS (\n    -- Calculate the total for \"Yellow Tanker\" per day\n    SELECT \n        \"date\"::date AS date, \n        SUM(\n            (\n                CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n            ) * tanker_capacity\n        ) / 1000 AS \"Yellow Tanker\"\n    FROM \n        user_tankerdata \n    WHERE \n        form_id = 75\n        AND $__timeFilter(\"date\")\n        AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\n    GROUP BY \n        \"date\"\n)\nSELECT \n    DATE_TRUNC('month', ds.month_start) AS \"Month\", \n    COALESCE(SUM(td.\"Yellow Tanker\"), 0) AS \"Monthly Yellow Tanker\"\nFROM \n    date_series ds\nLEFT JOIN \n    tanker_data td ON td.date >= ds.month_start \n                 AND td.date < ds.month_start + interval '1 month'\nWHERE \n    -- Only include the current month if fully included\n    (\n        -- If the selected time range includes the full current month (October)\n        (ds.month_start = date_trunc('month', now()::timestamp) \n         AND $__timeFrom()::timestamp <= now()::timestamp)\n        OR\n        -- Exclude September as it is partially included (partial month)\n        (ds.month_start > date_trunc('month', $__timeFrom()::timestamp)\n         AND ds.month_start <= date_trunc('month', $__timeTo()::timestamp))\n    )\nGROUP BY \n    DATE_TRUNC('month', ds.month_start)\nORDER BY \n    \"Month\";\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    -- Generate series from the first day of $__timeFrom() to the first day of $__timeTo()\n    SELECT \n        generate_series(\n            date_trunc('month', $__timeFrom()::timestamp),  -- Start of the month for $__timeFrom\n            date_trunc('month', $__timeTo()::timestamp),    -- Start of the month for $__timeTo\n            '1 month'::interval\n        )::date AS month_start\n),\ntanker_data AS (\n    -- Calculate the total \"Industrial Tanker\" per day\n    SELECT \n        \"date\"::date AS date, \n        (SUM(\n            (\n                CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n                CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n            ) * tanker_capacity\n        ) / 1000) * 1.5 AS \"Industrial Tanker\"\n    FROM \n        user_tankerdata \n    WHERE \n        form_id = 205\n        AND $__timeFilter(\"date\")\n        AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\n    GROUP BY \n        \"date\"\n)\nSELECT \n    DATE_TRUNC('month', ds.month_start) AS \"Month\", \n    COALESCE(SUM(td.\"Industrial Tanker\"), 0) AS \"Monthly Industrial Tanker\"\nFROM \n    date_series ds\nLEFT JOIN \n    tanker_data td ON td.date >= ds.month_start \n                 AND td.date < ds.month_start + interval '1 month'\nWHERE \n    -- Exclude months that are partially included and only show fully included months\n    (\n        -- If the current month is fully covered by the range (like October)\n        (ds.month_start = date_trunc('month', now()::timestamp) \n         AND $__timeFrom()::timestamp <= now()::timestamp)\n        OR\n        -- Exclude months that are partially included (like September)\n        (ds.month_start > date_trunc('month', $__timeFrom()::timestamp)\n         AND ds.month_start <= date_trunc('month', $__timeTo()::timestamp))\n    )\nGROUP BY \n    DATE_TRUNC('month', ds.month_start)\nORDER BY \n    \"Month\";\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A+$B",
+          "hide": false,
+          "refId": "Total Tanker Revenue",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$B",
+          "hide": false,
+          "refId": "D",
+          "type": "math"
+        }
+      ],
+      "title": "Monthly Tanker Revenue (OMR)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 4,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let stpValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    stpValues = s.fields.find(f => f.name === 'B')?.values ?? [];\n  }\n});\n\n// Calculate total daily consumption\nlet totalMonthlyCarbonEmissions = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += stpValues[i] || 0;\n  totalMonthlyCarbonEmissions.push(total);\n}\n\n// Calculate the average total daily consumption\nconst averageMonthlyCarbonEmissions = totalMonthlyCarbonEmissions.reduce((sum, value) => sum + value, 0) / totalMonthlyCarbonEmissions.length;\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['PS', 'STP', 'STP2']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Monthly Total Carbon Emissions (MT CO2eq)',\n    nameLocation: 'middle',\n    nameGap: 70,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'STP',\n      type: 'bar',\n      stack: 'total',\n      data: stpValues.map(value => value.toFixed(2)), // Format values to 2 decimal places\n      label: {\n        show: true,\n        position: 'top',\n        formatter: '{c}'\n      }\n    }\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    -- Generate series for the months in the range of $__timeFrom to $__timeTo\n    SELECT \n        generate_series(\n            date_trunc('month', $__timeFrom()::timestamp)::date,  -- Start of the month for $__timeFrom\n            date_trunc('month', $__timeTo()::timestamp)::date,    -- Start of the month for $__timeTo\n            '1 month'::interval\n        )::date AS month_start\n),\ndaily_consumption AS (\n    -- Fetch daily power meter readings from the database\n    SELECT\n        DATE(datetime) AS date,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_power\n        END AS \"daily_consumption\"\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 70  -- Filter by form_id\n        AND $__timeFilter(datetime)\n        AND\n    datetime >= CAST($__timeFrom() AS timestamp) \n  AND \n    datetime < CAST($__timeTo() AS timestamp)\n),\nmonthly_consumption AS (\n    -- Sum daily consumption per month\n    SELECT\n        date_trunc('month', dc.date) AS month_start,\n        SUM(dc.daily_consumption) AS monthly_consumption\n    FROM\n        daily_consumption dc\n    WHERE \n        dc.daily_consumption > 0\n    GROUP BY\n        month_start\n)\nSELECT\n    ds.month_start AS month,\n    COALESCE(mc.monthly_consumption, 0) AS \"Monthly Power Consumption STP\"\nFROM\n    date_series ds\nLEFT JOIN\n    monthly_consumption mc ON ds.month_start = mc.month_start\nWHERE\n    -- Only include fully completed months\n    (\n        -- Include the current month if fully included\n        (ds.month_start = date_trunc('month', now()::timestamp)\n         AND $__timeFrom()::timestamp <= now()::timestamp)\n        OR\n        -- Exclude partially included months\n        (ds.month_start > date_trunc('month', $__timeFrom()::timestamp)\n         AND ds.month_start <= date_trunc('month', $__timeTo()::timestamp))\n    )\n    -- AND COALESCE(dc.daily_consumption, 0) BETWEEN 0 AND 100000  -- Ensure valid consumption range\nORDER BY\n    ds.month_start;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "($A*489.9)/1000",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "Monthly Carbon Emissions (MT CO2eq)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "id": 5,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let stpValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'B') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    stpValues = s.fields.find(f => f.name === 'B')?.values ?? [];\n  }\n});\n\n// Calculate total daily consumption\nlet totalMonthlyPowerConsumption = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += stpValues[i] || 0;\n  totalMonthlyPowerConsumption.push(total);\n}\n\n// Calculate the average total daily consumption\nconst averageMonthlyCarbonEmissions = totalMonthlyPowerConsumption.reduce((sum, value) => sum + value, 0) / totalMonthlyPowerConsumption.length;\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['PS', 'STP', 'STP2']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Monthly Total Power Consumption (Kwh)',\n    nameLocation: 'middle',\n    nameGap: 70,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'STP',\n      type: 'bar',\n      stack: 'total',\n      data: stpValues.map(value => (value == null || value <= 0 ? \"-\" : value.toFixed(2))),\n      label: {\n        show: true,\n        position: 'top',\n        formatter: '{c}'\n      }\n    }\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    -- Generate series for the months in the range of $__timeFrom to $__timeTo\n    SELECT \n        generate_series(\n            date_trunc('month', $__timeFrom()::timestamp)::date,  -- Start of the month for $__timeFrom\n            date_trunc('month', $__timeTo()::timestamp)::date,    -- Start of the month for $__timeTo\n            '1 month'::interval\n        )::date AS month_start\n),\ndaily_readings AS (\n    -- Fetch daily power meter readings from the database\n    SELECT\n        DATE(datetime) AS date,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_power\n        END AS daily_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 70  -- Filter by form_id\n        AND $__timeFilter(datetime)\n           AND\n    datetime >= CAST($__timeFrom() AS timestamp) \n  AND \n   datetime < CAST($__timeTo() AS timestamp)\n),\ndaily_consumption AS (\n    -- Calculate daily consumption by subtracting the next day's reading\n    SELECT\n        dr1.date,\n        CASE\n            WHEN dr1.daily_power IS NOT NULL AND dr1.daily_power > 0 THEN dr1.daily_power\n            ELSE NULL\n        END AS daily_consumption\n    FROM\n        daily_readings dr1\n    LEFT JOIN\n        daily_readings dr2 ON dr1.date = dr2.date  -- Get the next day's reading for consumption calculation\n),\nmonthly_consumption AS (\n    -- Sum daily consumption per month\n    SELECT\n        date_trunc('month', dc.date) AS month_start,\n        SUM(dc.daily_consumption) AS monthly_consumption\n    FROM\n        daily_consumption dc\n    GROUP BY\n        month_start\n)\nSELECT\n    ds.month_start AS month,\n    COALESCE(mc.monthly_consumption, 0) AS \"Monthly Power Consumption Lift Station 1\"\nFROM\n    date_series ds\nLEFT JOIN\n    monthly_consumption mc ON ds.month_start = mc.month_start\nWHERE\n    -- Only include fully completed months\n    (\n        -- Include the current month if fully included\n        (ds.month_start = date_trunc('month', now()::timestamp)\n         AND $__timeFrom()::timestamp <= now()::timestamp)\n        OR\n        -- Exclude partially included months\n        (ds.month_start > date_trunc('month', $__timeFrom()::timestamp)\n         AND ds.month_start <= date_trunc('month', $__timeTo()::timestamp))\n    )\n    -- AND COALESCE(dc.daily_consumption, 0) BETWEEN 0 AND 100000  -- Ensure valid consumption range\nORDER BY\n    ds.month_start;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "B",
+          "type": "math"
+        }
+      ],
+      "title": "Monthly Power Consumption (Kwh)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "KPI Dashboard",
+  "uid": "eabad33b-897c-487b-bf95-f0a0b641e83a"
+}

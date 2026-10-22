@@ -1,0 +1,1520 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    time_of_sample_collection,\r\n    CASE \r\n        WHEN type_of_lab_test = 'PH' THEN result END AS \"pH (s.u.)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'Temperature' THEN result END AS \"Temperature (Celsius)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'Alkalinity' THEN result END AS \"Alkalinity (mg/l CaCO3)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'COD' THEN result END AS \"COD (mg/l)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'Volatile Acids' THEN result END AS \"Volatile_Acids (mg/l Acetic Acid)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'VSS' THEN result END AS \"VSS (mg/l)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'TSS' THEN result END AS \"TSS (mg/l)\",\r\n    CASE \r\n        WHEN type_of_lab_test = 'TKN' THEN result END AS \"TKN (mg/l)\"\r\nFROM \r\n    user_labtestdata \r\nWHERE \r\n    form_id = 192\r\n    AND location = '${LabTestLocation:raw}'\r\nAND\r\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [$LabTestLocation]",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  power_meter_reading AS \"Power Meter Reading (kwh)\"\r\nFROM\r\n  user_powermeterreadingdata\r\nWHERE\r\n  form_id = 193\r\nAND\r\n  $__timeFilter(datetime);\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Power Meter Readings",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 3,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let date_fed_into_eq_tank, pressmud_quantity, cow_manure_quantity, borewell_water, filtrate_water;\n\ncontext.panel.data.series.map((s) => {\n  if (s.fields.find((f) => f.name === \"Date Fed into EQ Tank\") != null) {\n    date_fed_into_eq_tank = s.fields.find((f) => f.name === \"Date Fed into EQ Tank\").values;\n    cow_manure_quantity = s.fields.find((f) => f.name === \"Cow manure quantity (tons)\").values;\n    borewell_water = s.fields.find((f) => f.name === \"Borewell water (m3)\").values;\n    filtrate_water = s.fields.find((f) => f.name === \"Filtrate water (m3)\").values;\n  }\n});\n\nconst options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric' };\n\nif (date_fed_into_eq_tank != null) {\n  date_fed_into_eq_tank = date_fed_into_eq_tank.map((d, i) => new Intl.DateTimeFormat('en-US', options).format(new Date(d)))\n}\n\nreturn {\n  tooltip: {},\n  legend: {},\n  grid: {\n    left: '3%',\n    right: '4%',\n    bottom: '3%',\n    containLabel: true\n  },\n  xAxis: {\n    data: date_fed_into_eq_tank,\n  },\n  yAxis: {},\n  series: [\n    {\n      name: \"Cow manure quantity (tons)\",\n      type: 'bar',\n      data: cow_manure_quantity\n    },\n    {\n      name: \"Borewell water (m3)\",\n      type: 'bar',\n      data: borewell_water\n    },\n    {\n      name: \"Filtrate water (m3)\",\n      type: 'bar',\n      data: filtrate_water\n    }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH sperate AS (\r\n  SELECT\r\n    date_fed_into_eq_tank,\r\n    cow_manure_quantity,\r\n    borewell_water,\r\n    filtrate_water\r\n  FROM\r\n    user_feedstockdata\r\n  WHERE\r\n    form_id = 191\r\n    AND eq_tank_fed = '${EQTankFed:raw}'\r\n    AND '${EQTankFed:raw}' != 'Total'\r\n    AND $__timeFilter(date_fed_into_eq_tank)\r\n),\r\ntotal AS (\r\n  SELECT\r\n    date_fed_into_eq_tank,\r\n    COALESCE(SUM(cow_manure_quantity), 0) AS cow_manure_quantity,\r\n    COALESCE(SUM(borewell_water), 0) AS borewell_water,\r\n    COALESCE(SUM(filtrate_water), 0) AS filtrate_water\r\n  FROM\r\n    user_feedstockdata\r\n  WHERE\r\n    form_id = 191\r\n    AND '${EQTankFed:raw}' = 'Total'\r\n    AND $__timeFilter(date_fed_into_eq_tank)\r\n  GROUP BY\r\n    date_fed_into_eq_tank\r\n)\r\n-- select * from total;\r\nSELECT\r\n  COALESCE(s.date_fed_into_eq_tank, t.date_fed_into_eq_tank) AS \"Date Fed into EQ Tank\",\r\n  COALESCE(s.cow_manure_quantity, t.cow_manure_quantity) AS \"Cow manure quantity (tons)\",\r\n  COALESCE(s.borewell_water, t.borewell_water) AS \"Borewell water (m3)\",\r\n  COALESCE(s.filtrate_water, t.filtrate_water) AS \"Filtrate water (m3)\"\r\nFROM\r\n  sperate s\r\nFULL JOIN\r\n  total t\r\nON\r\n  s.date_fed_into_eq_tank = t.date_fed_into_eq_tank\r\nORDER BY \"Date Fed into EQ Tank\" ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Feedstock [$EQTankFed]",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 14,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let datetime;\nlet main_plant;\nlet mcc_4;\n\ncontext.panel.data.series.map((s) => {\n  if (s.fields.find((f) => f.name === 'datetime') != null) {\n    datetime = s.fields.find((f) => f.name === 'datetime').values;\n    main_plant = s.fields.find((f) => f.name === 'MCC1 Power Meter Reading (kwh)').values;\n  }\n});\n\nconst options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric' };\n\nif (datetime != null) {\n  datetime = datetime.map((d, i) => new Intl.DateTimeFormat('en-US', options).format(new Date(d)))\n}\n\nreturn {\n  tooltip: {},\n  legend: {},\n  grid: {\n    left: '3%',\n    right: '4%',\n    bottom: '3%',\n    containLabel: true\n  },\n  xAxis: {\n    data: datetime,\n  },\n  yAxis: {},\n  series: [\n    {\n      name: \"MCC1 Power Meter Reading (kwh)\",\n      type: 'bar',\n      data: main_plant\n    },\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  CASE\r\n      WHEN reset_value != 0 THEN \r\n          GREATEST(reset_value, 0)\r\n      ELSE\r\n          GREATEST(daily_power, 0)\r\n  END AS \"MCC1 Power Meter Reading (kwh)\"\r\nFROM\r\n  user_powermeterreadingdata \r\nWHERE \r\n  $__timeFilter(datetime) AND form_id = 193\r\nORDER BY datetime ASC;\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Estimated Daily Power Consumption",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  lit_reading AS \"cover 1\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 1'\r\n  AND $__timeFilter(datetime)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  lit_reading AS \"cover 2\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 2'\r\n  AND $__timeFilter(datetime)",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  lit_reading AS \"cover 3\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 3'\r\n  AND $__timeFilter(datetime)",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  lit_reading AS \"cover 4\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 4'\r\n  AND $__timeFilter(datetime)",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  lit_reading AS \"cover 5\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 5'\r\n  AND $__timeFilter(datetime)",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  lit_reading AS \"cover 6\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 6'\r\n  AND $__timeFilter(datetime)",
+          "refId": "F",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Cover Status - LIT",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "(mg/l)"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 1: 200-P-01'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"Digester 1: 200-P-01\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 1: 200-P-02'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"Digester 1: 200-P-02\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 2: 200-P-03'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"Digester 2: 200-P-03\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 2: 200-P-04'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"Digester 2: 200-P-04\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Volatile Acids",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 0.3
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 1: 200-P-01'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 1: 200-P-01'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"Digester 1: 200-P-01\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 1: 200-P-02'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 1: 200-P-02'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"Digester 1: 200-P-02\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 2: 200-P-03'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 2: 200-P-03'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"Digester 2: 200-P-03\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 2: 200-P-04'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 192\r\n    AND location = 'Digester 2: 200-P-04'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"Digester 2: 200-P-04\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Ratio of Volatile Acids / Alkalinity",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 50
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  pit_reading AS \"Cover 1\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 1'\r\n  AND $__timeFilter(datetime)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  pit_reading AS \"Cover 2\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 2'\r\n  AND $__timeFilter(datetime)",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  pit_reading AS \"Cover 3\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 3'\r\n  AND $__timeFilter(datetime)",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  pit_reading AS \"Cover 4\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 4'\r\n  AND $__timeFilter(datetime)",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  pit_reading AS \"Cover 5\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 5'\r\n  AND $__timeFilter(datetime)",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  datetime,\r\n  pit_reading AS \"Cover 6\"\r\nFROM\r\n  user_coverstatusdata\r\nWHERE\r\n  form_id = 195\r\n  AND cover = 'cover 6'\r\n  AND $__timeFilter(datetime)",
+          "refId": "F",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Cover Status - PIT",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 57
+      },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  date_trunc('day', failure_time AT TIME ZONE 'Asia/Kolkata') AS \"Day\", -- Adjust to your required timezone\r\n  SUM(EXTRACT(EPOCH FROM (restore_time - failure_time)) / 3600) AS \"Total Power Outage Duration (hours)\",\r\n  COUNT(failure_time) AS \"Total Power Outage Count\"\r\nFROM\r\n  user_poweroutagedata \r\nWHERE\r\n  form_id = 198\r\n  AND $__timeFilter(failure_time)\r\nGROUP BY\r\n  \"Day\"\r\n\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Power Outage",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "dateFormat": "YYYY-MM-DD",
+                "destinationType": "string",
+                "targetField": "Day"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "102-T-01",
+          "value": "102-T-01"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+        },
+        "definition": "SELECT location_name FROM user_labtestlocationmasterdata\nWHERE team_id=6\nORDER BY location_name;",
+        "includeAll": false,
+        "name": "LabTestLocation",
+        "options": [],
+        "query": "SELECT location_name FROM user_labtestlocationmasterdata\nWHERE team_id=6\nORDER BY location_name;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "EQ Tank 1",
+          "value": "EQ Tank 1"
+        },
+        "includeAll": false,
+        "name": "EQTankFed",
+        "options": [
+          {
+            "selected": true,
+            "text": "EQ Tank 1",
+            "value": "EQ Tank 1"
+          },
+          {
+            "selected": false,
+            "text": "EQ Tank 2",
+            "value": "EQ Tank 2"
+          },
+          {
+            "selected": false,
+            "text": "Total",
+            "value": "Total"
+          }
+        ],
+        "query": "EQ Tank 1, EQ Tank 2, Total",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "102-A-01: Agitator Mixing Tank 1",
+          "value": "102-A-01: Agitator Mixing Tank 1"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+        },
+        "definition": "select unnest(choices) from user_flexiblefield where form_id = 196 and field='equipment';",
+        "includeAll": false,
+        "name": "EquipmentTag",
+        "options": [],
+        "query": "select unnest(choices) from user_flexiblefield where form_id = 196 and field='equipment';",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Jabalpur CBG Plant Operator Logs",
+  "uid": "b45985e9-ee7b-48e5-abf9-03a344fc1b37"
+}

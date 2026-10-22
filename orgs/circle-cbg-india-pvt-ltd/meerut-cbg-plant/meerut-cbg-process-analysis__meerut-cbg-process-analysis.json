@@ -1,0 +1,3418 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:12px;color:#9fa2a8;padding-top:6px\">Meerut CBG · CBG · lab, feedstock form and statistics &nbsp;·&nbsp; thin lines: daily values &nbsp;·&nbsp; <span style=\"color:#8AB8FF\">light blue dashed: calendar-month average (sensor charts: 30-day average)</span> &nbsp;·&nbsp; shaded bands: <span style=\"color:#D9B84A\">warning</span> and <span style=\"color:#E0707B\">limit</span> &nbsp;·&nbsp; red dots: outside the limit</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:16px;font-weight:600;color:#e6e7e8;padding-top:8px;border-bottom:1px solid #2a2d33\">Feedstock</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: t"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pressmud"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cow manure"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Pressmud' AS metric, sum(x.pressmud_quantity)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1 UNION ALL SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Cow manure' AS metric, sum(x.cow_manure_quantity)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Pressmud' AS metric, sum(x.pressmud_quantity)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1 UNION ALL SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Cow manure' AS metric, sum(x.cow_manure_quantity)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "Feed (t/day) · pressmud and cow manure",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Borewell"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Filtrate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Borewell' AS metric, sum(x.borewell_water)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1 UNION ALL SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Filtrate' AS metric, sum(x.filtrate_water)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Borewell' AS metric, sum(x.borewell_water)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1 UNION ALL SELECT ((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date)::timestamp AT TIME ZONE 'Asia/Kolkata' AS time, 'Filtrate' AS metric, sum(x.filtrate_water)::numeric AS value FROM user_feedstockdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "Water (m³/day) · borewell and filtrate",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 5,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:16px;font-weight:600;color:#e6e7e8;padding-top:8px;border-bottom:1px solid #2a2d33\">Gas production</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kg"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CBG filled"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.75)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 8
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "auto"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, 'CBG filled' AS metric, daily_cbgfilled::numeric AS value FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND \"Date\" < (now() AT TIME ZONE 'Asia/Kolkata')::date AND daily_cbgfilled IS NOT NULL AND daily_cbgfilled > 0) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, 'CBG filled' AS metric, daily_cbgfilled::numeric AS value FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND \"Date\" < (now() AT TIME ZONE 'Asia/Kolkata')::date AND daily_cbgfilled IS NOT NULL AND daily_cbgfilled > 0), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "CBG filled (kg/day)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#7E2F38",
+                "value": 0
+              },
+              {
+                "color": "transparent",
+                "value": 90
+              },
+              {
+                "color": "#7E2F38",
+                "value": 100.0001
+              }
+            ]
+          },
+          "unit": "suffix: %"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CH₄"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.75)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 8
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "auto"
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "dashed+area"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, 'CH₄' AS metric, daily_avg_ch4_cascade::numeric AS value FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND \"Date\" < (now() AT TIME ZONE 'Asia/Kolkata')::date AND daily_avg_ch4_cascade IS NOT NULL AND daily_avg_ch4_cascade > 0) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, 'CH₄' AS metric, daily_avg_ch4_cascade::numeric AS value FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND \"Date\" < (now() AT TIME ZONE 'Asia/Kolkata')::date AND daily_avg_ch4_cascade IS NOT NULL AND daily_avg_ch4_cascade > 0), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, 'CH₄' AS metric, daily_avg_ch4_cascade::numeric AS value FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND \"Date\" < (now() AT TIME ZONE 'Asia/Kolkata')::date AND daily_avg_ch4_cascade IS NOT NULL AND daily_avg_ch4_cascade > 0) SELECT time, \"Outside range (90–100)\" FROM (SELECT time, value AS \"Outside range (90–100)\" FROM s WHERE (value < 90 OR value > 100) UNION ALL SELECT $__timeFrom()::timestamptz, NULL::numeric) x ORDER BY time",
+          "refId": "C"
+        }
+      ],
+      "title": "Product CH₄ (%) · limit ≥ 90",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 8,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:16px;font-weight:600;color:#e6e7e8;padding-top:8px;border-bottom:1px solid #2a2d33\">Digesters</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              },
+              {
+                "color": "#7E2F38",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(184, 119, 217, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(255, 152, 48, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "dashed+area"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Volatile Acids')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Volatile Acids')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Volatile Acids' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Volatile Acids') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Volatile Acids')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, \"Above limit (≥ 500)\" FROM (SELECT time, value AS \"Above limit (≥ 500)\" FROM s WHERE value >= 500 UNION ALL SELECT $__timeFrom()::timestamptz, NULL::numeric) x ORDER BY time",
+          "refId": "C"
+        }
+      ],
+      "title": "Volatile acids (mg/L) · limit 500 · individual digesters",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(184, 119, 217, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(255, 152, 48, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Alkalinity') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Alkalinity') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Alkalinity') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Alkalinity')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Alkalinity' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Alkalinity') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Alkalinity') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Alkalinity') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Alkalinity')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "Alkalinity (mg/L) · individual digesters",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              },
+              {
+                "color": "#7E2F38",
+                "value": 0.3
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(184, 119, 217, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(255, 152, 48, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "dashed+area"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (a.day::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, initcap(a.loc) AS metric, (a.v / NULLIF(b.v, 0))::numeric AS value FROM (SELECT lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND $__timeFilter(l.time_of_sample_collection) GROUP BY 1, 2, 3) a JOIN (SELECT lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) AS loc, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND btrim(l.type_of_lab_test) = 'Alkalinity' AND $__timeFilter(l.time_of_sample_collection) GROUP BY 1, 2) b ON b.loc = a.loc AND b.day = a.day WHERE a.t = 'Volatile Acids' AND a.loc IN ('digester 1','digester 2','digester 3','digester 4')) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (a.day::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, initcap(a.loc) AS metric, (a.v / NULLIF(b.v, 0))::numeric AS value FROM (SELECT lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND $__timeFilter(l.time_of_sample_collection) GROUP BY 1, 2, 3) a JOIN (SELECT lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) AS loc, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND btrim(l.type_of_lab_test) = 'Alkalinity' AND $__timeFilter(l.time_of_sample_collection) GROUP BY 1, 2) b ON b.loc = a.loc AND b.day = a.day WHERE a.t = 'Volatile Acids' AND a.loc IN ('digester 1','digester 2','digester 3','digester 4')), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT (a.day::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, initcap(a.loc) AS metric, (a.v / NULLIF(b.v, 0))::numeric AS value FROM (SELECT lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND $__timeFilter(l.time_of_sample_collection) GROUP BY 1, 2, 3) a JOIN (SELECT lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) AS loc, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND btrim(l.type_of_lab_test) = 'Alkalinity' AND $__timeFilter(l.time_of_sample_collection) GROUP BY 1, 2) b ON b.loc = a.loc AND b.day = a.day WHERE a.t = 'Volatile Acids' AND a.loc IN ('digester 1','digester 2','digester 3','digester 4')) SELECT time, \"Above limit (≥ 0.3)\" FROM (SELECT time, value AS \"Above limit (≥ 0.3)\" FROM s WHERE value >= 0.3 UNION ALL SELECT $__timeFrom()::timestamptz, NULL::numeric) x ORDER BY time",
+          "refId": "C"
+        }
+      ],
+      "title": "VFA / alkalinity · limit 0.3 · individual digesters",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(184, 119, 217, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(255, 152, 48, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'pH') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'pH') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'pH') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'pH')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'pH' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'pH') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'pH') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'pH') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'pH')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "Digester pH · individual digesters",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(184, 119, 217, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(255, 152, 48, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'TSS') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'TSS') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'TSS') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'TSS')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'TSS') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'TSS') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'TSS') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'TSS')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "Digester TSS (mg/L) · individual digesters",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "suffix: °C"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(250, 222, 42, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(184, 119, 217, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digester 4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(255, 152, 48, 0.45)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 48
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Temperature') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Temperature') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Temperature') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Temperature')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 1' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 2' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 3' WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'Digester 4' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 1') AND btrim(l.type_of_lab_test) = 'Temperature') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 2') AND btrim(l.type_of_lab_test) = 'Temperature') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 3') AND btrim(l.type_of_lab_test) = 'Temperature') OR (lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('digester 4') AND btrim(l.type_of_lab_test) = 'Temperature')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "Digester temperature (°C) · individual digesters",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 58
+      },
+      "id": 15,
+      "options": {
+        "content": "<div style=\"font-size:16px;font-weight:600;color:#e6e7e8;padding-top:8px;border-bottom:1px solid #2a2d33\">Equalization tank</div>",
+        "mode": "html"
+      },
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EQ tank 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.75)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 8
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "auto"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 60
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'pH' THEN 'EQ tank 1' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'pH')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'pH' THEN 'EQ tank 1' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'pH')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "EQ tank pH",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EQ tank 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.75)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 8
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "auto"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 60
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'EQ tank 1' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'TSS')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'TSS' THEN 'EQ tank 1' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'TSS')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "EQ tank TSS (mg/L)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily values (thin line), each calendar month's average (thick blue, months with at least 3 values), and values outside the limit (red dots). Limits as dashed lines with shaded bands.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 259200000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1.5,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": 259200000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "suffix: °C"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EQ tank 1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(115, 191, 105, 0.75)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 8
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "opacity"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "auto"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*average$"
+            },
+            "properties": [
+              {
+                "id": "custom.spanNulls",
+                "value": false
+              },
+              {
+                "id": "custom.insertNulls",
+                "value": false
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "rgba(138, 184, 255, 0.85)",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(Above limit|Outside range|Below limit).*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.thresholdsStyle",
+                "value": {
+                  "mode": "off"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 70
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "min",
+            "count"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'EQ tank 1' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'Temperature')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()) SELECT time, metric, value FROM s ORDER BY 1",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH s AS (SELECT l.time_of_sample_collection AS time, CASE WHEN lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'Temperature' THEN 'EQ tank 1' END AS metric, l.result::numeric AS value FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND ((lower(regexp_replace(btrim(l.location), '\\s*:.*$', '')) = lower('equalization tank 1') AND btrim(l.type_of_lab_test) = 'Temperature')) AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now()), m AS (SELECT time, value, date_trunc('month', time AT TIME ZONE 'Asia/Kolkata') AS mo FROM s), a AS (SELECT mo, avg(value) AS av, count(*) AS n FROM m GROUP BY mo)\nSELECT time, \"Monthly average\" FROM (SELECT DISTINCT m.time, a.av AS \"Monthly average\" FROM m JOIN a ON a.mo = m.mo WHERE a.n >= 3 UNION ALL SELECT a.mo AT TIME ZONE 'Asia/Kolkata', NULL::numeric FROM a WHERE a.mo AT TIME ZONE 'Asia/Kolkata' > $__timeFrom()::timestamptz) x ORDER BY time",
+          "refId": "B"
+        }
+      ],
+      "title": "EQ tank temperature (°C)",
+      "transparent": true,
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git",
+    "new",
+    "process-analysis"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Meerut CBG – Process Analysis",
+  "uid": "meerut-cbg-process-analysis"
+}

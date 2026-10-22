@@ -1,0 +1,1283 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:13px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> on target &nbsp; <span style=\"color:#D9B84A\">●</span> below target &nbsp; <span style=\"color:#E0707B\">●</span> well below target &nbsp; <span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; white = no limit set &nbsp;·&nbsp; ⌀ 30-day average &nbsp;·&nbsp; days are midnight to midnight IST &nbsp;·&nbsp; For plant and project managers</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Treated outflow (m³/day) from gsi_ntiem_stats. Design capacity 100,000 m³/day. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Latest day"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$|% of design$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT daily_flow_out FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL)) AS \"Latest day\", (SELECT 100 * daily_flow_out / 100000 FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL)) AS \"% of design\", (SELECT avg(daily_flow_out) FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_flow_out IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "Treated outflow · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Plant energy ÷ treated outflow (kWh/m³). Days above twice the 30-day median (implausible) are left out. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kWh/m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT \"Date\", daily_power_total / NULLIF(daily_flow_out, 0) AS se FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_power_total > 0 AND daily_flow_out > 0), m AS (SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY se) AS med FROM e) SELECT (SELECT se FROM e WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_power_total IS NOT NULL) AND se <= 2 * (SELECT med FROM m)) AS \"Latest day\", (SELECT avg(se) FROM e WHERE se <= 2 * (SELECT med FROM m)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_power_total IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "Specific energy · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Inlet to outlet COD, % removed (lab averages). Target ≥ 80 %, from the existing lab dashboard. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#E0707B",
+                "value": 0
+              },
+              {
+                "color": "#73BF69",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT 100 * (daily_avg_inlet_cod - daily_avg_outlet_cod) / NULLIF(daily_avg_inlet_cod, 0) FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_avg_inlet_cod IS NOT NULL)) AS \"Latest day\", (SELECT avg(100 * (daily_avg_inlet_cod - daily_avg_outlet_cod) / NULLIF(daily_avg_inlet_cod, 0)) FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_avg_inlet_cod IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "COD reduction · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Inlet to outlet TSS, % removed (lab averages). No overall target set. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT 100 * (daily_avg_inlet_tss - daily_avg_outlet_tss) / NULLIF(daily_avg_inlet_tss, 0) FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_avg_inlet_tss IS NOT NULL)) AS \"Latest day\", (SELECT avg(100 * (daily_avg_inlet_tss - daily_avg_outlet_tss) / NULLIF(daily_avg_inlet_tss, 0)) FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_avg_inlet_tss IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "TSS reduction · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Lab results at the NTIEM outlet for the selected period (default 30 days). Limits from the existing NTIEM lab dashboard (COD, TSS, ammonia) and pH 6.5–8.5 as at AHSPA; no limits for TDS and temperature. Latest and days outside are coloured by the limit: green within, amber/red outside, purple impossible value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#ccccdc",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "pattern": "^(.*)\\|ok$",
+                "result": {
+                  "color": "#73BF69",
+                  "index": 0,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|amber$",
+                "result": {
+                  "color": "#FADE2A",
+                  "index": 1,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|red$",
+                "result": {
+                  "color": "#F2495C",
+                  "index": 2,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|purple$",
+                "result": {
+                  "color": "#B877D9",
+                  "index": 3,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|muted$",
+                "result": {
+                  "color": "#8e8e8e",
+                  "index": 4,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Parameter"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 190
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Range"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e8e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Limit"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e8e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH x AS (WITH lim(param, test, ord, unit, dec, warn, alarm, lo, hi, sev) AS (VALUES\n('COD','COD',1,'mg/L',0,225,250,NULL::numeric,NULL::numeric,'amber'),\n('TSS','TSS',2,'mg/L',0,80,100,NULL::numeric,NULL::numeric,'amber'),\n('pH','pH',3,'',1,NULL::numeric,NULL::numeric,6.5,8.5,'red'),\n('Ammonia (TAN)','TAN',4,'mg/L',1,40,50,NULL::numeric,NULL::numeric,'amber'),\n('TDS','TDS',5,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Colour','Colour',6,'Hazen',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Turbidity','Turbidity',7,'NTU',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Temperature','Temperature',8,'°C',1,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber')),\nd AS (SELECT btrim(l.type_of_lab_test) AS test, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id\n WHERE f.team_id = 25 AND btrim(l.location) = 'Outlet' AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now() GROUP BY 1, 2)\nSELECT lim.param, lim.ord, lim.unit, lim.dec, lim.warn, lim.alarm, lim.lo, lim.hi, lim.sev, to_char(d.day,'YYYY-MM-DD') AS day, d.v\nFROM lim LEFT JOIN d ON d.test = lim.test ORDER BY lim.ord, d.day),\nv AS (SELECT param, ord, unit, dec, warn, alarm, lo, hi, sev, NULL::text AS limtxt, day, v, (v < 0 OR (param ~* '\\mph\\M' AND v > 14)) AS bad FROM x),\np AS (SELECT param, min(ord) AS ord, max(unit) AS unit, max(dec) AS dec, max(warn) AS warn, max(alarm) AS alarm, max(lo) AS lo, max(hi) AS hi, max(sev) AS sev, max(limtxt) AS limtxt,\n  avg(v) FILTER (WHERE NOT bad) AS av, min(v) FILTER (WHERE NOT bad) AS mn, max(v) FILTER (WHERE NOT bad) AS mx, count(v) FILTER (WHERE NOT bad) AS n, count(v) FILTER (WHERE bad) AS nbad,\n  (array_agg(v ORDER BY day DESC) FILTER (WHERE v IS NOT NULL))[1] AS latest FROM v GROUP BY param),\nq AS (SELECT p.*, (SELECT count(*) FROM v WHERE v.param = p.param AND NOT v.bad AND ((p.lo IS NOT NULL AND (v.v < p.lo OR (CASE WHEN p.sev LIKE '%excl' THEN v.v >= p.hi ELSE v.v > p.hi END))) OR (p.lo IS NULL AND p.warn IS NOT NULL AND v.v >= p.warn))) AS nout FROM p)\nSELECT param || CASE WHEN unit <> '' THEN ' (' || unit || ')' ELSE '' END || CASE WHEN nbad > 0 THEN ' · ' || nbad || ' impossible|purple' ELSE '' END AS \"Parameter\",\n CASE WHEN latest IS NULL THEN '—' ELSE round(latest::numeric, dec)::text ||\n  CASE WHEN latest < 0 OR (param ~* '\\mph\\M' AND latest > 14) THEN '|purple'\n       WHEN lo IS NOT NULL THEN CASE WHEN latest < lo OR (CASE WHEN sev LIKE '%excl' THEN latest >= hi ELSE latest > hi END) THEN '|' || CASE WHEN sev LIKE 'red%' THEN 'red' ELSE 'amber' END ELSE '|ok' END\n       WHEN alarm IS NOT NULL AND latest >= alarm THEN '|red' WHEN warn IS NOT NULL AND latest >= warn THEN '|amber' WHEN warn IS NOT NULL THEN '|ok' ELSE '' END END AS \"Latest\",\n COALESCE(round(av::numeric, dec)::text, '—') AS \"⌀ period\",\n COALESCE(round(mn::numeric, dec)::text || ' – ' || round(mx::numeric, dec)::text, '—') AS \"Range\",\n COALESCE(limtxt, CASE WHEN lo IS NOT NULL THEN lo::text || ' – ' || hi::text WHEN warn IS NOT NULL THEN '< ' || warn::text || CASE WHEN alarm IS NOT NULL AND alarm <> warn THEN ' · alarm ' || alarm::text ELSE '' END ELSE '—' END) AS \"Limit\",\n CASE WHEN (lo IS NULL AND warn IS NULL) OR n = 0 THEN '—' ELSE nout || ' of ' || n || CASE WHEN nout = 0 THEN '|ok' WHEN nout < n / 2.0 THEN '|amber' ELSE '|red' END END AS \"Days outside\"\nFROM q ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "title": "Outlet quality · major parameters · summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "One row per parameter, one cell per day, coloured by that parameter's own limit: green within, amber above warning, red above alarm or outside range, blue no limit set, purple impossible value. Tap a cell for its value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 85,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "COD"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#FADE2A",
+                      "value": 225
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 250
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TSS"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#FADE2A",
+                      "value": 80
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 100
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pH"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 6.5
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 8.500000001
+                    },
+                    {
+                      "color": "#B877D9",
+                      "value": 14.0001
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ammonia (TAN)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#FADE2A",
+                      "value": 40
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 50
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TDS"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Colour"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Turbidity"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Temperature"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 9,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.85,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH x AS (WITH lim(param, test, ord, unit, dec, warn, alarm, lo, hi, sev) AS (VALUES\n('COD','COD',1,'mg/L',0,225,250,NULL::numeric,NULL::numeric,'amber'),\n('TSS','TSS',2,'mg/L',0,80,100,NULL::numeric,NULL::numeric,'amber'),\n('pH','pH',3,'',1,NULL::numeric,NULL::numeric,6.5,8.5,'red'),\n('Ammonia (TAN)','TAN',4,'mg/L',1,40,50,NULL::numeric,NULL::numeric,'amber'),\n('TDS','TDS',5,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Colour','Colour',6,'Hazen',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Turbidity','Turbidity',7,'NTU',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Temperature','Temperature',8,'°C',1,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber')),\nd AS (SELECT btrim(l.type_of_lab_test) AS test, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id\n WHERE f.team_id = 25 AND btrim(l.location) = 'Outlet' AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now() GROUP BY 1, 2)\nSELECT lim.param, lim.ord, lim.unit, lim.dec, lim.warn, lim.alarm, lim.lo, lim.hi, lim.sev, to_char(d.day,'YYYY-MM-DD') AS day, d.v\nFROM lim LEFT JOIN d ON d.test = lim.test ORDER BY lim.ord, d.day) SELECT (day::date)::timestamp AS time, param AS metric, v AS value FROM x WHERE day IS NOT NULL ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Each day against its limit",
+      "type": "status-history"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Daily treated outflow (m³). Dashed line: design capacity.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisSoftMax": 110000,
+            "axisSoftMin": 0,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "lineWidth": 0,
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              },
+              {
+                "color": "#9fa2a8",
+                "value": 100000
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 7,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single"
+        },
+        "xField": "Day",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(\"Date\",'DD Mon') AS \"Day\", daily_flow_out AS \"Treated outflow\" FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND LEAST(($__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date, ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) ORDER BY \"Date\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Treated outflow per day · dashed line: design capacity",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Daily COD reduction, inlet to outlet. Blue at or above the 80 % target, red below.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisSoftMax": 100,
+            "axisSoftMin": 0,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "lineWidth": 0,
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#E0707B"
+              },
+              {
+                "color": "#5d7fb3",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 8,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single"
+        },
+        "xField": "Day",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(\"Date\",'DD Mon') AS \"Day\", 100 * (daily_avg_inlet_cod - daily_avg_outlet_cod) / NULLIF(daily_avg_inlet_cod, 0) AS \"COD reduction\" FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND LEAST(($__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date, ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) ORDER BY \"Date\"",
+          "refId": "A"
+        }
+      ],
+      "title": "COD reduction per day · dashed line: target 80 %",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "etp",
+    "managed-by-git",
+    "new",
+    "ntiem",
+    "performance"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "NTIEM – Site Performance",
+  "uid": "ntiem-site-performance"
+}

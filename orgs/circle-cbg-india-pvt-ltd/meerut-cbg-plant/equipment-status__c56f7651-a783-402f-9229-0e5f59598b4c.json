@@ -1,0 +1,483 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "panels": [],
+      "title": "Equipment Daily RunTime",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${MotorSensor}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mqtt.runtime_hours"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "${MotorSensor}"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.66,
+        "colorByField": "Time",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "text": {
+          "valueSize": 1
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "${MotorSensor}",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT\n  COUNT(\"102-A-02 Motor Status\") / 60 AS runtime_hours\nFROM \"mqtt\"\nWHERE\n  $timeFilter\n  AND \"102-A-02 Motor Status\" = true\nGROUP BY time(1d,18h30m)\nfill(0)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs",
+          "select": [
+            [
+              {
+                "params": [
+                  "102-T-01 LT"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$MotorSensor",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "(.*)\\s(.*)\\s(.*)\\s(.*)",
+            "renamePattern": "$2"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.66,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "${ValveSensor}",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT COUNT(${ValveSensor}) / 60 AS \"Open Hours\"\nFROM \"mqtt\"\nWHERE ${ValveSensor} = true\n  AND $timeFilter\nGROUP BY time(1d,18h30m)\nfill(0)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs",
+          "select": [
+            [
+              {
+                "params": [
+                  "102-T-01 LT"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$ValveSensor",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "(.*)\\s(.*)\\s(.*)\\s(.*)",
+            "renamePattern": "$2"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "\"102-A-02 Motor Status\"",
+          "value": "\"102-A-02 Motor Status\""
+        },
+        "includeAll": false,
+        "name": "MotorSensor",
+        "options": [
+          {
+            "selected": false,
+            "text": "\"102-A-01 Motor Status\"",
+            "value": "\"102-A-01 Motor Status\""
+          },
+          {
+            "selected": true,
+            "text": "\"102-A-02 Motor Status\"",
+            "value": "\"102-A-02 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-A-03 Motor Status\"",
+            "value": "\"102-A-03 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-A-04 Motor Status\"",
+            "value": "\"102-A-04 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-G-01 Motor Status\"",
+            "value": "\"102-G-01 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-G-02 Motor Status\"",
+            "value": "\"102-G-02 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-01 Motor Status\"",
+            "value": "\"102-P-01 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-02 Motor Status\"",
+            "value": "\"102-P-02 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-03 Motor Status\"",
+            "value": "\"102-P-03 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-04 Motor Status\"",
+            "value": "\"102-P-04 Motor Status\""
+          }
+        ],
+        "query": "\"102-A-01 Motor Status\", \"102-A-02 Motor Status\", \"102-A-03 Motor Status\", \"102-A-04 Motor Status\", \"102-G-01 Motor Status\", \"102-G-02 Motor Status\", \"102-P-01 Motor Status\", \"102-P-02 Motor Status\", \"102-P-03 Motor Status\", \"102-P-04 Motor Status\"",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "\"Auto Valve XV-07 Open Status\"",
+          "value": "\"Auto Valve XV-07 Open Status\""
+        },
+        "includeAll": false,
+        "name": "ValveSensor",
+        "options": [
+          {
+            "selected": true,
+            "text": "\"Auto Valve XV-07 Open Status\"",
+            "value": "\"Auto Valve XV-07 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-08 Open Status\"",
+            "value": "\"Auto Valve XV-08 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-09 Open Status\"",
+            "value": "\"Auto Valve XV-09 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-10 Open Status\"",
+            "value": "\"Auto Valve XV-10 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-11 Open Status\"",
+            "value": "\"Auto Valve XV-11 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-12 Open Status\"",
+            "value": "\"Auto Valve XV-12 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-17 Open Status\"",
+            "value": "\"Auto Valve XV-17 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-18 Open Status\"",
+            "value": "\"Auto Valve XV-18 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-19 Open Status\"",
+            "value": "\"Auto Valve XV-19 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-20 Open Status\"",
+            "value": "\"Auto Valve XV-20 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-21 Open Status\"",
+            "value": "\"Auto Valve XV-21 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-22 Open Status\"",
+            "value": "\"Auto Valve XV-22 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-23 Open Status\"",
+            "value": "\"Auto Valve XV-23 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-01 Open Status\"",
+            "value": "\"XV-01 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-02 Open Status\"",
+            "value": "\"XV-02 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-03 Open Status\"",
+            "value": "\"XV-03 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-04 Open Status\"",
+            "value": "\"XV-04 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-05 Open Status\"",
+            "value": "\"XV-05 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-06 Open Status\"",
+            "value": "\"XV-06 Open Status\""
+          }
+        ],
+        "query": "\"Auto Valve XV-07 Open Status\", \"Auto Valve XV-08 Open Status\", \"Auto Valve XV-09 Open Status\", \"Auto Valve XV-10 Open Status\", \"Auto Valve XV-11 Open Status\", \"Auto Valve XV-12 Open Status\", \"Auto Valve XV-17 Open Status\", \"Auto Valve XV-18 Open Status\", \"Auto Valve XV-19 Open Status\", \"Auto Valve XV-20 Open Status\", \"Auto Valve XV-21 Open Status\", \"Auto Valve XV-22 Open Status\", \"Auto Valve XV-23 Open Status\", \"XV-01 Open Status\", \"XV-02 Open Status\", \"XV-03 Open Status\", \"XV-04 Open Status\", \"XV-05 Open Status\", \"XV-06 Open Status\"",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Equipment Status",
+  "uid": "c56f7651-a783-402f-9229-0e5f59598b4c"
+}

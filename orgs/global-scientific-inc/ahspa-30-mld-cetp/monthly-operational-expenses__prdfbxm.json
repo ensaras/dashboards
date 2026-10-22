@@ -1,0 +1,1059 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let timeData = [],\n  Blower1Values = [], Blower2Values = [], Blower3Values = [],\n  Blower4Values = [], Blower5Values = [],\n  Incomer1Values = [], Incomer2Values = [],\n  LightingValues = [], PDB1Values = [], PDB2Values = [],\n  PMCC1Incomer1Values = [], PMCC2Incomer1Values = [], PMCC3Incomer1Values = [],\n  PMCC1Incomer2Values = [], PMCC2Incomer2Values = [], PMCC3Incomer2Values = [],\n  TorrentValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (!timeData.length) {\n    const timeField = s.fields.find(f => f.name === 'date' || f.name === 'time' || f.name === 'month_date' || f.name === 'Time');\n    if (timeField) timeData = timeField.values;\n  }\n\n  if (s.refId === 'A') {\n    const f = s.fields.find(f => f.name === 'Blower1');\n    if (f) Blower1Values = f.values;\n  } else if (s.refId === 'B') {\n    const f = s.fields.find(f => f.name === 'Blower2');\n    if (f) Blower2Values = f.values;\n  } else if (s.refId === 'C') {\n    const f = s.fields.find(f => f.name === 'Blower3');\n    if (f) Blower3Values = f.values;\n  } else if (s.refId === 'D') {\n    const f = s.fields.find(f => f.name === 'Blower4');\n    if (f) Blower4Values = f.values;\n  } else if (s.refId === 'E') {\n    const f = s.fields.find(f => f.name === 'Blower5');\n    if (f) Blower5Values = f.values;\n  } else if (s.refId === 'F') {\n    const f = s.fields.find(f => f.name === 'Incomer1');\n    if (f) Incomer1Values = f.values;\n  } else if (s.refId === 'G') {\n    const f = s.fields.find(f => f.name === 'Incomer2');\n    if (f) Incomer2Values = f.values;\n  } else if (s.refId === 'H') {\n    const f = s.fields.find(f => f.name === 'PDB1');\n    if (f) PDB1Values = f.values;\n  } else if (s.refId === 'I') {\n    const f = s.fields.find(f => f.name === 'PDB2');\n    if (f) PDB2Values = f.values;\n  } else if (s.refId === 'J') {\n    const f = s.fields.find(f => f.name === 'Lighting');\n    if (f) LightingValues = f.values;\n  } else if (s.refId === 'K') {\n    const f = s.fields.find(f => f.name === 'Torrent');\n    if (f) TorrentValues = f.values;\n  } else if (s.refId === 'L') {\n    const f = s.fields.find(f => f.name === 'PMCC1-Incomer1');\n    if (f) PMCC1Incomer1Values = f.values;\n  } else if (s.refId === 'M') {\n    const f = s.fields.find(f => f.name === 'PMCC3-Incomer1');\n    if (f) PMCC3Incomer1Values = f.values;\n  } else if (s.refId === 'N') {\n    const f = s.fields.find(f => f.name === 'PMCC2-Incomer1');\n    if (f) PMCC2Incomer1Values = f.values;\n  } else if (s.refId === 'O') {\n    const f = s.fields.find(f => f.name === 'PMCC1-Incomer2');\n    if (f) PMCC1Incomer2Values = f.values;\n  } else if (s.refId === 'P') {\n    const f = s.fields.find(f => f.name === 'PMCC2-Incomer2');\n    if (f) PMCC2Incomer2Values = f.values;\n  } else if (s.refId === 'Q') {\n    const f = s.fields.find(f => f.name === 'PMCC3-Incomer2');\n    if (f) PMCC3Incomer2Values = f.values;\n  }\n});\n\nlet PMCC1Values = [], PMCC2Values = [], PMCC3Values = [];\nlet totalMonthlyConsumption = [];\n\nfor (let i = 0; i < timeData.length; i++) {\n  const pmcc1 = (PMCC1Incomer1Values[i] || 0) + (PMCC1Incomer2Values[i] || 0);\n  const pmcc2 = (PMCC2Incomer1Values[i] || 0) + (PMCC2Incomer2Values[i] || 0);\n  const pmcc3 = (PMCC3Incomer1Values[i] || 0) + (PMCC3Incomer2Values[i] || 0);\n\n  PMCC1Values.push(pmcc1);\n  PMCC2Values.push(pmcc2);\n  PMCC3Values.push(pmcc3);\n\n  let total = 0;\n  total += Blower1Values[i] || 0;\n  total += Blower2Values[i] || 0;\n  total += Blower3Values[i] || 0;\n  total += Blower4Values[i] || 0;\n  total += Blower5Values[i] || 0;\n  total += Incomer1Values[i] || 0;\n  total += Incomer2Values[i] || 0;\n  total += LightingValues[i] || 0;\n  total += PDB1Values[i] || 0;\n  total += PDB2Values[i] || 0;\n  total += pmcc1;\n  total += pmcc2;\n  total += pmcc3;\n  totalMonthlyConsumption.push(total);\n}\n\nconst averageTotalMonthlyConsumption =\n  totalMonthlyConsumption.length > 0\n    ? totalMonthlyConsumption.reduce((sum, value) => sum + value, 0) / totalMonthlyConsumption.length\n    : 0;\n\nconst monthNames = [\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"];\nconst formattedMonths = timeData.map(d => {\n  const date = new Date(d);\n  return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;\n});\n\nconst customColors = {\n  'Blower1': '#1f77b4',\n  'Blower2': '#ff7f0e',\n  'Blower3': '#2ca02c',\n  'Blower4': '#d62728',\n  'Blower5': '#9467bd',\n  'Incomer1': '#e377c2',\n  'Incomer2': '#7f7f7f',\n  'Lighting': '#8c564b',\n  'PDB1': '#bcbd22',\n  'PDB2': '#17becf',\n  'PMCC1': '#aec7e8',\n  'PMCC2': '#ffbb78',\n  'PMCC3': '#98df8a',\n  'Torrent': '#f7b6d2'\n};\n\nreturn {\n  title: {\n    text: `Average Monthly Consumption: {value|${averageTotalMonthlyConsumption.toFixed(2)} kwh/month}`,\n    left: 'center',\n    bottom: 0,\n    textStyle: {\n      fontSize: 20,\n      rich: {\n        value: {\n          color: '#00ff00',\n          fontSize: 24,\n          fontWeight: 'bold'\n        }\n      }\n    }\n  },\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: { type: 'cross' }\n  },\n  legend: {\n    data: ['Blower1', 'Blower2', 'Blower3', 'Blower4', 'Blower5',\n      'Incomer1', 'Incomer2', 'Lighting', 'PDB1', 'PDB2',\n      'PMCC1', 'PMCC2', 'PMCC3', 'Torrent']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedMonths,\n    axisLabel: {\n      fontSize: 12\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Monthly Power Consumption',\n    nameLocation: 'middle',\n    nameGap: 90,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  color: Object.values(customColors),\n  series: [\n    { name: 'Blower1', type: 'bar', stack: 'total', data: Blower1Values, itemStyle: { color: customColors['Blower1'] } },\n    { name: 'Blower2', type: 'bar', stack: 'total', data: Blower2Values, itemStyle: { color: customColors['Blower2'] } },\n    { name: 'Blower3', type: 'bar', stack: 'total', data: Blower3Values, itemStyle: { color: customColors['Blower3'] } },\n    { name: 'Blower4', type: 'bar', stack: 'total', data: Blower4Values, itemStyle: { color: customColors['Blower4'] } },\n    { name: 'Blower5', type: 'bar', stack: 'total', data: Blower5Values, itemStyle: { color: customColors['Blower5'] } },\n    { name: 'Incomer1', type: 'bar', stack: 'total', data: Incomer1Values, itemStyle: { color: customColors['Incomer1'] } },\n    { name: 'Incomer2', type: 'bar', stack: 'total', data: Incomer2Values, itemStyle: { color: customColors['Incomer2'] } },\n    { name: 'Lighting', type: 'bar', stack: 'total', data: LightingValues, itemStyle: { color: customColors['Lighting'] } },\n    { name: 'PDB1', type: 'bar', stack: 'total', data: PDB1Values, itemStyle: { color: customColors['PDB1'] } },\n    { name: 'PDB2', type: 'bar', stack: 'total', data: PDB2Values, itemStyle: { color: customColors['PDB2'] } },\n    { name: 'PMCC1', type: 'bar', stack: 'total', data: PMCC1Values, itemStyle: { color: customColors['PMCC1'] } },\n    { name: 'PMCC2', type: 'bar', stack: 'total', data: PMCC2Values, itemStyle: { color: customColors['PMCC2'] } },\n    { name: 'PMCC3', type: 'bar', stack: 'total', data: PMCC3Values, itemStyle: { color: customColors['PMCC3'] } },\n    { name: 'Torrent', type: 'line', data: TorrentValues, itemStyle: { color: customColors['Torrent'] }, lineStyle: { color: customColors['Torrent'] } }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 606\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Blower1\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 607\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Blower2\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 608\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Blower3\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 609\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Blower4\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 610\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Blower5\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 599\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Incomer1\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "F",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 600\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Incomer2\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "G",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 604\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PDB1\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "H",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 605\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PDB2\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "I",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 611\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Lighting\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "J",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 598\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"Torrent\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "K",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 601\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PMCC1-Incomer1\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "L",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 603\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PMCC3-Incomer1\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "M",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 602\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PMCC2-Incomer1\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "N",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 676\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PMCC1-Incomer2\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "O",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 677\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PMCC2-Incomer2\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "P",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_power\n            END\n        ) AS monthly_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 678\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_power IS NOT NULL AND mr.monthly_power > 0 THEN mr.monthly_power\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN \n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption) AS \"PMCC3-Incomer2\"\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date \n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "Q",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Monthly Power Consumption",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 7,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let timeData = [];\nlet inFlowMeter = [];\nlet outFlowMeter = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'In Flow Meter Reading') {\n    timeData = s.fields.find(f => f.name === 'Time' || f.name === 'date' || f.name === 'time')?.values ?? [];\n    inFlowMeter = s.fields.find(f => f.name === 'In Flow Meter Reading')?.values ?? [];\n  }\n\n  if (s.refId === 'Out Flow Meter Reading') {\n    outFlowMeter = s.fields.find(f => f.name === 'Out Flow Meter Reading')?.values ?? [];\n  }\n});\n\n// Format dates as Month Year (e.g., 'Apr 2026')\nconst monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];\nconst formattedMonths = timeData.map(d => {\n  const date = new Date(d);\n  return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;\n});\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross',\n    },\n    formatter: function (params) {\n      let tooltipText = `${params[0].axisValueLabel}<br/>`;\n      params.forEach((item) => {\n        let value = item.data === '-' ? '-' : `${item.data.toLocaleString()} m³`;\n        tooltipText += `${item.marker} ${item.seriesName}: ${value}<br/>`;\n      });\n      return tooltipText;\n    },\n  },\n  legend: {\n    data: ['Flow Meter(In)', 'Flow Meter(Out)'],\n    top: '2%'\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedMonths,\n    axisLabel: {\n      fontSize: 12\n    }\n  },\n  yAxis: {\n    type: 'value',\n    axisLabel: {\n      formatter: function (val) {\n        return `${val.toLocaleString()} m³`;\n      },\n    },\n  },\n  series: [\n    {\n      name: 'Flow Meter(In)',\n      type: 'line',\n      data: inFlowMeter.map(value => (value == null || value <= 0 ? \"-\" : value))\n    },\n    {\n      name: 'Flow Meter(Out)',\n      type: 'line',\n      data: outFlowMeter.map(value => (value == null || value <= 0 ? \"-\" : value))\n    },\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_flow\n            END\n        ) AS monthly_flow\n    FROM\n        user_flowmeterreadingdata\n    WHERE\n        form_id = 465\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_flow IS NOT NULL AND mr.monthly_flow > 0 THEN mr.monthly_flow\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN\n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption)\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),\n        '1 month'::interval\n    )::date AS date\n),\nmonthly_readings AS (\n    SELECT\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\n        SUM(\n            CASE\n                WHEN is_override THEN reset_value\n                ELSE daily_flow\n            END\n        ) AS monthly_flow\n    FROM\n        user_flowmeterreadingdata\n    WHERE\n        form_id = 466\n        AND $__timeFilter(datetime)\n    GROUP BY\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\n),\nmonthly_consumption AS (\n    SELECT\n        ms.date,\n        CASE\n            WHEN mr.monthly_flow IS NOT NULL AND mr.monthly_flow > 0 THEN mr.monthly_flow\n            ELSE NULL\n        END AS monthly_consumption\n    FROM\n        month_series ms\n    LEFT JOIN\n        monthly_readings mr ON ms.date = mr.date\n)\nSELECT\n    date,\n    SUM(monthly_consumption)\nFROM\n    monthly_consumption\nWHERE\n    date >= DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\n    AND date <= DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date\nGROUP BY\n    date\nORDER BY\n    date;\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "In Flow Meter Reading",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$B",
+          "hide": false,
+          "refId": "Out Flow Meter Reading",
+          "type": "math"
+        }
+      ],
+      "title": "Monthly Flow Rate",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.metric}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 4,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "vertical",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\r\n    -- Generate 1st of each calendar month in Asia/Kolkata timezone\r\n    SELECT generate_series(\r\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),  \r\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),    \r\n        '1 month'::interval\r\n    )::date AS date\r\n),\r\nmonthly_chem AS (\r\n    -- Sum monthly chemical consumption dynamically by chemical type\r\n    SELECT\r\n        DATE_TRUNC('month', c.date::timestamp)::date AS date,\r\n        c.chemical_name,\r\n        SUM(c.consumption) AS total_consumption\r\n    FROM user_chemicalstocktrackerdata c\r\n    JOIN user_customform f ON c.form_id = f.id\r\n    WHERE\r\n        f.team_id = 219\r\n        AND $__timeFilter(c.date::timestamp)\r\n    GROUP BY\r\n        DATE_TRUNC('month', c.date::timestamp)::date,\r\n        c.chemical_name\r\n)\r\nSELECT\r\n    ms.date::timestamp AS \"time\",\r\n    COALESCE(mc.total_consumption, 0) AS \"value\",\r\n    mc.chemical_name AS \"metric\"\r\nFROM month_series ms\r\nJOIN monthly_chem mc ON ms.date = mc.date\r\nWHERE\r\n    ms.date >= (DATE_TRUNC('month', CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata'))::date\r\n    AND ms.date <= (DATE_TRUNC('month', CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata'))::date\r\nORDER BY\r\n    ms.date ASC,\r\n    mc.chemical_name ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Monthly Chemical Consumption",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "metric"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\r\n    SELECT generate_series(\r\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),  \r\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),    \r\n        '1 month'::interval\r\n    )::date AS date\r\n),\r\nmonthly_flow AS (\r\n    SELECT\r\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\r\n        SUM(\r\n            CASE\r\n                WHEN is_override THEN reset_value\r\n                ELSE daily_flow\r\n            END\r\n        ) AS flow_in\r\n    FROM user_flowmeterreadingdata\r\n    WHERE\r\n        form_id = 465\r\n        AND $__timeFilter(datetime)\r\n    GROUP BY DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\r\n),\r\nmonthly_power AS (\r\n    SELECT\r\n        DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date AS date,\r\n        SUM(\r\n            CASE\r\n                WHEN is_override THEN reset_value\r\n                ELSE daily_power\r\n            END\r\n        ) AS torrent_power\r\n    FROM user_powermeterreadingdata\r\n    WHERE\r\n        form_id = 598\r\n        AND $__timeFilter(datetime)\r\n    GROUP BY DATE_TRUNC('month', datetime AT TIME ZONE 'Asia/Kolkata')::date\r\n)\r\nSELECT\r\n    ds.date AS \"time\",\r\n    (mp.torrent_power / NULLIF(mf.flow_in, 0)) AS \"Monthly Power Intensity (kWh/m³)\"\r\nFROM date_series ds\r\nLEFT JOIN monthly_flow mf ON ds.date = mf.date\r\nLEFT JOIN monthly_power mp ON ds.date = mp.date\r\nWHERE\r\n    ds.date >= (DATE_TRUNC('month', CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata'))::date\r\n    AND ds.date <= (DATE_TRUNC('month', CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata'))::date\r\nORDER BY ds.date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Monthly Power Intensity",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "masst"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 42
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "dataset": "usermgmt",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH month_series AS (\r\n    -- Generate series of 1st of each calendar month in Asia/Kolkata timezone\r\n    SELECT generate_series(\r\n        DATE_TRUNC('month', $__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata'),  \r\n        DATE_TRUNC('month', $__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata'),    \r\n        '1 month'::interval\r\n    )::date AS date\r\n),\r\nmonthly_sludge AS (\r\n    -- Sum daily sludge cake by calendar month\r\n    SELECT\r\n        DATE_TRUNC('month', s.date::timestamp)::date AS date,\r\n        SUM(s.daily_sludge_cake) AS total_monthly_sludge\r\n    FROM user_sludgecaketrackerdata s\r\n    JOIN user_customform f ON s.form_id = f.id\r\n    WHERE\r\n        f.team_id = 219\r\n        AND $__timeFilter(s.date::timestamp)\r\n    GROUP BY DATE_TRUNC('month', s.date::timestamp)::date\r\n)\r\nSELECT\r\n    ms.date::timestamp AS \"time\",\r\n    COALESCE(msl.total_monthly_sludge, 0) AS \"Monthly Sludge Cake (MT)\"\r\nFROM month_series ms\r\nLEFT JOIN monthly_sludge msl ON ms.date = msl.date\r\nWHERE\r\n    ms.date >= (DATE_TRUNC('month', CAST($__timeFrom() AS timestamptz) AT TIME ZONE 'Asia/Kolkata'))::date\r\n    AND ms.date <= (DATE_TRUNC('month', CAST($__timeTo() AS timestamptz) AT TIME ZONE 'Asia/Kolkata'))::date\r\nORDER BY ms.date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Monthly Sludge Production",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6M",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Monthly Operational Expenses",
+  "uid": "prdfbxm"
+}

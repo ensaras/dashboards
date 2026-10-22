@@ -1,0 +1,2047 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:13px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> on target &nbsp; <span style=\"color:#D9B84A\">●</span> below target &nbsp; <span style=\"color:#E0707B\">●</span> well below target &nbsp; <span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; white = no limit set &nbsp;·&nbsp; ⌀ 30-day average &nbsp;·&nbsp; days are midnight to midnight IST &nbsp;·&nbsp; For plant and project managers</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "CBG filled (kg) from the daily statistics table (circlecbg_meerutplant_stats). Design capacity 14,600 kg/day. The 30-day average leaves out days below 5 % of design (plant stopped or data outage). Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Latest day"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: kg"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: kg"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$|% of design$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT daily_cbgfilled FROM circlecbg_meerutplant_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled IS NOT NULL)) AS \"Latest day\", (SELECT 100 * daily_cbgfilled / 14600 FROM circlecbg_meerutplant_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled IS NOT NULL)) AS \"% of design\", (SELECT avg(daily_cbgfilled) FROM circlecbg_meerutplant_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled >= 730) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_cbgfilled IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "CBG filled · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Raw gas over the last 30 days ÷ feed over the same days (m³ per tonne), matching the 30-day digester retention time. Target = (100 m³/t × pressmud + 40 m³/t × cow manure) ÷ total feed. Days without a gas figure or a feed entry are left out; needs at least 20 days with data. Green at 80 % of target or more, amber 60–80 %, red below 60 %. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of target"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#E0707B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 60
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 80
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Actual"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/t"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Target"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/t"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(Actual|Target|% of target)$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH d AS (SELECT \"Date\", daily_rawbiogas AS g, COALESCE(daily_pressmud,0) AS p, COALESCE(daily_cowmanure,0) AS c FROM circlecbg_meerutplant_stats WHERE \"Date\" >= current_date - 60),\nv AS (SELECT \"Date\", CASE WHEN g IS NOT NULL AND p + c > 0 THEN g END AS g, CASE WHEN g IS NOT NULL AND p + c > 0 THEN p END AS p, CASE WHEN g IS NOT NULL AND p + c > 0 THEN c END AS c, CASE WHEN g IS NOT NULL AND p + c > 0 THEN 1 ELSE 0 END AS ok FROM d),\nr AS (SELECT \"Date\", SUM(g) OVER w AS g30, SUM(p) OVER w AS p30, SUM(c) OVER w AS c30, SUM(ok) OVER w AS n FROM v WINDOW w AS (ORDER BY \"Date\" RANGE BETWEEN INTERVAL '29 days' PRECEDING AND CURRENT ROW))\nSELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, CASE WHEN n >= 20 THEN g30 / (p30 + c30) END AS \"Actual\", CASE WHEN n >= 20 THEN (100 * p30 + 40 * c30) / (p30 + c30) END AS \"Target\", CASE WHEN n >= 20 THEN 100 * g30 / (100 * p30 + 40 * c30) END AS \"% of target\", n AS \"Days with data\"\nFROM r WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Raw gas yield · 30-day rolling",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Plant energy ÷ CBG filled (kWh/kg). Days with the plant stopped, and days above twice the 30-day median (implausible), are left out. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kWh/kg"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT \"Date\", daily_power / NULLIF(daily_cbgfilled, 0) AS se FROM circlecbg_meerutplant_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled >= 730 AND daily_power > 0), m AS (SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY se) AS med FROM e) SELECT (SELECT se FROM e WHERE \"Date\" = (SELECT max(\"Date\") FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_power IS NOT NULL) AND se <= 2 * (SELECT med FROM m)) AS \"Latest day\", (SELECT avg(se) FROM e WHERE se <= 2 * (SELECT med FROM m)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_power IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "Specific energy · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Methane in the product gas (cascade lab result). Specification to be confirmed (≥ 95 % or > 96 %). Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT daily_avg_ch4_cascade FROM circlecbg_meerutplant_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_avg_ch4_cascade IS NOT NULL)) AS \"Latest day\", (SELECT avg(daily_avg_ch4_cascade) FROM circlecbg_meerutplant_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(max(\"Date\"), 'DD Mon') || CASE WHEN max(\"Date\") < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM circlecbg_meerutplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND \"Date\" > ((now() AT TIME ZONE 'Asia/Kolkata')::date - 60) AND daily_avg_ch4_cascade IS NOT NULL",
+          "refId": "D"
+        }
+      ],
+      "title": "Product CH₄ (cascade, lab)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Pressmud fed on the latest feeding day; ⌀ over feeding days in the period.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: t"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 6
+      },
+      "id": 100,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT (SELECT pm FROM f WHERE day = (SELECT day FROM ld)) AS \"Latest day\", (SELECT avg(pm) FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date AND pm > 0) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT to_char(max(day), 'DD Mon') || CASE WHEN max(day) < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM f",
+          "refId": "D"
+        }
+      ],
+      "title": "Pressmud",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Cow manure fed on the latest feeding day.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: t"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 6
+      },
+      "id": 101,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT (SELECT cm FROM f WHERE day = (SELECT day FROM ld)) AS \"Latest day\", (SELECT avg(cm) FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date AND cm > 0) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT to_char(max(day), 'DD Mon') || CASE WHEN max(day) < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM f",
+          "refId": "D"
+        }
+      ],
+      "title": "Cow manure",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Pressmud + cow manure.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: t"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 6
+      },
+      "id": 102,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT (SELECT tot FROM f WHERE day = (SELECT day FROM ld)) AS \"Latest day\", (SELECT avg(tot) FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date AND tot > 0) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT to_char(max(day), 'DD Mon') || CASE WHEN max(day) < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM f",
+          "refId": "D"
+        }
+      ],
+      "title": "Total feed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Borewell water from the Feedstock form (meter reading).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 6
+      },
+      "id": 103,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT (SELECT bw FROM f WHERE day = (SELECT day FROM ld)) AS \"Latest day\", (SELECT avg(bw) FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date AND bw > 0) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT to_char(max(day), 'DD Mon') || CASE WHEN max(day) < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM f",
+          "refId": "D"
+        }
+      ],
+      "title": "Borewell water",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Filtrate water from the Feedstock form.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fa2a8",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^(.*)\\|old$",
+                      "result": {
+                        "color": "#D9B84A",
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 6
+      },
+      "id": 104,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(?!x$|Time$).*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 22
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT (SELECT fw FROM f WHERE day = (SELECT day FROM ld)) AS \"Latest day\", (SELECT avg(fw) FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date AND fw > 0) AS \"⌀ 30 days\"",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH f AS (SELECT (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date AS day, sum(x.pressmud_quantity) AS pm, sum(x.cow_manure_quantity) AS cm, sum(x.pressmud_quantity) + sum(x.cow_manure_quantity) AS tot, sum(x.borewell_water) AS bw, sum(x.filtrate_water) AS fw FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY 1), ld AS (SELECT max(day) AS day FROM f WHERE day < (now() AT TIME ZONE 'Asia/Kolkata')::date) SELECT to_char(max(day), 'DD Mon') || CASE WHEN max(day) < ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) THEN '|old' ELSE '' END AS \"Day\" FROM f",
+          "refId": "D"
+        }
+      ],
+      "title": "Filtrate water",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily lab results averaged across all digesters and all equalization tanks, so every CBG plant shows the same rows whatever its number of units. VFA / alkalinity is worked out per digester, then averaged. EQ tank pH values above 14 are left out as impossible. Limits from the existing Meerut dashboards: VFA / alkalinity < 0.3, product CH₄ ≥ 90 %. Latest and days outside are coloured by the limit: green within, amber/red outside, purple impossible value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#ccccdc",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "pattern": "^(.*)\\|ok$",
+                "result": {
+                  "color": "#73BF69",
+                  "index": 0,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|amber$",
+                "result": {
+                  "color": "#FADE2A",
+                  "index": 1,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|red$",
+                "result": {
+                  "color": "#F2495C",
+                  "index": 2,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|purple$",
+                "result": {
+                  "color": "#B877D9",
+                  "index": 3,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|muted$",
+                "result": {
+                  "color": "#8e8e8e",
+                  "index": 4,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Parameter"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 190
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Range"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e8e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Limit"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e8e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 105,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH x AS (WITH lim(param, test, ord, unit, dec, warn, alarm, lo, hi, sev) AS (VALUES\n('Digesters · VFA / alkalinity (average of all)','dig_ratio',1,'',2,0.3,0.3,NULL::numeric,NULL::numeric,'amber'),\n('Digesters · temperature (average of all)','dig_temp',2,'°C',1,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Digesters · TSS (average of all)','dig_tss',3,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('EQ tanks · pH (average of all)','eq_ph',4,'',2,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('EQ tanks · TSS (average of all)','eq_tss',5,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Product CH₄','ch4',6,'%',1,NULL::numeric,NULL::numeric,90,100,'red')),\nd0 AS (SELECT regexp_replace(lower(btrim(l.location)),':.*$','') AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now() GROUP BY 1, 2, 3),\nd AS (SELECT 'dig_ratio' AS test, a.day, avg(a.v / NULLIF(b.v, 0)) AS v FROM d0 a JOIN d0 b ON b.loc = a.loc AND b.day = a.day AND b.t = 'Alkalinity' WHERE a.t = 'Volatile Acids' AND a.loc ~ '^digester [0-9]+$' AND b.v > 0 GROUP BY a.day\n UNION ALL SELECT 'dig_temp', day, avg(v) FROM d0 WHERE loc ~ '^digester [0-9]+$' AND t = 'Temperature' GROUP BY day\n UNION ALL SELECT 'dig_tss', day, avg(v) FROM d0 WHERE loc ~ '^digester [0-9]+$' AND t = 'TSS' GROUP BY day\n UNION ALL SELECT 'eq_ph', day, avg(v) FROM d0 WHERE loc ~ '^equali[sz]ation tank' AND t = 'pH' AND v BETWEEN 0 AND 14 GROUP BY day\n UNION ALL SELECT 'eq_tss', day, avg(v) FROM d0 WHERE loc ~ '^equali[sz]ation tank' AND t = 'TSS' GROUP BY day\n UNION ALL SELECT 'ch4', \"Date\", daily_avg_ch4_cascade FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND daily_avg_ch4_cascade IS NOT NULL)\nSELECT lim.param, lim.ord, lim.unit, lim.dec, lim.warn, lim.alarm, lim.lo, lim.hi, lim.sev, to_char(d.day,'YYYY-MM-DD') AS day, d.v FROM lim LEFT JOIN d ON d.test = lim.test ORDER BY lim.ord, d.day),\nv AS (SELECT param, ord, unit, dec, warn, alarm, lo, hi, sev, NULL::text AS limtxt, day, v, (v < 0 OR (param ~* '\\mph\\M' AND v > 14)) AS bad FROM x),\np AS (SELECT param, min(ord) AS ord, max(unit) AS unit, max(dec) AS dec, max(warn) AS warn, max(alarm) AS alarm, max(lo) AS lo, max(hi) AS hi, max(sev) AS sev, max(limtxt) AS limtxt,\n  avg(v) FILTER (WHERE NOT bad) AS av, min(v) FILTER (WHERE NOT bad) AS mn, max(v) FILTER (WHERE NOT bad) AS mx, count(v) FILTER (WHERE NOT bad) AS n, count(v) FILTER (WHERE bad) AS nbad,\n  (array_agg(v ORDER BY day DESC) FILTER (WHERE v IS NOT NULL))[1] AS latest FROM v GROUP BY param),\nq AS (SELECT p.*, (SELECT count(*) FROM v WHERE v.param = p.param AND NOT v.bad AND ((p.lo IS NOT NULL AND (v.v < p.lo OR (CASE WHEN p.sev LIKE '%excl' THEN v.v >= p.hi ELSE v.v > p.hi END))) OR (p.lo IS NULL AND p.warn IS NOT NULL AND v.v >= p.warn))) AS nout FROM p)\nSELECT param || CASE WHEN unit <> '' THEN ' (' || unit || ')' ELSE '' END || CASE WHEN nbad > 0 THEN ' · ' || nbad || ' impossible|purple' ELSE '' END AS \"Parameter\",\n CASE WHEN latest IS NULL THEN '—' ELSE round(latest::numeric, dec)::text ||\n  CASE WHEN latest < 0 OR (param ~* '\\mph\\M' AND latest > 14) THEN '|purple'\n       WHEN lo IS NOT NULL THEN CASE WHEN latest < lo OR (CASE WHEN sev LIKE '%excl' THEN latest >= hi ELSE latest > hi END) THEN '|' || CASE WHEN sev LIKE 'red%' THEN 'red' ELSE 'amber' END ELSE '|ok' END\n       WHEN alarm IS NOT NULL AND latest >= alarm THEN '|red' WHEN warn IS NOT NULL AND latest >= warn THEN '|amber' WHEN warn IS NOT NULL THEN '|ok' ELSE '' END END AS \"Latest\",\n COALESCE(round(av::numeric, dec)::text, '—') AS \"⌀ period\",\n COALESCE(round(mn::numeric, dec)::text || ' – ' || round(mx::numeric, dec)::text, '—') AS \"Range\",\n COALESCE(limtxt, CASE WHEN lo IS NOT NULL THEN lo::text || ' – ' || hi::text WHEN warn IS NOT NULL THEN '< ' || warn::text || CASE WHEN alarm IS NOT NULL AND alarm <> warn THEN ' · alarm ' || alarm::text ELSE '' END ELSE '—' END) AS \"Limit\",\n CASE WHEN (lo IS NULL AND warn IS NULL) OR n = 0 THEN '—' ELSE nout || ' of ' || n || CASE WHEN nout = 0 THEN '|ok' WHEN nout < n / 2.0 THEN '|amber' ELSE '|red' END END AS \"Days outside\"\nFROM q ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "title": "Digesters, EQ tanks and product gas · summary",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "One row per parameter, one cell per day, coloured by that parameter's own limit: green within, amber above warning, red above alarm or outside range, blue no limit set, purple impossible value. Tap a cell for its value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 85,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digesters · VFA / alkalinity (average of all)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#FADE2A",
+                      "value": 0.3
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digesters · temperature (average of all)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Digesters · TSS (average of all)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EQ tanks · pH (average of all)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    },
+                    {
+                      "color": "#B877D9",
+                      "value": 14.0001
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EQ tanks · TSS (average of all)"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "blue",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Product CH₄"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#B877D9",
+                      "value": 0
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 90
+                    },
+                    {
+                      "color": "#F2495C",
+                      "value": 100.000000001
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 107,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.85,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH x AS (WITH lim(param, test, ord, unit, dec, warn, alarm, lo, hi, sev) AS (VALUES\n('Digesters · VFA / alkalinity (average of all)','dig_ratio',1,'',2,0.3,0.3,NULL::numeric,NULL::numeric,'amber'),\n('Digesters · temperature (average of all)','dig_temp',2,'°C',1,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Digesters · TSS (average of all)','dig_tss',3,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('EQ tanks · pH (average of all)','eq_ph',4,'',2,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('EQ tanks · TSS (average of all)','eq_tss',5,'mg/L',0,NULL::numeric,NULL::numeric,NULL::numeric,NULL::numeric,'amber'),\n('Product CH₄','ch4',6,'%',1,NULL::numeric,NULL::numeric,90,100,'red')),\nd0 AS (SELECT regexp_replace(lower(btrim(l.location)),':.*$','') AS loc, btrim(l.type_of_lab_test) AS t, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id = 5 AND $__timeFilter(l.time_of_sample_collection) AND l.time_of_sample_collection < now() GROUP BY 1, 2, 3),\nd AS (SELECT 'dig_ratio' AS test, a.day, avg(a.v / NULLIF(b.v, 0)) AS v FROM d0 a JOIN d0 b ON b.loc = a.loc AND b.day = a.day AND b.t = 'Alkalinity' WHERE a.t = 'Volatile Acids' AND a.loc ~ '^digester [0-9]+$' AND b.v > 0 GROUP BY a.day\n UNION ALL SELECT 'dig_temp', day, avg(v) FROM d0 WHERE loc ~ '^digester [0-9]+$' AND t = 'Temperature' GROUP BY day\n UNION ALL SELECT 'dig_tss', day, avg(v) FROM d0 WHERE loc ~ '^digester [0-9]+$' AND t = 'TSS' GROUP BY day\n UNION ALL SELECT 'eq_ph', day, avg(v) FROM d0 WHERE loc ~ '^equali[sz]ation tank' AND t = 'pH' AND v BETWEEN 0 AND 14 GROUP BY day\n UNION ALL SELECT 'eq_tss', day, avg(v) FROM d0 WHERE loc ~ '^equali[sz]ation tank' AND t = 'TSS' GROUP BY day\n UNION ALL SELECT 'ch4', \"Date\", daily_avg_ch4_cascade FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND daily_avg_ch4_cascade IS NOT NULL)\nSELECT lim.param, lim.ord, lim.unit, lim.dec, lim.warn, lim.alarm, lim.lo, lim.hi, lim.sev, to_char(d.day,'YYYY-MM-DD') AS day, d.v FROM lim LEFT JOIN d ON d.test = lim.test ORDER BY lim.ord, d.day) SELECT (day::date)::timestamp AS time, param AS metric, v AS value FROM x WHERE day IS NOT NULL ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Each day against its limit",
+      "type": "status-history"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Daily CBG filled (kg), last 30 days. The dashed line is the 14,600 kg/day design capacity.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisSoftMax": 16060,
+            "axisSoftMin": 0,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "lineWidth": 0,
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              },
+              {
+                "color": "#9fa2a8",
+                "value": 14600
+              }
+            ]
+          },
+          "unit": "suffix: kg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 30
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single"
+        },
+        "xField": "Day",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char(\"Date\",'DD Mon') AS \"Day\", daily_cbgfilled AS \"CBG filled\" FROM circlecbg_meerutplant_stats WHERE \"Date\" BETWEEN ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND LEAST(($__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date, ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) ORDER BY \"Date\"",
+          "refId": "A"
+        }
+      ],
+      "title": "CBG filled per day · dashed line: design capacity",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Rolling 30-day raw gas yield as % of target, for each of the last 30 days. Bars are blue at 80 % or more, amber 60–80 %, red below 60 %; dashed lines at 60 % and 80 %. Hover for actual and target m³/t.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisSoftMax": 100,
+            "axisSoftMin": 0,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "lineWidth": 0,
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#E0707B"
+              },
+              {
+                "color": "#D9B84A",
+                "value": 60
+              },
+              {
+                "color": "#5d7fb3",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Actual"
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Target"
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Days with data"
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 30
+      },
+      "id": 7,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single"
+        },
+        "xField": "Day",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH d AS (SELECT \"Date\", daily_rawbiogas AS g, COALESCE(daily_pressmud,0) AS p, COALESCE(daily_cowmanure,0) AS c FROM circlecbg_meerutplant_stats WHERE \"Date\" >= ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date - 30),\nv AS (SELECT \"Date\", CASE WHEN g IS NOT NULL AND p + c > 0 THEN g END AS g, CASE WHEN g IS NOT NULL AND p + c > 0 THEN p END AS p, CASE WHEN g IS NOT NULL AND p + c > 0 THEN c END AS c, CASE WHEN g IS NOT NULL AND p + c > 0 THEN 1 ELSE 0 END AS ok FROM d),\nr AS (SELECT \"Date\", SUM(g) OVER w AS g30, SUM(p) OVER w AS p30, SUM(c) OVER w AS c30, SUM(ok) OVER w AS n FROM v WINDOW w AS (ORDER BY \"Date\" RANGE BETWEEN INTERVAL '29 days' PRECEDING AND CURRENT ROW))\nSELECT to_char(\"Date\",'DD Mon') AS \"Day\", CASE WHEN n >= 20 THEN g30 / (p30 + c30) END AS \"Actual\", CASE WHEN n >= 20 THEN (100 * p30 + 40 * c30) / (p30 + c30) END AS \"Target\", CASE WHEN n >= 20 THEN 100 * g30 / (100 * p30 + 40 * c30) END AS \"% of target\", n AS \"Days with data\"\nFROM r WHERE \"Date\" BETWEEN ($__timeFrom()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date AND LEAST(($__timeTo()::timestamptz AT TIME ZONE 'Asia/Kolkata')::date, ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Raw gas yield · 30-day rolling · % of target",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "Feed per feeding day from the Feedstock form.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisSoftMin": 0,
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "lineWidth": 0,
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent"
+              }
+            ]
+          },
+          "unit": "suffix: t"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pressmud"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5d7fb3",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cow manure"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9fb8c9",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 30
+      },
+      "id": 106,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.9,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "single"
+        },
+        "xField": "Day",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char((x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date,'DD Mon') AS \"Day\", sum(x.pressmud_quantity) AS \"Pressmud\", sum(x.cow_manure_quantity) AS \"Cow manure\" FROM user_feedstockdata x JOIN user_customform cf ON cf.id = x.form_id WHERE cf.team_id = 5 AND $__timeFilter(x.date_fed_into_eq_tank) GROUP BY (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date ORDER BY (x.date_fed_into_eq_tank AT TIME ZONE 'Asia/Kolkata')::date",
+          "refId": "A"
+        }
+      ],
+      "title": "Feed per day · t",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "cbg",
+    "managed-by-git",
+    "meerut",
+    "new",
+    "performance"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Meerut CBG – Site Performance",
+  "uid": "meerut-cbg-site-performance"
+}
