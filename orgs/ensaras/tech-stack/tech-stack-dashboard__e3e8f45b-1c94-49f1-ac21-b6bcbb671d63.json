@@ -1,0 +1,611 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "fd5c9468-e06b-406c-9cf7-7c20b76896dd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 11,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "fd5c9468-e06b-406c-9cf7-7c20b76896dd"
+          },
+          "dimensions": {
+            "InstanceId": "i-0138fd26a806e59d5"
+          },
+          "expression": "",
+          "hide": false,
+          "id": "",
+          "label": "",
+          "logGroups": [],
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "CPUUtilization",
+          "metricQueryType": 1,
+          "namespace": "CWAgent",
+          "period": "auto",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sql": {
+            "from": {
+              "property": {
+                "name": "CWAgent",
+                "type": "string"
+              },
+              "type": "property"
+            },
+            "select": {
+              "name": "AVG",
+              "parameters": [
+                {
+                  "name": "mem_used_percent",
+                  "type": "functionParameter"
+                }
+              ],
+              "type": "function"
+            }
+          },
+          "sqlExpression": "SELECT AVG(CPUUtilization) FROM \"AWS/EC2\" GROUP BY InstanceId",
+          "statistic": "Average"
+        }
+      ],
+      "title": "CPU Usage",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0790475d589982017",
+            "renamePattern": "nanded-mbr"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-05d932650ea271438",
+            "renamePattern": "prod-grafana"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0161afcc174a5485d",
+            "renamePattern": "prod-influxdb"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-093dce43fdabe3855",
+            "renamePattern": "prod-mqtt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0e7f76603e5315a95",
+            "renamePattern": "prod-reverse-proxy"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0dd3354e8dc1eb99c",
+            "renamePattern": "test-mqtt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0ce722617d49e9bfd",
+            "renamePattern": "test-reverse-proxy"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0138fd26a806e59d5",
+            "renamePattern": "test-server"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "fd5c9468-e06b-406c-9cf7-7c20b76896dd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 11,
+        "x": 11,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "fd5c9468-e06b-406c-9cf7-7c20b76896dd"
+          },
+          "dimensions": {
+            "InstanceId": "i-0138fd26a806e59d5"
+          },
+          "expression": "",
+          "hide": false,
+          "id": "",
+          "label": "",
+          "logGroups": [],
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "CPUUtilization",
+          "metricQueryType": 1,
+          "namespace": "CWAgent",
+          "period": "auto",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sql": {
+            "from": {
+              "property": {
+                "name": "CWAgent",
+                "type": "string"
+              },
+              "type": "property"
+            },
+            "select": {
+              "name": "AVG",
+              "parameters": [
+                {
+                  "name": "mem_used_percent",
+                  "type": "functionParameter"
+                }
+              ],
+              "type": "function"
+            }
+          },
+          "sqlExpression": "SELECT AVG(mem_used_percent) FROM CWAgent GROUP BY InstanceId",
+          "statistic": "Average"
+        }
+      ],
+      "title": "Mem Usage",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0790475d589982017",
+            "renamePattern": "nanded-mbr"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-05d932650ea271438",
+            "renamePattern": "prod-grafana"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0161afcc174a5485d",
+            "renamePattern": "prod-influxdb"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-093dce43fdabe3855",
+            "renamePattern": "prod-mqtt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0e7f76603e5315a95",
+            "renamePattern": "prod-reverse-proxy"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0dd3354e8dc1eb99c",
+            "renamePattern": "test-mqtt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0ce722617d49e9bfd",
+            "renamePattern": "test-reverse-proxy"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0138fd26a806e59d5",
+            "renamePattern": "test-server"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "fd5c9468-e06b-406c-9cf7-7c20b76896dd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 11,
+        "x": 0,
+        "y": 11
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "fd5c9468-e06b-406c-9cf7-7c20b76896dd"
+          },
+          "dimensions": {
+            "InstanceId": "i-0138fd26a806e59d5"
+          },
+          "expression": "",
+          "hide": false,
+          "id": "",
+          "label": "",
+          "logGroups": [],
+          "matchExact": true,
+          "metricEditorMode": 1,
+          "metricName": "CPUUtilization",
+          "metricQueryType": 1,
+          "namespace": "CWAgent",
+          "period": "auto",
+          "queryMode": "Metrics",
+          "refId": "A",
+          "region": "default",
+          "sql": {
+            "from": {
+              "property": {
+                "name": "CWAgent",
+                "type": "string"
+              },
+              "type": "property"
+            },
+            "select": {
+              "name": "AVG",
+              "parameters": [
+                {
+                  "name": "mem_used_percent",
+                  "type": "functionParameter"
+                }
+              ],
+              "type": "function"
+            }
+          },
+          "sqlExpression": "SELECT AVG(disk_used_percent) FROM CWAgent GROUP BY InstanceId",
+          "statistic": "Average"
+        }
+      ],
+      "title": "Disk Usage",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0790475d589982017",
+            "renamePattern": "nanded-mbr"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-05d932650ea271438",
+            "renamePattern": "prod-grafana"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0161afcc174a5485d",
+            "renamePattern": "prod-influxdb"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-093dce43fdabe3855",
+            "renamePattern": "prod-mqtt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0e7f76603e5315a95",
+            "renamePattern": "prod-reverse-proxy"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0dd3354e8dc1eb99c",
+            "renamePattern": "test-mqtt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0ce722617d49e9bfd",
+            "renamePattern": "test-reverse-proxy"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "i-0138fd26a806e59d5",
+            "renamePattern": "test-server"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Tech Stack Dashboard",
+  "uid": "e3e8f45b-1c94-49f1-ac21-b6bcbb671d63"
+}
