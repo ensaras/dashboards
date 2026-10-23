@@ -32,24 +32,43 @@ def changed_dashboard_paths(base_ref: str, head_ref: str, orgs_dir: Path) -> lis
     """Return existing JSON files changed between two Git refs."""
     result = subprocess.run(
         [
-            "git", "diff", "--name-only", "--diff-filter=ACMR",
-            f"{base_ref}..{head_ref}", "--", str(orgs_dir),
+            "git",
+            "diff",
+            "--name-only",
+            "--diff-filter=ACMR",
+            f"{base_ref}..{head_ref}",
+            "--",
+            str(orgs_dir),
         ],
         check=True,
         capture_output=True,
         text=True,
     )
-    paths = [Path(item) for item in result.stdout.splitlines() if item.lower().endswith(".json")]
+    paths = [
+        Path(item)
+        for item in result.stdout.splitlines()
+        if item.lower().endswith(".json")
+    ]
     return [path for path in paths if path.is_file()]
 
 
-def _replace_datasource_uids(value: Any, uid_map: dict[str, str], missing: set[str]) -> Any:
+def _replace_datasource_uids(
+    value: Any, uid_map: dict[str, str], missing: set[str]
+) -> Any:
     if isinstance(value, dict):
-        result = {key: _replace_datasource_uids(child, uid_map, missing) for key, child in value.items()}
+        result = {
+            key: _replace_datasource_uids(child, uid_map, missing)
+            for key, child in value.items()
+        }
         if "datasource" in result and isinstance(result["datasource"], dict):
             ref = result["datasource"]
             uid = ref.get("uid")
-            if isinstance(uid, str) and uid and not uid.startswith("$") and uid not in {"-- Grafana --", "-- Mixed --"}:
+            if (
+                isinstance(uid, str)
+                and uid
+                and not uid.startswith("$")
+                and uid not in {"-- Grafana --", "-- Mixed --"}
+            ):
                 if uid in uid_map:
                     ref["uid"] = uid_map[uid]
                 else:
@@ -77,7 +96,9 @@ def _deployment_context(
         folders = env_config.get("team_folders", {})
         uid_map = env_config.get("datasource_uid_map", {})
         if not isinstance(uid_map, dict):
-            raise ValueError(f"environments.{environment}.datasource_uid_map must be a mapping")
+            raise ValueError(
+                f"environments.{environment}.datasource_uid_map must be a mapping"
+            )
     org_id = site.get("org_id")
     if org_id is None:
         raise ValueError(f"site config is missing org_id for {environment}")
@@ -90,9 +111,13 @@ def _deployment_context(
 
 def _get_or_create_retired_folder(client: GrafanaClient, org_id: int) -> str:
     folders = client.get_folders(org_id)
-    matches = [folder for folder in folders if folder.get("title") == RETIRED_FOLDER_TITLE]
+    matches = [
+        folder for folder in folders if folder.get("title") == RETIRED_FOLDER_TITLE
+    ]
     if len(matches) > 1:
-        raise ValueError(f"Grafana org {org_id} has multiple {RETIRED_FOLDER_TITLE!r} folders")
+        raise ValueError(
+            f"Grafana org {org_id} has multiple {RETIRED_FOLDER_TITLE!r} folders"
+        )
     if matches:
         folder = matches[0]
     else:
@@ -101,7 +126,9 @@ def _get_or_create_retired_folder(client: GrafanaClient, org_id: int) -> str:
     if not isinstance(folder_uid, str) or not folder_uid:
         raise ValueError("Grafana did not return a UID for the Retired folder")
     # Folder permissions replace the inherited role grants, leaving Grafana Admins only.
-    client.set_folder_permissions(org_id, folder_uid, [{"role": "Admin", "permission": 4}])
+    client.set_folder_permissions(
+        org_id, folder_uid, [{"role": "Admin", "permission": 4}]
+    )
     return folder_uid
 
 
@@ -130,19 +157,27 @@ def deploy_paths(
         if org_slug not in config_cache:
             config_path = sites_dir / f"{org_slug}.yaml"
             config_cache[org_slug] = load_site_config(config_path)
-            context_cache[org_slug] = _deployment_context(config_cache[org_slug], environment)
+            context_cache[org_slug] = _deployment_context(
+                config_cache[org_slug], environment
+            )
         org_id, folders, datasource_uid_map = context_cache[org_slug]
 
         dashboard = json.loads(path.read_text(encoding="utf-8"))
         retired_directory = team_slug.casefold() == "retired"
         if dashboard.get("retired") is True or retired_directory:
             if dashboard.get("retired") is not True:
-                raise ValueError(f"{path}: dashboard in Retired directory must set retired: true")
+                raise ValueError(
+                    f"{path}: dashboard in Retired directory must set retired: true"
+                )
             if org_slug not in retired_folder_uids:
-                retired_folder_uids[org_slug] = _get_or_create_retired_folder(client, org_id)
+                retired_folder_uids[org_slug] = _get_or_create_retired_folder(
+                    client, org_id
+                )
             folder_uid = retired_folder_uids[org_slug]
             if not str(dashboard.get("title", "")).startswith("[RETIRED]"):
-                dashboard["title"] = f"[RETIRED] {dashboard.get('title', dashboard['uid'])}"
+                dashboard["title"] = (
+                    f"[RETIRED] {dashboard.get('title', dashboard['uid'])}"
+                )
         else:
             folder = folders.get(team_slug)
             if not isinstance(folder, dict) or not folder.get("folder_uid"):
@@ -176,8 +211,14 @@ def deploy_paths(
                 raise
             current = None
 
-        current_dashboard = current.get("dashboard") if isinstance(current, dict) else None
-        current_folder_uid = current.get("meta", {}).get("folderUid") if isinstance(current, dict) else None
+        current_dashboard = (
+            current.get("dashboard") if isinstance(current, dict) else None
+        )
+        current_folder_uid = (
+            current.get("meta", {}).get("folderUid")
+            if isinstance(current, dict)
+            else None
+        )
         if (
             isinstance(current_dashboard, dict)
             and current_folder_uid == str(folder_uid)
@@ -194,15 +235,28 @@ def deploy_paths(
             overwrite=True,
             message=" | ".join(message_parts),
         )
-        logger.info("Deployed %s to %s/%s (dashboard UID %s): %s", path, environment, org_slug, dashboard.get("uid"), response)
+        logger.info(
+            "Deployed %s to %s/%s (dashboard UID %s): %s",
+            path,
+            environment,
+            org_slug,
+            dashboard.get("uid"),
+            response,
+        )
         deployed += 1
     return deployed
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Deploy changed Git dashboards to Grafana.")
-    parser.add_argument("--environment", choices=("staging", "production"), required=True)
-    parser.add_argument("--base-ref", required=True, help="Base commit/ref for this deployment.")
+    parser = argparse.ArgumentParser(
+        description="Deploy changed Git dashboards to Grafana."
+    )
+    parser.add_argument(
+        "--environment", choices=("staging", "production"), required=True
+    )
+    parser.add_argument(
+        "--base-ref", required=True, help="Base commit/ref for this deployment."
+    )
     parser.add_argument("--head-ref", default="HEAD")
     parser.add_argument("--org", help="Limit deployment to one organization slug.")
     parser.add_argument("--sites-dir", type=Path, default=SITE_ROOT)
@@ -212,7 +266,9 @@ def main() -> int:
     parser.add_argument("--author", default=os.getenv("GITHUB_ACTOR"))
     args = parser.parse_args()
 
-    errors = validate_repository(args.orgs_dir, args.sites_dir, args.base_ref, args.head_ref)
+    errors = validate_repository(
+        args.orgs_dir, args.sites_dir, args.base_ref, args.head_ref
+    )
     if errors:
         for error in errors:
             logger.error(error)
@@ -222,15 +278,29 @@ def main() -> int:
     try:
         paths = changed_dashboard_paths(args.base_ref, args.head_ref, args.orgs_dir)
         if args.org:
-            paths = [path for path in paths if path.relative_to(args.orgs_dir).parts[0] == args.org]
+            paths = [
+                path
+                for path in paths
+                if path.relative_to(args.orgs_dir).parts[0] == args.org
+            ]
         if not paths:
             logger.info("No changed dashboards to deploy.")
             return 0
 
-        url = os.getenv("GRAFANA_STAGING_URL" if args.environment == "staging" else "GRAFANA_PROD_URL")
-        token = os.getenv("GRAFANA_STAGING_TOKEN" if args.environment == "staging" else "GRAFANA_PROD_TOKEN")
+        url = os.getenv(
+            "GRAFANA_STAGING_URL"
+            if args.environment == "staging"
+            else "GRAFANA_PROD_URL"
+        )
+        token = os.getenv(
+            "GRAFANA_STAGING_TOKEN"
+            if args.environment == "staging"
+            else "GRAFANA_PROD_TOKEN"
+        )
         if not url or not token:
-            raise ValueError(f"Set the URL and token secrets for the {args.environment} environment")
+            raise ValueError(
+                f"Set the URL and token secrets for the {args.environment} environment"
+            )
         client = GrafanaClient(base_url=url, token=token)
         count = deploy_paths(
             paths=paths,
@@ -242,9 +312,20 @@ def main() -> int:
             author=args.author,
             orgs_dir=args.orgs_dir,
         )
-        logger.info("Deployment complete: %d dashboard(s) deployed to %s.", count, args.environment)
+        logger.info(
+            "Deployment complete: %d dashboard(s) deployed to %s.",
+            count,
+            args.environment,
+        )
         return 0
-    except (GrafanaAPIError, OSError, TypeError, ValueError, yaml.YAMLError, subprocess.CalledProcessError) as exc:
+    except (
+        GrafanaAPIError,
+        OSError,
+        TypeError,
+        ValueError,
+        yaml.YAMLError,
+        subprocess.CalledProcessError,
+    ) as exc:
         logger.error("Deployment failed: %s", exc)
         return 1
 

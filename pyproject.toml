@@ -17,6 +17,9 @@ dependencies = [
 grafana-dashboards = "grafana_dashboards:main"
 validate-dashboards = "grafana_dashboards.tools.validate:main"
 deploy-dashboards = "grafana_dashboards.tools.deploy:main"
+preview-dashboards = "grafana_dashboards.tools.preview:main"
+cleanup-dashboard-previews = "grafana_dashboards.tools.cleanup:main"
+purge-retired-dashboards = "grafana_dashboards.tools.purge_retired:main"
 
 [build-system]
 requires = ["uv_build>=0.12.15,<0.13.0"]

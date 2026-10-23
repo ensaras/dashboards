@@ -1,0 +1,58 @@
+name: Deploy dashboards to Grafana production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "orgs/**/*.json"
+      - "sites/**/*.yaml"
+      - "src/grafana_dashboards/tools/**"
+      - "pyproject.toml"
+      - "uv.lock"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: uv sync --locked
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Deploy changed dashboards by Org
+        shell: bash
+        env:
+          GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
+          TOKEN_PREFIX: ${{ vars.GRAFANA_PROD_TOKEN_SSM_PREFIX || '/grafana/dashboards/production' }}
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          orgs="$(git diff --name-only "$BASE_SHA..$HEAD_SHA" -- orgs/ | awk -F/ 'NF >= 3 && !seen[$2]++ {print $2}')"
+          if [[ -z "$orgs" ]]; then
+            echo "No changed dashboard JSON files."
+            exit 0
+          fi
+          while IFS= read -r org; do
+            [[ -z "$org" ]] && continue
+            token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"
+            GRAFANA_PROD_TOKEN="$token" uv run python -m grafana_dashboards.tools.deploy \
+              --environment production --org "$org" --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA"
+            unset token
+          done <<< "$orgs"

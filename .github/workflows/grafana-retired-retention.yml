@@ -1,0 +1,43 @@
+name: Retired dashboard retention
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: uv sync --locked
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Purge Retired dashboards after 90 days
+        shell: bash
+        env:
+          GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
+          TOKEN_PREFIX: ${{ vars.GRAFANA_PROD_TOKEN_SSM_PREFIX || '/grafana/dashboards/production' }}
+        run: |
+          set -euo pipefail
+          while IFS= read -r config; do
+            org="$(basename "$config" .yaml)"
+            org_id="$(uv run python -c 'import sys,yaml; print(yaml.safe_load(open(sys.argv[1], encoding="utf-8"))["site"]["org_id"])' "$config")"
+            token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"
+            GRAFANA_PROD_TOKEN="$token" GRAFANA_PROD_URL="$GRAFANA_PROD_URL" \
+              uv run python -m grafana_dashboards.tools.purge_retired --org-id "$org_id"
+            unset token
+          done < <(find sites -maxdepth 1 -type f -name '*.yaml' ! -name '.gitkeep' | sort)

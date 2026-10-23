@@ -64,7 +64,9 @@ def _validate_dashboard(
 ) -> tuple[str | None, str | None]:
     rel = path.relative_to(orgs_dir)
     if len(rel.parts) < 2:
-        errors.append(f"{path}: expected orgs/<org>/<team>/<dashboard>.json or orgs/<org>/Retired/<dashboard>.json")
+        errors.append(
+            f"{path}: expected orgs/<org>/<team>/<dashboard>.json or orgs/<org>/Retired/<dashboard>.json"
+        )
         return None, None
 
     org_slug = rel.parts[0]
@@ -74,7 +76,9 @@ def _validate_dashboard(
     if site.get("slug") != org_slug:
         errors.append(f"{path}: organization directory does not match site slug")
     folder = site_config.get("team_folders", {}).get(team_slug)
-    if not retired_directory and (not isinstance(folder, dict) or not folder.get("folder_uid")):
+    if not retired_directory and (
+        not isinstance(folder, dict) or not folder.get("folder_uid")
+    ):
         errors.append(f"{path}: team/folder {team_slug!r} is not configured in sites")
 
     if not isinstance(data, dict):
@@ -90,14 +94,18 @@ def _validate_dashboard(
     if not match:
         errors.append(f"{path}: filename must use <dashboard_slug>__<uid>.json")
     elif uid and match.group(1) != uid:
-        errors.append(f"{path}: filename UID {match.group(1)!r} does not match JSON UID {uid!r}")
+        errors.append(
+            f"{path}: filename UID {match.group(1)!r} does not match JSON UID {uid!r}"
+        )
     if not isinstance(title, str) or not title.strip():
         errors.append(f"{path}: dashboard must have a non-empty string title")
         title = None
     if data.get("editable") is not False:
         errors.append(f"{path}: editable must be false (dashboard JSON is Git-managed)")
     if retired_directory and data.get("retired") is not True:
-        errors.append(f"{path}: dashboards in an Org's Retired directory must set retired: true")
+        errors.append(
+            f"{path}: dashboards in an Org's Retired directory must set retired: true"
+        )
     tags = data.get("tags", [])
     if not isinstance(tags, list):
         errors.append(f"{path}: tags must be an array of strings")
@@ -131,9 +139,19 @@ def _validate_dashboard(
     return org_slug, title
 
 
-def _git_deleted_json(base_ref: str, head_ref: str, orgs_dir: Path) -> list[tuple[str, str]]:
+def _git_deleted_json(
+    base_ref: str, head_ref: str, orgs_dir: Path
+) -> list[tuple[str, str]]:
     result = subprocess.run(
-        ["git", "diff", "--name-status", "-M", f"{base_ref}..{head_ref}", "--", str(orgs_dir)],
+        [
+            "git",
+            "diff",
+            "--name-status",
+            "-M",
+            f"{base_ref}..{head_ref}",
+            "--",
+            str(orgs_dir),
+        ],
         check=True,
         capture_output=True,
         text=True,
@@ -188,21 +206,29 @@ def validate_repository(
         if checked_org and isinstance(uid, str):
             prior = uids.setdefault(checked_org, {}).get(uid)
             if prior:
-                errors.append(f"{path}: duplicate dashboard UID {uid!r} also used by {prior}")
+                errors.append(
+                    f"{path}: duplicate dashboard UID {uid!r} also used by {prior}"
+                )
             else:
                 uids[checked_org][uid] = path
         if checked_org and isinstance(title, str) and len(rel.parts) >= 2:
             key = (checked_org, rel.parts[1])
             prior = titles.setdefault(key, {}).get(title.casefold())
             if prior:
-                errors.append(f"{path}: duplicate title {title!r} in folder also used by {prior}")
+                errors.append(
+                    f"{path}: duplicate title {title!r} in folder also used by {prior}"
+                )
             else:
                 titles[key][title.casefold()] = path
 
     if base_ref:
         try:
             for deleted_path, uid in _git_deleted_json(base_ref, head_ref, orgs_dir):
-                deleted_org = Path(deleted_path).parts[1] if len(Path(deleted_path).parts) > 1 else ""
+                deleted_org = (
+                    Path(deleted_path).parts[1]
+                    if len(Path(deleted_path).parts) > 1
+                    else ""
+                )
                 replacement = next(
                     (
                         p
@@ -229,20 +255,29 @@ def validate_repository(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate dashboard JSON and repository metadata offline.")
+    parser = argparse.ArgumentParser(
+        description="Validate dashboard JSON and repository metadata offline."
+    )
     parser.add_argument("--orgs-dir", type=Path, default=ORG_ROOT)
     parser.add_argument("--sites-dir", type=Path, default=SITE_ROOT)
-    parser.add_argument("--base-ref", help="Optional base Git ref for deleted-dashboard checks.")
+    parser.add_argument(
+        "--base-ref", help="Optional base Git ref for deleted-dashboard checks."
+    )
     parser.add_argument("--head-ref", default="HEAD")
     args = parser.parse_args()
 
-    errors = validate_repository(args.orgs_dir, args.sites_dir, args.base_ref, args.head_ref)
+    errors = validate_repository(
+        args.orgs_dir, args.sites_dir, args.base_ref, args.head_ref
+    )
     if errors:
         for error in errors:
             logger.error(error)
         logger.error("Validation failed with %d error(s).", len(errors))
         return 1
-    logger.info("Validation passed for %d dashboard JSON file(s).", len(list(args.orgs_dir.rglob("*.json"))))
+    logger.info(
+        "Validation passed for %d dashboard JSON file(s).",
+        len(list(args.orgs_dir.rglob("*.json"))),
+    )
     return 0
 
 

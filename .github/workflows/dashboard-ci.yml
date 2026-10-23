@@ -1,0 +1,51 @@
+name: Dashboard CI
+
+on:
+  push:
+    branches: [development]
+  pull_request:
+    branches: [development, main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project and development dependencies
+        run: uv sync --locked --dev
+      - name: Lint
+        run: uv run ruff check .
+      - name: Run unit tests
+        run: uv run pytest -v
+      - name: Validate dashboard repository
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base="$EVENT_BASE_SHA"
+            head="$EVENT_HEAD_SHA"
+          else
+            base="$EVENT_BEFORE"
+            head="$CURRENT_SHA"
+          fi
+          if [[ -z "$base" || "$base" =~ ^0+$ ]]; then
+            uv run python -m grafana_dashboards.tools.validate
+          else
+            uv run python -m grafana_dashboards.tools.validate --base-ref "$base" --head-ref "$head"
+          fi
