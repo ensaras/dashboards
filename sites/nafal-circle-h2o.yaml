@@ -1,0 +1,46 @@
+site:
+  name: "Nafal / Circle H2O"
+  slug: "nafal-circle-h2o"
+  org_id: 22
+  timezone: "Asia/Muscat"
+
+team_folders:
+  master-data-management:
+    name: "Master Data Management"
+    folder_uid: "e90c7a34-d135-4692-a4cc-9a24d670a654"
+  wani-bani-khalid:
+    name: "Wani Bani Khalid"
+    folder_uid: "a483cc78-6e53-415a-8ea3-8b282c9865c8"
+  al-mudhaibi:
+    name: "Al-Mudhaibi"
+    folder_uid: "de80826a-5210-47c0-8a5c-c1e86988bc0b"
+  ibra:
+    name: "Ibra"
+    folder_uid: "d730c6df-451e-4079-bdd5-b444891101dc"
+  bidiya:
+    name: "Bidiya"
+    folder_uid: "fe8289b6-0bb7-4c43-97e6-c981b6cc5c97"
+  al-qabil:
+    name: "Al-Qabil"
+    folder_uid: "ee2c2dd0-0ce8-4e49-a9cf-33d83f9d4cc8"
+  jalaan-bani-bu-ali:
+    name: "Jalaan Bani Bu Ali"
+    folder_uid: "b2596b38-d8e4-4221-8d3e-ece045458eab"
+  jalaan-bani-bu-hassn:
+    name: "Jalaan Bani Bu Hassn"
+    folder_uid: "f8a8042a-e093-4b46-b0fd-22093b52d767"
+  al-kamil-wafi:
+    name: "Al-Kamil Wafi"
+    folder_uid: "f6f3436c-47a1-4b0b-b68b-18fc5e4114c3"
+  sur:
+    name: "Sur"
+    folder_uid: "bffe5a60-eb5d-457a-a77b-f97332a64272"
+  massirah:
+    name: "Massirah"
+    folder_uid: "ca363c15-f256-491c-822d-c30ddec3fafc"
+  new-haima:
+    name: "New Haima"
+    folder_uid: "e10dd560-a98b-481e-9cf1-23f39ad12890"
+
+datasources:
+  postgres: "pg-nafal-prod"

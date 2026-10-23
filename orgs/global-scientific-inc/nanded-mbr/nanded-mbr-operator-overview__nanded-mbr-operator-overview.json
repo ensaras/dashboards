@@ -1,0 +1,2376 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Draft v1 – Nanded 7.5 MLD MBR Operator Overview on the Ensaras standard (same template as Meerut CBG). Limits for TMP, permeability and treated water not yet defined, so shown neutral.",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Membrane Health · Train 1",
+      "tooltip": "TMP anomaly score, permeability and cleaning effectiveness",
+      "type": "link",
+      "url": "/grafana/d/bc88f030-a140-4e0c-a836-e5e4c13dcc4f?orgId=19"
+    },
+    {
+      "asDropdown": false,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Membrane Health · Train 2",
+      "tooltip": "TMP anomaly score, permeability and cleaning effectiveness",
+      "type": "link",
+      "url": "/grafana/d/c9d44c13-1f77-4db8-a272-68df53002f88?orgId=19"
+    },
+    {
+      "asDropdown": false,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Energy & Chemicals",
+      "tooltip": "Energy and chemical use in detail",
+      "type": "link",
+      "url": "/grafana/d/kChQc254k?orgId=19"
+    },
+    {
+      "asDropdown": false,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Blower Health",
+      "tooltip": "Blower current, temperatures, filter ΔP",
+      "type": "link",
+      "url": "/grafana/d/d1c218dc-33c0-4eb1-a4e6-7d7d6889e75b?orgId=19"
+    }
+  ],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"margin-top:-4px;font-size:12px;color:#9a9aa8\"><span style=\"color:#73BF69\">●</span> normal &nbsp;<span style=\"color:#D9B84A\">●</span> warning &nbsp;<span style=\"color:#E0707B\">●</span> alarm &nbsp;·&nbsp; ⌀ 30-day avg &nbsp;·&nbsp; — not running &nbsp;·&nbsp; blowers: <span style=\"color:#73BF69\">●</span> running ○ off &nbsp;·&nbsp; ⓘ shows definitions</div>",
+        "mode": "markdown"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Running when total permeate flow (FIT-20211 + FIT-20231) averages above 5 m³/h over the last 15 minutes.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": -1000000000000,
+                "result": {
+                  "color": "#8E8E8E",
+                  "index": 0,
+                  "text": "■ Stopped"
+                },
+                "to": 5
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 5.0001,
+                "result": {
+                  "color": "#2f6b37",
+                  "index": 1,
+                  "text": "▶ Running"
+                },
+                "to": 1000000000000
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-Instruments-FIT20211mqtt\")+mean(\"MBR-Instruments-FIT20231mqtt\") FROM \"mqtt_consumer\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "timeFrom": "15m",
+      "title": "Plant",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Permeate from both trains (FIT-20211 + FIT-20231). today = volume since midnight IST. ↗ = on pace for the full day (average flow since midnight × 24 h). ⌀ = average per day over the last 30 complete days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "today"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "today"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pace"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "↗"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "avg_m3"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "⌀"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#8e8e9e",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 7,
+        "x": 4,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT integral(\"MBR-Instruments-FIT20211mqtt\",1h)+integral(\"MBR-Instruments-FIT20231mqtt\",1h) AS \"today\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}'",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT mean(\"MBR-Instruments-FIT20211mqtt\")*24+mean(\"MBR-Instruments-FIT20231mqtt\")*24 AS \"pace\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT (integral(\"MBR-Instruments-FIT20211mqtt\",1h)+integral(\"MBR-Instruments-FIT20231mqtt\",1h))/30 AS \"avg_m3\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}' - 30d AND time < '${todayStart}'",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Treated water",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "avg_m3": 2,
+              "pace": 1,
+              "today": 0
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Plant power (main energy meter) divided by permeate flow. Today = since midnight IST. ⌀ = last 30 complete days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kWh/m³"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#8e8e9e",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 7,
+        "x": 11,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT abs(mean(\"MFM_Data-TotalActivePower\"))/1000/(mean(\"MBR-Instruments-FIT20211mqtt\")+mean(\"MBR-Instruments-FIT20231mqtt\")) AS \"today\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}'",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT abs(mean(\"MFM_Data-TotalActivePower\"))/1000/(mean(\"MBR-Instruments-FIT20211mqtt\")+mean(\"MBR-Instruments-FIT20231mqtt\")) AS \"⌀\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}' - 30d AND time < '${todayStart}'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Energy intensity",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Main energy meter, 15-minute average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kW"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT abs(mean(\"MFM_Data-TotalActivePower\"))/1000 FROM \"mqtt_consumer\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "timeFrom": "15m",
+      "title": "Plant power",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "panels": [],
+      "title": "Membrane trains",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Permeate flow (FIT-20211), MBR tank level and scouring air: last 15 min. TMP, permeability (temperature-corrected, ×1000 → LMH/mbar) and flux: averaged over permeation only (flow above 5 m³/h). Limits not yet defined, so values are shown neutral.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "#6f7280",
+                  "index": 0,
+                  "text": "—"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TMP"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: mbar"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeability"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: LMH/mbar"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Flux"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: LMH"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tank level"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Scour air"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "hideTimeOverride": true,
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 24
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-Instruments-FIT20211mqtt\") AS \"Permeate\", last(\"MBR-Instruments-LIT20210\") AS \"Tank level\", mean(\"MBR-Instruments-FIT20263\") AS \"Scour air\" FROM \"mqtt_consumer\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-CalcParameters-TMP20200mqtt\") AS \"TMP\", mean(\"MBR-CalcParameters-PermeabilityTrain1TC\") AS \"Permeability\", mean(\"MBR-CalcParameters-FluxTrain1\") AS \"Flux\" FROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "15m",
+      "title": "Train 1",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Flux": 3,
+              "Permeability": 2,
+              "Permeate": 0,
+              "Scour air": 5,
+              "TMP": 1,
+              "Tank level": 4
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Permeate flow (FIT-20231), MBR tank level and scouring air: last 15 min. TMP, permeability (temperature-corrected, ×1000 → LMH/mbar) and flux: averaged over permeation only (flow above 5 m³/h). Limits not yet defined, so values are shown neutral.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "#6f7280",
+                  "index": 0,
+                  "text": "—"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TMP"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: mbar"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeability"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: LMH/mbar"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Flux"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: LMH"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tank level"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Scour air"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 6
+      },
+      "hideTimeOverride": true,
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 24
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-Instruments-FIT20231mqtt\") AS \"Permeate\", last(\"MBR-Instruments-LIT20230\") AS \"Tank level\", mean(\"MBR-Instruments-FIT20262\") AS \"Scour air\" FROM \"mqtt_consumer\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-CalcParameters-TMP20220mqtt\") AS \"TMP\", mean(\"MBR-CalcParameters-PermeabilityTrain2TC\") AS \"Permeability\", mean(\"MBR-CalcParameters-FluxTrain2\") AS \"Flux\" FROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20231mqtt\" > 5",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "15m",
+      "title": "Train 2",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Flux": 3,
+              "Permeability": 2,
+              "Permeate": 0,
+              "Scour air": 5,
+              "TMP": 1,
+              "Tank level": 4
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Blower power from the VFDs, last 5 min. Green = running; ○ off = below 1 kW (off or standby). MBR scour blowers: B-20204 → Train 1 (202-T-04), B-20203 → Train 2 (202-T-08), B-20205 → Train 3 (202-T-12, not in service). B-20206 → aeration tanks 202-T-02/06/10. B-20101 → converted aeration tank 201-T-01. B-20201 = common standby. Source: Nanded IO list rev 1 and P&ID 20000-1-1001.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "from": -1000000000000,
+                "result": {
+                  "color": "#6f7280",
+                  "index": 0,
+                  "text": "○ off"
+                },
+                "to": 1
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#6f7280",
+                "value": 0
+              },
+              {
+                "color": "#73BF69",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "suffix: kW"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 6
+      },
+      "hideTimeOverride": true,
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT last(\"MBR-Blower_Ctrl-B20204_kW\") AS \"Train 1 scour · B-20204\", last(\"MBR-Blower_Ctrl-B20203_kW\") AS \"Train 2 scour · B-20203\", last(\"MBR-Blower_Ctrl-B20205_kW\") AS \"Train 3 scour · B-20205\", last(\"MBR-Blower_Ctrl-B20206_kW\") AS \"Aeration tanks · B-20206\", last(\"Pre_Aeration-Blower_Ctrl-B20101_kW\") AS \"Pre-aeration · B-20101\", last(\"Anoxic_Aeration-Blower_Ctrl-B20201_kW\") AS \"Common standby · B-20201\" FROM \"mqtt_consumer\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "5m",
+      "title": "Blowers",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Aeration tanks · B-20206": 3,
+              "Common standby · B-20201": 5,
+              "Pre-aeration · B-20101": 4,
+              "Train 1 scour · B-20204": 0,
+              "Train 2 scour · B-20203": 1,
+              "Train 3 scour · B-20205": 2
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Treated water · aeration",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Online COD analyser, treated water tank (AIT-30103A), 15-min average. ⌀ = last 30 complete days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "from": -1000000000000,
+                "result": {
+                  "color": "#B877D9",
+                  "index": 0,
+                  "text": "Bad data"
+                },
+                "to": 0
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "now"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "​"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#8e8e9e",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 0,
+        "y": 15
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Treated_Water_Tank-Instruments-AIT30103A\") AS \"now\" FROM \"mqtt_consumer\" WHERE time > now() - 15m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Treated_Water_Tank-Instruments-AIT30103A\") AS \"⌀\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}' - 30d AND time < '${todayStart}'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Treated COD",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Online TSS analyser, treated water tank (AIT-30103B), 15-min average. ⌀ = last 30 complete days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [
+            {
+              "options": {
+                "from": -1000000000000,
+                "result": {
+                  "color": "#B877D9",
+                  "index": 0,
+                  "text": "Bad data"
+                },
+                "to": -0.01
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "now"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "​"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#8e8e9e",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 15
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Treated_Water_Tank-Instruments-AIT30103B\") AS \"now\" FROM \"mqtt_consumer\" WHERE time > now() - 15m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Treated_Water_Tank-Instruments-AIT30103B\") AS \"⌀\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}' - 30d AND time < '${todayStart}'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Treated TSS",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Aeration tank dissolved oxygen, Train 1 (AIT-20202), 15-min average. ⌀ = last 30 complete days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [
+            {
+              "options": {
+                "from": -1000000000000,
+                "result": {
+                  "color": "#B877D9",
+                  "index": 0,
+                  "text": "Bad data"
+                },
+                "to": 0.05
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "now"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "​"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#8e8e9e",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 15
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Anoxic_Aeration-Instruments-AIT20202\") AS \"now\" FROM \"mqtt_consumer\" WHERE time > now() - 15m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Anoxic_Aeration-Instruments-AIT20202\") AS \"⌀\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}' - 30d AND time < '${todayStart}'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "DO · Train 1",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "description": "Aeration tank dissolved oxygen, Train 2 (AIT-20222), 15-min average. A reading of zero indicates a sensor or signal fault. ⌀ = last 30 complete days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [
+            {
+              "options": {
+                "from": -1000000000000,
+                "result": {
+                  "color": "#B877D9",
+                  "index": 0,
+                  "text": "Bad data"
+                },
+                "to": 0.05
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "now"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "​"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#8e8e9e",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 15
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Anoxic_Aeration-Instruments-AIT20222\") AS \"now\" FROM \"mqtt_consumer\" WHERE time > now() - 15m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Anoxic_Aeration-Instruments-AIT20222\") AS \"⌀\" FROM \"mqtt_consumer\" WHERE time >= '${todayStart}' - 30d AND time < '${todayStart}'",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "DO · Train 2",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Days since the most recent maintenance clean of Train 1 (alkaline, acid, or alkaline + acid), from the operators’ MBR cleaning log.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No log",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: days ago"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 16,
+        "y": 15
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT date_part('day', now() - max(cleaning_start_datetime)) AS \"Days since last clean\" FROM public.user_mbrcleaninglogandchemicalconsumptiondata WHERE mbr_train = '1' AND cleaning_type IN ('Alkaline MC','Acid MC','Alkaline + Acid MC')",
+          "refId": "A"
+        }
+      ],
+      "title": "Last membrane clean · T1",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Days since the most recent maintenance clean of Train 2 (alkaline, acid, or alkaline + acid), from the operators’ MBR cleaning log.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No log",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: days ago"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 20,
+        "y": 15
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT date_part('day', now() - max(cleaning_start_datetime)) AS \"Days since last clean\" FROM public.user_mbrcleaninglogandchemicalconsumptiondata WHERE mbr_train = '2' AND cleaning_type IN ('Alkaline MC','Acid MC','Alkaline + Acid MC')",
+          "refId": "A"
+        }
+      ],
+      "title": "Last membrane clean · T2",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 17,
+      "panels": [],
+      "title": "Trends",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "description": "Energy intensity (plant power ÷ permeate flow) over the selected time range; bucket size adapts to the range (hourly for short ranges, about daily for a month). Dashed line = average over the period shown.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "AVG"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "⌀ period"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8e8e9e",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    8,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Daily"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5794F2",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 19
+      },
+      "id": 18,
+      "interval": "1h",
+      "maxDataPoints": 50,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT abs(mean(\"MFM_Data-TotalActivePower\"))/1000/(mean(\"MBR-Instruments-FIT20211mqtt\")+mean(\"MBR-Instruments-FIT20231mqtt\")) AS \"Daily\" FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "A",
+          "hide": true,
+          "reducer": "mean",
+          "refId": "R",
+          "settings": {
+            "mode": "dropNN"
+          },
+          "type": "reduce"
+        },
+        {
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A*0 + $R",
+          "hide": false,
+          "refId": "AVG",
+          "type": "math"
+        }
+      ],
+      "title": "Energy intensity · kWh/m³",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "description": "Transmembrane pressure during permeation only (train flow above 5 m³/h), over the selected time range. Rising TMP signals fouling.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Train 1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Train 2"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 19
+      },
+      "id": 19,
+      "interval": "15m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-CalcParameters-TMP20200mqtt\") AS \"Train 1\" FROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-CalcParameters-TMP20220mqtt\") AS \"Train 2\" FROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20231mqtt\" > 5 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "TMP (permeation) · mbar",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "description": "Temperature-corrected permeability during permeation, over the selected time range. Recovery after each cleaning shows its effectiveness; a steady decline signals fouling.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Train 1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Train 2"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "id": 20,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-CalcParameters-PermeabilityTrain1TC\") AS \"Train 1\" FROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20211mqtt\" > 5 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"MBR-CalcParameters-PermeabilityTrain2TC\") AS \"Train 2\" FROM \"mqtt_consumer\" WHERE $timeFilter AND \"MBR-Instruments-FIT20231mqtt\" > 5 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Permeability · LMH/mbar",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 42,
+  "tags": [
+    "draft",
+    "managed-by-git",
+    "mbr",
+    "nanded",
+    "new",
+    "operator"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "InfluxDB",
+          "value": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+        },
+        "hide": 2,
+        "label": "Data source",
+        "name": "ds_influx",
+        "options": [],
+        "query": "influxdb",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "text": "2026-10-18T18:30:00Z",
+          "value": "2026-10-18T18:30:00Z"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "definition": "SELECT to_char(date_trunc('day', now() AT TIME ZONE 'Asia/Kolkata') AT TIME ZONE 'Asia/Kolkata' AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')",
+        "hide": 2,
+        "includeAll": false,
+        "name": "todayStart",
+        "options": [],
+        "query": "SELECT to_char(date_trunc('day', now() AT TIME ZONE 'Asia/Kolkata') AT TIME ZONE 'Asia/Kolkata' AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')",
+        "refresh": 2,
+        "skipUrlSync": true,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "2026-09-30T18:30:00Z",
+          "value": "2026-09-30T18:30:00Z"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+        },
+        "definition": "SELECT to_char(date_trunc('month', now() AT TIME ZONE 'Asia/Kolkata') AT TIME ZONE 'Asia/Kolkata' AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')",
+        "hide": 2,
+        "includeAll": false,
+        "name": "monthStart",
+        "options": [],
+        "query": "SELECT to_char(date_trunc('month', now() AT TIME ZONE 'Asia/Kolkata') AT TIME ZONE 'Asia/Kolkata' AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')",
+        "refresh": 2,
+        "skipUrlSync": true,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Nanded MBR – Operator Overview",
+  "uid": "nanded-mbr-operator-overview"
+}

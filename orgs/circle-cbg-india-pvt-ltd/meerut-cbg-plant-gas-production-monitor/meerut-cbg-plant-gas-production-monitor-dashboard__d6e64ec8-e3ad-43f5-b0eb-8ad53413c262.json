@@ -1,0 +1,304 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (!context.panel.data?.series?.length) {\n  return { xAxis: { type: \"time\" }, yAxis: { type: \"value\" }, series: [] };\n}\n\nlet timeData = [];\nlet inlet = [];\n\nconst toArray = (v) =>\n  Array.isArray(v) ? v : (v?.toArray ? v.toArray() : Array.from(v ?? []));\n\nconst toMs = (t) => {\n  if (t == null) return null;\n  if (typeof t === \"number\") return t;\n  const d = t instanceof Date ? t : new Date(t);\n  const ms = d.getTime();\n  return Number.isFinite(ms) ? ms : null;\n};\n\n// Pull Time + Inlet safely\ncontext.panel.data.series.forEach((s) => {\n  const tf = s.fields.find((f) => f.type === \"time\" || f.name === \"Time\");\n  if (tf?.values && !timeData.length) timeData = toArray(tf.values).map(toMs);\n\n  const inletField = s.fields.find(\n    (f) => f.name === \"Inlet\" || f.config?.displayNameFromDS === \"Inlet\"\n  );\n  if (s.refId === \"Inlet\" && inletField?.values) inlet = toArray(inletField.values);\n});\n\nconst HOUR_MS = 60 * 60 * 1000;\n// Shift x-values by -30min so UTC hour ticks land on IST HH:00\nconst SHIFT_MS = 30 * 60 * 1000;\n\nconst inletSeries = timeData\n  .filter((t) => t != null)\n  .map((t, i) => [\n    t - SHIFT_MS,\n    inlet[i] == null || inlet[i] <= 0 ? null : Math.round(inlet[i]),\n  ]);\n\nreturn {\n  backgroundColor: \"transparent\",\n\n  tooltip: {\n    trigger: \"axis\",\n    axisPointer: { type: \"shadow\" },\n    formatter: function (params) {\n      const shiftedMs = params?.[0]?.value?.[0];\n      const ts = shiftedMs\n        ? new Intl.DateTimeFormat(\"en-US\", {\n          timeZone: \"Asia/Kolkata\",\n          year: \"numeric\",\n          month: \"2-digit\",\n          day: \"2-digit\",\n          hour: \"2-digit\",\n          minute: \"2-digit\",\n          hour12: false,\n        }).format(new Date(shiftedMs))\n        : \"\";\n\n      let tooltipText = `${ts}<br/>`;\n      params.forEach((item) => {\n        const v = item?.value?.[1];\n        const valueText = v == null ? \"-\" : `${v} m³`;\n        tooltipText += `${item.marker} ${item.seriesName}: ${valueText}<br/>`;\n      });\n      return tooltipText;\n    },\n  },\n\n  legend: { data: [\"Raw Biogas Production\"] },\n\n  grid: { left: \"5%\", right: \"4%\", bottom: \"12%\", containLabel: true },\n\n  xAxis: {\n    type: \"time\",\n    minInterval: HOUR_MS,\n    maxInterval: HOUR_MS,\n    axisTick: { show: true },\n    splitLine: { show: true },\n    axisLabel: {\n      rotate: 45,\n      formatter: function (shiftedValue) {\n        return new Intl.DateTimeFormat(\"en-US\", {\n          timeZone: \"Asia/Kolkata\",\n          month: \"2-digit\",\n          day: \"2-digit\",\n          hour: \"2-digit\",\n          minute: \"2-digit\",\n          hour12: false,\n        }).format(new Date(shiftedValue));\n      },\n    },\n  },\n\n  yAxis: {\n    type: \"value\",\n    axisLabel: { formatter: (val) => `${val} m³` },\n    splitLine: { lineStyle: { type: \"dashed\", opacity: 0.3 } },\n  },\n\n  series: [\n    {\n      name: \"Raw Biogas Production\",\n      type: \"bar\",\n      data: inletSeries,\n      itemStyle: { opacity: 0.85 },\n\n      // ✅ labels on top of each bar\n      label: {\n        show: true,\n        position: \"top\",\n        formatter: (p) => {\n          const v = p?.value?.[1];\n          return v == null ? \"\" : `${v}`;\n        },\n      },\n    },\n  ],\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "alias": "Daily Membrane Inlet Flow",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": true,
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT Final\nFROM (SELECT SUM(\"FT-0303 Inlet Flow\") / 60 AS Final FROM \"mqtt\" WHERE $timeFilter GROUP BY time(1h, 0m))",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "Inlet",
+          "type": "math"
+        }
+      ],
+      "title": "Hourly Raw Biogas Production",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 1,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 403
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "if (!context.panel.data?.series?.length) {\n  return { xAxis: { type: \"time\" }, yAxis: { type: \"value\" }, series: [] };\n}\n\nconst toArray = (v) =>\n  Array.isArray(v) ? v : (v?.toArray ? v.toArray() : Array.from(v ?? []));\n\nconst findField = (s, wanted) =>\n  s.fields.find(\n    (f) =>\n      f.name === wanted ||\n      f.config?.displayNameFromDS === wanted ||\n      f.config?.displayName === wanted\n  );\n\nconst toMs = (t) => {\n  if (t == null) return null;\n  if (typeof t === \"number\") return t;\n  const d = t instanceof Date ? t : new Date(t);\n  const ms = d.getTime();\n  return Number.isFinite(ms) ? ms : null;\n};\n\nfunction extractSeries(wantedFieldName) {\n  for (const s of context.panel.data.series) {\n    const tf = s.fields.find((f) => f.type === \"time\" || f.name === \"Time\");\n    const vf = findField(s, wantedFieldName);\n    if (tf?.values && vf?.values) {\n      return {\n        time: toArray(tf.values).map(toMs).filter((x) => x != null),\n        values: toArray(vf.values),\n      };\n    }\n  }\n  return { time: [], values: [] };\n}\n\n// === Hourly fields (your aliases) ===\nconst s01 = extractSeries(\"Hourly Flow FIT 600-01\");\nconst s02 = extractSeries(\"Hourly Flow FIT 600-02\");\nconst st = extractSeries(\"Total\"); // optional; may be empty\n\n// Union of timestamps\nconst allTimes = Array.from(new Set([...(s01.time || []), ...(s02.time || []), ...(st.time || [])]))\n  .sort((a, b) => a - b);\n\n// Map timestamp -> value\nconst mapByTime = (timeArr, valArr) => {\n  const m = new Map();\n  for (let i = 0; i < (timeArr?.length || 0); i++) {\n    m.set(timeArr[i], valArr[i]);\n  }\n  return m;\n};\n\nconst m01 = mapByTime(s01.time, s01.values);\nconst m02 = mapByTime(s02.time, s02.values);\nconst mt = mapByTime(st.time, st.values);\n\nconst HOUR_MS = 60 * 60 * 1000;\n// Shift x-values by -30min so UTC hour ticks land on IST HH:00\nconst SHIFT_MS = 30 * 60 * 1000;\n\n// Build [time,value] pairs with shifted time\nconst fit600_01 = allTimes.map((t) => {\n  const v = Number(m01.get(t)) || 0;\n  return [t - SHIFT_MS, v <= 0 ? null : Math.round(v)];\n});\n\nconst fit600_02 = allTimes.map((t) => {\n  const v = Number(m02.get(t)) || 0;\n  return [t - SHIFT_MS, v <= 0 ? null : Math.round(v)];\n});\n\n// Total label values aligned to allTimes\nconst total = allTimes.map((t) => {\n  const v = mt.get(t);\n  return v == null ? null : Number(v);\n});\n\nreturn {\n  backgroundColor: \"transparent\",\n\n  tooltip: {\n    trigger: \"axis\",\n    axisPointer: { type: \"shadow\" },\n    formatter: function (params) {\n      const shiftedMs = params?.[0]?.value?.[0];\n      const ts = shiftedMs\n        ? new Intl.DateTimeFormat(\"en-US\", {\n          timeZone: \"Asia/Kolkata\",\n          year: \"numeric\",\n          month: \"2-digit\",\n          day: \"2-digit\",\n          hour: \"2-digit\",\n          minute: \"2-digit\",\n          hour12: false,\n        }).format(new Date(shiftedMs))\n        : \"\";\n\n      let out = `${ts}<br/>`;\n      params.forEach((item) => {\n        const v = item?.value?.[1];\n        out += `${item.marker} ${item.seriesName}: ${v == null ? \"-\" : `${v} kg`}<br/>`;\n      });\n      return out;\n    },\n  },\n\n  legend: { data: [\"FIT 600-01\", \"FIT 600-02\"] },\n\n  grid: { left: \"5%\", right: \"4%\", bottom: \"12%\", containLabel: true },\n\n  xAxis: {\n    type: \"time\",\n    minInterval: HOUR_MS,\n    maxInterval: HOUR_MS,\n    axisTick: { show: true },\n    splitLine: { show: true },\n    axisLabel: {\n      rotate: 45,\n      formatter: function (shiftedValue) {\n        return new Intl.DateTimeFormat(\"en-US\", {\n          timeZone: \"Asia/Kolkata\",\n          month: \"2-digit\",\n          day: \"2-digit\",\n          hour: \"2-digit\",\n          minute: \"2-digit\",\n          hour12: false,\n        }).format(new Date(shiftedValue));\n      },\n    },\n  },\n\n  yAxis: {\n    type: \"value\",\n    // ✅ show units on y-axis ticks\n    axisLabel: { formatter: (val) => `${val} kg` },\n    splitLine: { lineStyle: { type: \"dashed\", opacity: 0.3 } },\n  },\n\n  series: [\n    {\n      name: \"FIT 600-01\",\n      type: \"bar\",\n      stack: \"total\",\n      data: fit600_01,\n      itemStyle: { opacity: 0.85 },\n    },\n    {\n      name: \"FIT 600-02\",\n      type: \"bar\",\n      stack: \"total\",\n      data: fit600_02,\n      itemStyle: { opacity: 0.85 },\n      label: {\n        show: true,\n        position: \"top\",\n        formatter: (p) => {\n          const t = total?.[p.dataIndex];\n          return t == null ? \"\" : Math.round(t);\n        },\n      },\n    },\n  ],\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "alias": "Daily Flow FIT 600-01",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT\n  last(\"FIT-600-01 Total Flow In Kg\") - first(\"FIT-600-01 Total Flow In Kg\") AS \"Hourly Flow FIT 600-01\"\nFROM \"mqtt\"\nWHERE $timeFilter\nGROUP BY time(1h, 0m) fill(null)\n\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Daily Flow FIT 600-02",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT\n  last(\"FIT-600-02 Total Flow In Kg\") - first(\"FIT-600-02 Total Flow In Kg\") AS \"Hourly Flow FIT 600-02\"\nFROM \"mqtt\"\nWHERE $timeFilter\nGROUP BY time(1h, 0m) fill(null)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Total Hourly CBG Production",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Meerut CBG Plant - Gas Production Monitor Dashboard",
+  "uid": "d6e64ec8-e3ad-43f5-b0eb-8ad53413c262"
+}

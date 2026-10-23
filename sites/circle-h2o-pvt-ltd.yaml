@@ -1,0 +1,20 @@
+site:
+  name: "Circle H2O Pvt. Ltd."
+  slug: "circle-h2o-pvt-ltd"
+  org_id: 21
+  timezone: "Asia/Kolkata"
+
+team_folders:
+  master-data-management:
+    name: "Master Data Management"
+    folder_uid: "a4ff36a7-7fc6-4901-a7c3-505f5b5dac84"
+  jabalpur-cbg-plant:
+    name: "Jabalpur CBG Plant"
+    folder_uid: "b4e2108b-cda6-4e59-baea-e42158e47e45"
+  jabalpur-fertilizer-marketing:
+    name: "Jabalpur Fertilizer Marketing"
+    folder_uid: "f2ae2b40-477e-40d4-b928-1c8b0b08fcb0"
+
+datasources:
+  influxdb: "influx-circle-h2o-prod"
+  postgres: "pg-circle-h2o-prod"

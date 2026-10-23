@@ -1,0 +1,1901 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:12px;color:#9fa2a8;padding-top:4px\"><span style=\"color:#73BF69\">●</span> normal &nbsp;<span style=\"color:#D9B84A\">●</span> warning &nbsp;<span style=\"color:#E0707B\">●</span> alarm &nbsp;<span style=\"color:#B877D9\">●</span> bad data &nbsp;·&nbsp; ⌀ 30-day avg &nbsp;·&nbsp; — off &nbsp;·&nbsp; ⓘ details &nbsp;·&nbsp; <b>New dashboard for review</b>: limits not yet set, so values show in white</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "Running when UF permeate flow is above 1 m³/h.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UF"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": " "
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "#73BF69",
+                        "text": "▶ Running"
+                      },
+                      "to": 1000000000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#8E8E8E",
+                        "text": "■ Stopped"
+                      },
+                      "to": 0.9999
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_fit_03_suf_permeate_flow\") AS \"UF\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q0",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "UF",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "Running when the RO high-pressure pump draws power.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RO"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": " "
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0.5,
+                      "result": {
+                        "color": "#73BF69",
+                        "text": "▶ Running"
+                      },
+                      "to": 1000000000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#8E8E8E",
+                        "text": "■ Stopped"
+                      },
+                      "to": 0.4999
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"301_p_07_ro_hp_pump_power\") AS \"RO\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q1",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "RO",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "UF permeate flow (m³/h) integrated since midnight IST.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Today"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Today"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 2
+      },
+      "hideTimeOverride": true,
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT integral(\"202_fit_03_suf_permeate_flow\", 1h) AS \"Today\" FROM \"plc\" WHERE $timeFilter AND \"202_fit_03_suf_permeate_flow\" >= 0",
+          "rawQuery": true,
+          "refId": "q2",
+          "resultFormat": "table"
+        }
+      ],
+      "timeFrom": "now/d",
+      "title": "UF permeate today",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "Plant power calculated from the MCC energy total (kWh per hour, 10-minute steps). The meter's own power reading reads 0 and is under repair.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Now"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kW"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Current"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Current"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: A"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT non_negative_derivative(last(\"900_mfm_01_mcc_main_energy_total\"), 1h) AS \"Now\" FROM \"plc\" WHERE time > now() - 40m GROUP BY time(10m) fill(none)",
+          "rawQuery": true,
+          "refId": "q3",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"900_mfm_01_mcc_main_current\") AS \"Current\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q4",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Plant power",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeate"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Permeate"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TMP"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TMP"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mbar"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Flux"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Flux"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: LMH"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeability"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Permeability"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: LMH/mbar"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UF tank"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "UF tank level"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Temperature"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Temperature"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_fit_03_suf_permeate_flow\") AS \"Permeate\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q18",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_calc_suf_tmp\") AS \"TMP\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q19",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_calc_suf_flux\") AS \"Flux\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q20",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_calc_suf_permeability\") AS \"Permeability\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q21",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_lit_01_suf_tank_level\") AS \"UF tank\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q22",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_tit_06_suf_permeate_line_temperature\") AS \"Temperature\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q23",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Ultrafiltration",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "No membrane clean has been recorded: the CIP pump signals have never reported running, and the site does not use the membrane cleaning log form. Will show the time since the last clean once either is in use (the cleaning log form, as at Nanded and Zim Lab, is recommended).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#8e8e8e",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No cleaning record",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "dateTimeFromNow"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Time$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_p_05_suf_cip_pump_run_fb\") AS \"ran\" FROM \"plc\" WHERE \"202_p_05_suf_cip_pump_run_fb\" = 1 AND time > now() - 365d",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Last clean · UF",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: m³/h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "UF permeate",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT mean(\"202_fit_03_suf_permeate_flow\") AS \"UF permeate\" FROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "q34",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "UF permeate · m³/h",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Feed"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Feed"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Permeate"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Permeate"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Reject"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Reject"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³/h"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Conductivity"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Permeate conductivity"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: µS/cm"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pH"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Permeate pH"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 14.0001,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": 1000000000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Inlet ORP"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Inlet ORP"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mV"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 16
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"302_fit_01_ro_first_stage_inlet_feed_flow\") AS \"Feed\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q24",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"302_fit_03_ro_permeate_flow\") AS \"Permeate\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q25",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"302_fit_03_ro_reject_flow\") AS \"Reject\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q26",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"302_ait_03_ro_combined_permeate_conductivity\") AS \"Conductivity\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q27",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"302_ait_01_ro_combined_permeate_ph\") AS \"pH\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q28",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"302_ait_02_ro_inlet_orp\") AS \"Inlet ORP\" FROM \"plc\" WHERE time > now() - 10m",
+          "rawQuery": true,
+          "refId": "q29",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Reverse osmosis",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "Fresh = readings in the last 5 minutes; Late = last reading 5–15 minutes ago; Stale = nothing for 15 minutes.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 11,
+                "result": {
+                  "color": "#73BF69",
+                  "text": "Fresh"
+                },
+                "to": 100000
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "#D9B84A",
+                  "text": "Late (5–15 min)"
+                },
+                "to": 10
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "#B877D9",
+                  "text": "Stale (> 15 min)"
+                },
+                "to": 0
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "Stale: nothing in 15 min",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#B877D9",
+                "value": 0
+              },
+              {
+                "color": "#D9B84A",
+                "value": 1
+              },
+              {
+                "color": "#73BF69",
+                "value": 11
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 22
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT count(*) FROM \"plc\" WHERE time > now() - 15m",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Data feed",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "readings",
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "max"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "Time since the RO CIP pump last ran (run feedback 301_p_02_ro_cip_pump_run_fb). Looks back one year.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "not in the last year",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "dateTimeFromNow"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Time$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 13,
+          "valueSize": 26
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"301_p_02_ro_cip_pump_run_fb\") AS \"ran\" FROM \"plc\" WHERE \"301_p_02_ro_cip_pump_run_fb\" = 1 AND time > now() - 365d",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Last clean · RO (CIP pump)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: mbar"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 26
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "TMP",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT mean(\"202_calc_suf_tmp\") AS \"TMP\" FROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "q35",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "UF TMP · mbar",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffbjhg37mkcu8a"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: µS/cm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 26
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Conductivity",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT mean(\"302_ait_03_ro_combined_permeate_conductivity\") AS \"Conductivity\" FROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "q36",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "RO permeate conductivity · µS/cm",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "A daily form is one entered on at least 20 of the last 30 days (from its own history). Missed = no entry dated yesterday (IST).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "missed"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69"
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 32
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_cbgcascadedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_chemicalstocktrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_coverprotectiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentflowaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentphaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipment WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentcurrentdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentnoisedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimemeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmenttemperaturedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvibrationdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvoltagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_farmersurveydata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_feedstockdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_fertilizersalestrackingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_gascompositiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_location WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_maintenancedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_mbrcleaninglogandchemicalconsumptiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacconsumptionaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacorderaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_poweroutagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pumpdischargepressuredata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_quantitativelimit WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_retailoutletmeterdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgecaketrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgewastagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankermerutdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tanklevelaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM weighment_data WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 189) GROUP BY form_id), s AS (SELECT COALESCE(NULLIF(f.title_override,''), f.name) AS form, COALESCE(e.entries_30d,0) AS entries_30d, COALESCE(e.days_30d,0) AS days_30d, e.last_ever, COALESCE(e.had_yday,false) AS had_yday FROM user_customform f LEFT JOIN e ON e.form_id = f.id WHERE f.is_enabled AND f.is_active AND f.team_id = 189) SELECT count(*) FILTER (WHERE days_30d >= 20 AND NOT had_yday) AS \"missed\", count(*) FILTER (WHERE days_30d >= 20) AS \"daily forms\" FROM s",
+          "refId": "A"
+        }
+      ],
+      "title": "Daily forms missed yesterday",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 15,
+      "options": {
+        "content": "Data Health · existing process dashboards",
+        "mode": "markdown"
+      },
+      "title": "Detail dashboards",
+      "type": "text"
+    }
+  ],
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git",
+    "new",
+    "operator",
+    "riverview-2000",
+    "wtp"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Riverview City 2000 KLD WTP – Operator Overview",
+  "uid": "riverview-2000-operator-overview"
+}

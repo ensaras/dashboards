@@ -1,0 +1,402 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "panels": [],
+      "title": "Equipment Daily RunTime",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "const series = context.panel.data.series.map((s) => {\n  const test = s.fields.find((f) => f.type === 'boolean').values.buffer\n    || s.fields.find((f) => f.type === 'boolean').values;\n  const sTime = s.fields.find((f) => f.type === 'time').values.buffer\n    || s.fields.find((f) => f.type === 'time').values;\n\n  const entries = sTime.map((time, index) => { return { data: test[index], time: time } })\n\n  // group by date and sum up the minutes\n  const openMinutes = {};\n  entries.forEach(entry => {\n    const date = new Date(entry.time);\n    const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toLocaleDateString();\n\n    if (!openMinutes[day]) {\n      openMinutes[day] = 0;\n    }\n\n    if (entry.data) {\n      openMinutes[day] += 1;\n    }\n  });\n\n  // seperate the fields and use hour instead of minutes\n  const sDate = []\n  const sData = []\n  for (const key in openMinutes) {\n    if (openMinutes.hasOwnProperty(key)) {\n      sDate.push(key)\n      sData.push(openMinutes[key] / 60)\n    }\n  }\n\n  return { sDate, sData }\n});\n\nconsole.log(context.panel.data.series[0].fields)\n\nconsole.log(series)\n\nreturn {\n  tooltip: {},\n  grid: {\n    bottom: \"3%\",\n    containLabel: true,\n    left: \"3%\",\n    right: \"4%\",\n    top: \"4%\"\n  },\n  xAxis: {\n    type: 'category',\n    data: series[0].sDate\n  },\n  yAxis: {\n    type: 'value'\n  },\n  series: [\n    {\n      data: series[0].sData,\n      type: 'bar',\n    }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT $MotorSensor FROM \"mqtt\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs",
+          "select": [
+            [
+              {
+                "params": [
+                  "102-T-01 LT"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$MotorSensor",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "(.*)\\s(.*)\\s(.*)\\s(.*)",
+            "renamePattern": "$2"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "const series = context.panel.data.series.map((s) => {\n  const test = s.fields.find((f) => f.type === 'boolean').values.buffer\n    || s.fields.find((f) => f.type === 'boolean').values;\n  const sTime = s.fields.find((f) => f.type === 'time').values.buffer\n    || s.fields.find((f) => f.type === 'time').values;\n\n  const entries = sTime.map((time, index) => { return { data: test[index], time: time } })\n\n  // group by date and sum up the minutes\n  const openMinutes = {};\n  entries.forEach(entry => {\n    const date = new Date(entry.time);\n    const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toLocaleDateString();\n\n    if (!openMinutes[day]) {\n      openMinutes[day] = 0;\n    }\n\n    if (entry.data) {\n      openMinutes[day] += 1;\n    }\n  });\n\n  // seperate the fields and use hour instead of minutes\n  const sDate = []\n  const sData = []\n  for (const key in openMinutes) {\n    if (openMinutes.hasOwnProperty(key)) {\n      sDate.push(key)\n      sData.push(openMinutes[key] / 60)\n    }\n  }\n\n  return { sDate, sData }\n});\n\n\nreturn {\n  tooltip: {},\n  grid: {\n    bottom: \"3%\",\n    containLabel: true,\n    left: \"3%\",\n    right: \"4%\",\n    top: \"4%\"\n  },\n  xAxis: {\n    type: 'category',\n    data: series[0].sDate,\n    axisLabel: {\n      formatter: function (value) {\n        const parts = value.split('/'); // If it's \"28/02/2025\"\n        if (parts.length === 3) {\n          return `${parts[1]}/${parts[0]}`; // Converts to \"02/28\"\n        }\n        return value; // Return as is if format is unexpected\n      }\n    }\n  },\n  yAxis: {\n    type: 'value'\n  },\n  series: [\n    {\n      data: series[0].sData.map(num => num?.toFixed(2)),\n      type: 'bar',\n    }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT $ValveSensor FROM \"mqtt\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs",
+          "select": [
+            [
+              {
+                "params": [
+                  "102-T-01 LT"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$ValveSensor",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "(.*)\\s(.*)\\s(.*)\\s(.*)",
+            "renamePattern": "$2"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "\"102-A-02 Motor Status\"",
+          "value": "\"102-A-02 Motor Status\""
+        },
+        "includeAll": false,
+        "name": "MotorSensor",
+        "options": [
+          {
+            "selected": false,
+            "text": "\"102-A-01 Motor Status\"",
+            "value": "\"102-A-01 Motor Status\""
+          },
+          {
+            "selected": true,
+            "text": "\"102-A-02 Motor Status\"",
+            "value": "\"102-A-02 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-A-03 Motor Status\"",
+            "value": "\"102-A-03 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-A-04 Motor Status\"",
+            "value": "\"102-A-04 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-G-01 Motor Status\"",
+            "value": "\"102-G-01 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-G-02 Motor Status\"",
+            "value": "\"102-G-02 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-01 Motor Status\"",
+            "value": "\"102-P-01 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-02 Motor Status\"",
+            "value": "\"102-P-02 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-03 Motor Status\"",
+            "value": "\"102-P-03 Motor Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"102-P-04 Motor Status\"",
+            "value": "\"102-P-04 Motor Status\""
+          }
+        ],
+        "query": "\"102-A-01 Motor Status\", \"102-A-02 Motor Status\", \"102-A-03 Motor Status\", \"102-A-04 Motor Status\", \"102-G-01 Motor Status\", \"102-G-02 Motor Status\", \"102-P-01 Motor Status\", \"102-P-02 Motor Status\", \"102-P-03 Motor Status\", \"102-P-04 Motor Status\"",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "\"Auto Valve XV-07 Open Status\"",
+          "value": "\"Auto Valve XV-07 Open Status\""
+        },
+        "includeAll": false,
+        "name": "ValveSensor",
+        "options": [
+          {
+            "selected": true,
+            "text": "\"Auto Valve XV-07 Open Status\"",
+            "value": "\"Auto Valve XV-07 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-08 Open Status\"",
+            "value": "\"Auto Valve XV-08 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-09 Open Status\"",
+            "value": "\"Auto Valve XV-09 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-10 Open Status\"",
+            "value": "\"Auto Valve XV-10 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-11 Open Status\"",
+            "value": "\"Auto Valve XV-11 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-12 Open Status\"",
+            "value": "\"Auto Valve XV-12 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-17 Open Status\"",
+            "value": "\"Auto Valve XV-17 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-18 Open Status\"",
+            "value": "\"Auto Valve XV-18 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-19 Open Status\"",
+            "value": "\"Auto Valve XV-19 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-20 Open Status\"",
+            "value": "\"Auto Valve XV-20 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-21 Open Status\"",
+            "value": "\"Auto Valve XV-21 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-22 Open Status\"",
+            "value": "\"Auto Valve XV-22 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"Auto Valve XV-23 Open Status\"",
+            "value": "\"Auto Valve XV-23 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-01 Open Status\"",
+            "value": "\"XV-01 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-02 Open Status\"",
+            "value": "\"XV-02 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-03 Open Status\"",
+            "value": "\"XV-03 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-04 Open Status\"",
+            "value": "\"XV-04 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-05 Open Status\"",
+            "value": "\"XV-05 Open Status\""
+          },
+          {
+            "selected": false,
+            "text": "\"XV-06 Open Status\"",
+            "value": "\"XV-06 Open Status\""
+          }
+        ],
+        "query": "\"Auto Valve XV-07 Open Status\", \"Auto Valve XV-08 Open Status\", \"Auto Valve XV-09 Open Status\", \"Auto Valve XV-10 Open Status\", \"Auto Valve XV-11 Open Status\", \"Auto Valve XV-12 Open Status\", \"Auto Valve XV-17 Open Status\", \"Auto Valve XV-18 Open Status\", \"Auto Valve XV-19 Open Status\", \"Auto Valve XV-20 Open Status\", \"Auto Valve XV-21 Open Status\", \"Auto Valve XV-22 Open Status\", \"Auto Valve XV-23 Open Status\", \"XV-01 Open Status\", \"XV-02 Open Status\", \"XV-03 Open Status\", \"XV-04 Open Status\", \"XV-05 Open Status\", \"XV-06 Open Status\"",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Equipment Status",
+  "uid": "c56f7651-a783-402f-9229-0e5f59598b4c"
+}

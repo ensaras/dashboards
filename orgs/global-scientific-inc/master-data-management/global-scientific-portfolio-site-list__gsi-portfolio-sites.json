@@ -1,0 +1,257 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:12px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> nothing to report &nbsp;<span style=\"color:#D9B84A\">●</span> needs attention &nbsp;<span style=\"color:#E0707B\">●</span> alarm &nbsp;<span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; bar: % of design (white line = 100 %) &nbsp;·&nbsp; trend: daily output, last 30 days (dashed = design) &nbsp;·&nbsp; within limits: days within all limits ÷ days sampled (green ≥ 95 %, amber 80–95 %, red &lt; 80 %)</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "description": "Statistics-table sites (AHSPA, NTIEM, Nanded) and sensor sites (Zim Lab, Riverview 1500 and 2000) on one page. Riverview volumes from the flow meters; Riverview 1500 days with less than 80 % of readings are left out. Zim Lab energy is per m³ of inlet and is excluded from the energy average.",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto"
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "const C={blue:'#5d7fb3',amber:'#D9B84A',red:'#E0707B',purple:'#B877D9',green:'#73BF69',text:'#e6e7e8',muted:'#9fa2a8',line:'#7fa6d9',grid:'#22252b',card:'#181b1f',border:'#2a2d33'};\nconst S=id=>context.panel.data.series.find(x=>x.refId===id);const col=(id,n)=>{const s=S(id);const f=s&&s.fields.find(f=>f.name===n);return f?f.values:[];};\nconst ist=t=>new Date(t+19800000).toISOString().slice(0,10);const todayK=ist(Date.now());const dayMs=86400000;\nconst keys=[];for(let k=30;k>=1;k--)keys.push(ist(Date.now()-k*dayMs));const yK=keys[keys.length-1];\nconst fmtD=k=>{if(!k)return null;const d=new Date(k+'T00:00:00Z');return d.toUTCString().slice(5,11);};\nconst daysBetween=(a,b)=>Math.round((new Date(b)-new Date(a))/dayMs);\nconst rows=[];\n// statistics-table sites\nconst A=n=>col('A',n);for(let i=0;i<A('name').length;i++){rows.push({ord:A('ord')[i],name:A('name')[i],sub:A('grp')[i],des:A('des')[i],up:A('up_to')[i],behind:A('behind')[i],flow30:A('flow30')[i],pct:A('pct')[i],series:(A('series')[i]||'').split(',').slice(0,30).map(v=>v===''?null:+v),kwh:A('kwh30')[i],m3:A('m3_30')[i],klbl:A('key_lbl')[i],kval:A('key_val')[i],kunit:A('key_unit')[i],kcol:A('key_col')[i],sok:A('score_ok')[i],sn:A('score_n')[i],slbl:'outlet COD, TSS, ammonia, pH',sev:A('sev')[i]});}\n// sensor sites\nconst lastAge=id=>{const t=col(id,'Time');return t.length?(Date.now()-t[t.length-1])/3600000:999;};\nconst sensor=(id,name,sub,des,minN,ord,extra)=>{const T=col(id,'Time'),M=col(id,'m3'),K=col(id,'kwh'),N=col(id,'n'),R=col(id,'rec');const by={};\n for(let i=0;i<T.length;i++){const k=ist(T[i]);if(k===todayK)continue;if(M[i]==null||(N.length&&N[i]<minN)||M[i]<=0)continue;by[k]={m3:M[i],kwh:K[i],rec:R.length?R[i]:null};}\n const ks=keys.filter(k=>by[k]);const up=ks.length?ks[ks.length-1]:null;const ser=keys.map(k=>by[k]?by[k].m3:null);\n const v=ks.map(k=>by[k]);const flow30=v.length?v.reduce((a,b)=>a+b.m3,0)/v.length:null;const ev=v.filter(x=>x.kwh>0&&x.m3>20);\n const r={ord,name,sub,des,up:fmtD(up),behind:up?daysBetween(up,yK):null,flow30,pct:up?by[up].m3/des*100:null,series:ser,kwh:ev.reduce((a,b)=>a+b.kwh,0),m3:ev.reduce((a,b)=>a+b.m3,0),days:v};\n Object.assign(r,extra(r));return r;};\nconst lab=n=>{const N=col('L','name'),V=col('L','v');const i=N.indexOf(n);return i<0?null:V[i];};\nconst n24=id=>{const v=col(id,'n24');return v.length?v[0]:0;};\nconst stale=(id,h)=>lastAge(id)>h;\nconst sevOf=(r,purple,amber)=>(r.up==null||r.behind>3||purple)?'purple':((r.behind>1||r.flow30>r.des||amber)?'amber':'ok');\nrows.push(sensor('D','Zim Lab','ZLD · 250 m³/d inlet',250,0,1,r=>{const rec=r.days.filter(x=>x.rec!=null);const avg=rec.length?rec.reduce((a,b)=>a+b.rec,0)/rec.length:null;\n return {klbl:'RO recovery',kval:avg,kunit:'%',kcol:avg==null?'none':(avg>=98?'ok':'amber'),sok:rec.filter(x=>x.rec>=98).length,sn:rec.length,slbl:'RO recovery ≥ 98 %',noAvgE:true,sev:sevOf(r,stale('J',12),(avg!=null&&avg<98)||n24('H')<130)};}));\nrows.push(sensor('B','Riverview 1500','MBR · 1,500 m³/d',1500,38,5,r=>({klbl:'Treated COD (lab)',kval:lab('Riverview 1500'),kunit:'mg/L',kcol:'none',sok:null,sn:null,slbl:'no limits set',sev:sevOf(r,stale('F',12),n24('E')<130)})));\nrows.push(sensor('C','Riverview 2000','WTP · 2,000 m³/d',2000,1,6,r=>{const sp=col('K','sp')[0],l=col('K','l')[0];const stuck=sp===0&&l>14;\n return {klbl:'Product TDS (lab)',kval:lab('Riverview 2000'),kunit:'mg/L',kcol:'none',sok:null,sn:null,slbl:'no limits set',sev:sevOf(r,stale('G',12)||stuck,false)};}));\nrows.sort((a,b)=>a.ord-b.ord);\nconst H=context.panel.chart.getHeight(),W=context.panel.chart.getWidth();const g=[],grids=[],xa=[],ya=[],ser=[];\n// summary tiles\nconst cur=rows.filter(r=>r.behind!=null&&r.behind<=1).length,att=rows.filter(r=>r.sev!=='ok').length,alm=rows.filter(r=>r.sev==='red').length;\nconst pv=rows.filter(r=>r.flow30!=null).map(r=>r.flow30/r.des*100);const avgP=pv.length?pv.reduce((a,b)=>a+b,0)/pv.length:null;\nconst ew=rows.filter(r=>!r.noAvgE&&r.m3>0);const seW=ew.reduce((a,b)=>a+b.kwh,0)/ew.reduce((a,b)=>a+b.m3,0);\nconst tiles=[['Data current',cur+' of '+rows.length,cur===rows.length?C.green:C.amber,'readings up to yesterday or today'],['Need attention',att+' of '+rows.length,alm?C.red:(att?C.amber:C.green),(alm?alm+' alarm · ':'')+'see the dots below'],['Output vs design',avgP==null?'—':Math.round(avgP)+' %',C.text,'average of sites'],['Specific energy ⌀',isFinite(seW)?seW.toFixed(2)+' kWh/m³':'—',C.text,'flow-weighted · excl. Zim Lab (per m³ inlet)']];\nconst tw=(W-30)/4;tiles.forEach((t,i)=>{const x=i*(tw+10);g.push({type:'rect',shape:{x,y:0,width:tw,height:82,r:4},style:{fill:C.card,stroke:C.border}});\n g.push({type:'text',left:x+14,top:10,style:{text:t[0],fill:C.muted,fontSize:12}});g.push({type:'text',left:x+14,top:28,style:{text:t[1],fill:t[2],fontSize:24,fontWeight:600}});g.push({type:'text',left:x+14,top:60,style:{text:t[3],fill:C.muted,fontSize:11}});});\nconst top0=96,head=26,rowH=Math.max(34,(H-top0-head-4)/rows.length);\nconst X={name:0.01,up:0.17,flow:0.24,trend:0.45,se:0.62,key:0.71,score:0.83};\n[['Site','name'],['Data up to','up'],['Output ⌀ 30 d · % of design','flow'],['Trend · 30 days','trend'],['kWh/m³ ⌀ (0–2.5)','se'],['Key metric ⌀ 30 d','key'],['Within limits · 30 d','score']].forEach(([t,k])=>g.push({type:'text',left:X[k]*100+'%',top:top0+6,style:{text:t,fill:C.muted,fontSize:12}}));\ng.push({type:'rect',shape:{x:0,y:top0+head-2,width:W,height:1},style:{fill:C.border}});\nconst sevC={ok:C.green,amber:C.amber,purple:C.purple,red:C.red};const f0=v=>v==null?'—':Math.round(v).toLocaleString('en-US');\nrows.forEach((r,i)=>{const y=top0+head+i*rowH,cy=y+rowH/2;\n g.push({type:'circle',shape:{cx:W*X.name+5,cy,r:5},style:{fill:sevC[r.sev]||C.green}});\n g.push({type:'text',left:W*X.name+16,top:cy-15,style:{text:r.name,fill:C.text,fontSize:13,fontWeight:600}});g.push({type:'text',left:W*X.name+16,top:cy+2,style:{text:r.sub,fill:C.muted,fontSize:11}});\n g.push({type:'text',left:X.up*100+'%',top:cy-7,style:{text:r.up||'no data',fill:(r.up==null||r.behind>3)?C.purple:(r.behind>1?C.amber:C.text),fontSize:13}});\n if(r.flow30!=null){const p=r.pct==null?null:Math.round(r.pct);const x0=W*X.flow,w=W*(X.trend-X.flow)-24;\n  g.push({type:'text',left:x0,top:cy-16,style:{text:f0(r.flow30)+' m³'+(r.name==='Zim Lab'?' inlet':''),fill:C.text,fontSize:13}});\n  g.push({type:'text',left:x0+w-40,top:cy-16,style:{text:p==null?'—':p+' %',fill:p>100?C.amber:C.text,fontSize:13,fontWeight:500}});\n  g.push({type:'rect',shape:{x:x0,y:cy+4,width:w,height:7,r:3},style:{fill:'#2a2d33'}});if(p!=null)g.push({type:'rect',shape:{x:x0,y:cy+4,width:w*Math.min(p,150)/150,height:7,r:3},style:{fill:p>100?C.amber:C.blue}});\n  g.push({type:'rect',shape:{x:x0+w*100/150-1,y:cy+1,width:2,height:13},style:{fill:C.text}});} else g.push({type:'text',left:X.flow*100+'%',top:cy-7,style:{text:'no data',fill:C.muted,fontSize:13}});\n const vals=r.series;grids.push({left:X.trend*100+'%',width:(X.se-X.trend-0.02)*100+'%',top:y+6,height:rowH-12});xa.push({type:'category',gridIndex:i,show:false,data:vals.map((_,k)=>k)});\n ya.push({type:'value',gridIndex:i,show:false,min:0,max:Math.max(...vals.filter(v=>v!=null),r.des)*1.08});\n ser.push({type:'line',xAxisIndex:i,yAxisIndex:i,data:vals,connectNulls:false,symbol:'none',showSymbol:false,lineStyle:{color:C.line,width:1.5},silent:true,markLine:{symbol:'none',silent:true,label:{show:false},lineStyle:{type:'dashed',color:'#6c6f75',width:1},data:[{yAxis:r.des}]}});\n const se=r.m3>0?r.kwh/r.m3:null;const sx=W*X.se,sw=W*(X.key-X.se)-30;\n if(se!=null){g.push({type:'text',left:sx,top:cy-16,style:{text:se.toFixed(2)+(se>2.5?'  ▸ per m³ inlet':''),fill:C.text,fontSize:13}});g.push({type:'rect',shape:{x:sx,y:cy+4,width:sw,height:6,r:3},style:{fill:'#2a2d33'}});g.push({type:'rect',shape:{x:sx,y:cy+4,width:sw*Math.min(se,2.5)/2.5,height:6,r:3},style:{fill:'#9fb8c9'}});}\n else g.push({type:'text',left:sx,top:cy-7,style:{text:'—',fill:C.muted,fontSize:13}});\n g.push({type:'text',left:X.key*100+'%',top:cy-15,style:{text:r.klbl,fill:C.muted,fontSize:11}});\n g.push({type:'text',left:X.key*100+'%',top:cy+1,style:{text:r.kval==null?'—':(r.kunit==='%'?Math.round(r.kval)+' %':(Math.round(r.kval*10)/10)+' '+r.kunit),fill:{ok:C.green,amber:C.amber,red:C.red,none:C.text}[r.kcol]||C.text,fontSize:13,fontWeight:500}});\n if(r.sn){const p=r.sok/r.sn*100,c=p>=95?C.green:(p>=80?C.amber:C.red),x0=W*X.score;g.push({type:'text',left:x0,top:cy-15,style:{text:r.sok+' / '+r.sn,fill:c,fontSize:13,fontWeight:600}});\n  g.push({type:'rect',shape:{x:x0+58,y:cy-10,width:W*(1-X.score)-74,height:6,r:3},style:{fill:'#2a2d33'}});g.push({type:'rect',shape:{x:x0+58,y:cy-10,width:(W*(1-X.score)-74)*p/100,height:6,r:3},style:{fill:c}});\n  g.push({type:'text',left:x0,top:cy+3,style:{text:r.slbl,fill:C.muted,fontSize:11}});}\n else {g.push({type:'text',left:X.score*100+'%',top:cy-15,style:{text:'no limits set',fill:C.muted,fontSize:13}});g.push({type:'text',left:X.score*100+'%',top:cy+3,style:{text:r.slbl==='no limits set'?'score appears once limits exist':r.slbl,fill:C.muted,fontSize:11}});}\n g.push({type:'rect',shape:{x:0,y:y+rowH-1,width:W,height:1},style:{fill:C.grid}});});\nreturn {backgroundColor:'transparent',animation:false,graphic:g,grid:grids,xAxis:xa,yAxis:ya,series:ser};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH today AS (SELECT (now() AT TIME ZONE 'Asia/Kolkata')::date AS d),\nst AS (SELECT 'AHSPA' AS name, \"Date\" AS day, daily_flow_out AS v, daily_power AS kwh, 100 * (daily_cod_avg_inlet - daily_cod_avg_outlet) / NULLIF(daily_cod_avg_inlet, 0) AS k, NULL::numeric AS tss FROM gsi_ahspa_stats WHERE \"Date\" >= (SELECT d FROM today) - 30 AND \"Date\" < (SELECT d FROM today)\n UNION ALL SELECT 'NTIEM', \"Date\", daily_flow_out, daily_power_total, 100 * (daily_avg_inlet_cod - daily_avg_outlet_cod) / NULLIF(daily_avg_inlet_cod, 0), NULL FROM gsi_ntiem_stats WHERE \"Date\" >= (SELECT d FROM today) - 30 AND \"Date\" < (SELECT d FROM today)\n UNION ALL SELECT 'Nanded MBR', \"Date\", daily_permeate_flow, daily_power, daily_avg_outlet_cod, daily_avg_outlet_tss FROM gsi_nandedmbr_stats WHERE \"Date\" >= (SELECT d FROM today) - 30 AND \"Date\" < (SELECT d FROM today)),\nmeta(name, grp, des, key_lbl, key_unit, ord, cetp) AS (VALUES ('AHSPA','CETP · 30,000 m³/d',30000,'COD reduction','%',2,true),('NTIEM','CETP · 100,000 m³/d',100000,'COD reduction','%',3,true),('Nanded MBR','MBR · 7,500 m³/d',7500,'Treated COD','mg/L',4,false)),\nlab AS (SELECT CASE f.team_id WHEN 219 THEN 'AHSPA' ELSE 'NTIEM' END AS name, (l.time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day, btrim(l.type_of_lab_test) AS t, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE ((f.team_id = 219 AND btrim(l.location) = 'CETP Outfall') OR (f.team_id = 25 AND btrim(l.location) = 'Outlet')) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2, 3),\nlim(name, t, w, a, lo, hi) AS (VALUES ('AHSPA','COD',220,250,NULL::numeric,NULL::numeric),('AHSPA','TSS',75,100,NULL,NULL),('AHSPA','TAN',5,10,NULL,NULL),('AHSPA','pH',NULL,NULL,6.5,8.5),('NTIEM','COD',225,250,NULL,NULL),('NTIEM','TSS',80,100,NULL,NULL),('NTIEM','TAN',40,50,NULL,NULL),('NTIEM','pH',NULL,NULL,6.5,8.5)),\nlj AS (SELECT lab.name, lab.day, lab.t, ((lim.lo IS NOT NULL AND (lab.v < lim.lo OR lab.v > lim.hi)) OR (lim.w IS NOT NULL AND lab.v >= lim.w)) AS out, ((lim.lo IS NOT NULL AND (lab.v < lim.lo OR lab.v > lim.hi)) OR (lim.a IS NOT NULL AND lab.v >= lim.a)) AS alarm FROM lab JOIN lim ON lim.name = lab.name AND lim.t = lab.t),\nld AS (SELECT DISTINCT ON (name, t) name, t, alarm FROM lj ORDER BY name, t, day DESC),\ns AS (SELECT m.*, (SELECT max(day) FROM st WHERE st.name = m.name AND st.v > 0) AS up_to,\n  (SELECT avg(v) FROM st WHERE st.name = m.name AND st.v > 0) AS flow30,\n  (SELECT v FROM st WHERE st.name = m.name AND st.v > 0 ORDER BY day DESC LIMIT 1) / m.des * 100 AS pct,\n  (SELECT string_agg(COALESCE(round(st.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') g(day) LEFT JOIN st ON st.name = m.name AND st.day = g.day::date AND st.v > 0) AS series,\n  (SELECT sum(kwh) FROM st WHERE st.name = m.name AND st.v > 0 AND st.kwh > 0) AS kwh30, (SELECT sum(v) FROM st WHERE st.name = m.name AND st.v > 0 AND st.kwh > 0) AS m3_30,\n  (SELECT avg(k) FROM st WHERE st.name = m.name AND k > 0) AS key_val,\n  (SELECT count(DISTINCT day) FROM lj WHERE lj.name = m.name) AS score_n,\n  (SELECT count(*) FROM (SELECT day FROM lj WHERE lj.name = m.name GROUP BY day HAVING NOT bool_or(out)) x) AS score_ok,\n  (SELECT bool_or(alarm) FROM ld WHERE ld.name = m.name) AS alarm_now,\n  (SELECT max(c) FROM (SELECT count(*) AS c FROM lj WHERE lj.name = m.name AND lj.day > (SELECT d FROM today) - 7 AND out GROUP BY t) x) AS out7,\n  (SELECT count(tss) >= 7 AND count(DISTINCT tss) = 1 FROM st WHERE st.name = m.name) AS tss_const\n FROM meta m)\nSELECT name, grp, des, ord, to_char(up_to, 'DD Mon') AS up_to, (SELECT d FROM today) - 1 - up_to AS behind, flow30, pct, series, kwh30, m3_30, key_lbl, key_unit, key_val,\n CASE WHEN NOT cetp THEN 'none' WHEN key_val >= 80 THEN 'ok' WHEN key_val >= 60 THEN 'amber' ELSE 'red' END AS key_col,\n CASE WHEN cetp THEN score_ok END AS score_ok, CASE WHEN cetp THEN score_n END AS score_n,\n CASE WHEN alarm_now OR (cetp AND key_val < 60) THEN 'red'\n      WHEN up_to IS NULL OR (SELECT d FROM today) - 1 - up_to > 3 OR tss_const THEN 'purple'\n      WHEN (SELECT d FROM today) - 1 - up_to > 1 OR flow30 > des OR (cetp AND key_val < 80) OR COALESCE(out7, 0) >= 3 THEN 'amber' ELSE 'ok' END AS sev\nFROM s ORDER BY ord",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT m3, kwh, n FROM (SELECT sum(v) / 2 AS m3, last(e) - first(e) AS kwh, count(v) AS n FROM (SELECT mean(\"202_fit_03_mbr_permeate_flow\") AS v, last(\"900_mfm_01_mcc_main_energy_total\") AS e FROM \"plc\" WHERE time > now() - 32d GROUP BY time(30m) fill(none)) WHERE time > now() - 32d GROUP BY time(1d, 18h30m) fill(none))",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT m3, kwh, n FROM (SELECT sum(v) / 2 AS m3, last(e) - first(e) AS kwh, count(v) AS n FROM (SELECT mean(\"202_fit_03_suf_permeate_flow\") AS v, last(\"900_mfm_01_mcc_main_energy_total\") AS e FROM \"plc\" WHERE time > now() - 32d GROUP BY time(30m) fill(none)) WHERE time > now() - 32d GROUP BY time(1d, 18h30m) fill(none))",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"100_fit_01_inlet_flow_totalizer\") - first(\"100_fit_01_inlet_flow_totalizer\") AS m3, last(\"900_mfm_01_mcc_main_energy_total\") - first(\"900_mfm_01_mcc_main_energy_total\") AS kwh, 100 * (last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) / ((last(\"302_fit_02_ro_permeate_flow_totalizer\") - first(\"302_fit_02_ro_permeate_flow_totalizer\")) + (last(\"302_fit_01_ro_reject_flow_totalizer\") - first(\"302_fit_01_ro_reject_flow_totalizer\"))) AS rec FROM \"plc\" WHERE time > now() - 32d AND \"100_fit_01_inlet_flow_totalizer\" > 0 AND \"302_fit_02_ro_permeate_flow_totalizer\" > 0 AND \"302_fit_01_ro_reject_flow_totalizer\" > 0 GROUP BY time(1d, 18h30m) fill(none)",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT count(v) AS n24 FROM (SELECT mean(\"202_fit_03_mbr_permeate_flow\") AS v FROM \"plc\" WHERE time > now() - 24h GROUP BY time(10m) fill(none))",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT last(\"202_fit_03_mbr_permeate_flow\") AS l FROM \"plc\" WHERE time > now() - 7d",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT last(\"202_fit_03_suf_permeate_flow\") AS l FROM \"plc\" WHERE time > now() - 7d",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT count(v) AS n24 FROM (SELECT mean(\"100_fit_01_inlet_flow_totalizer\") AS v FROM \"plc\" WHERE time > now() - 24h GROUP BY time(10m) fill(none))",
+          "rawQuery": true,
+          "refId": "H",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT last(\"100_fit_01_inlet_flow_totalizer\") AS l FROM \"plc\" WHERE time > now() - 7d",
+          "rawQuery": true,
+          "refId": "J",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffbjhg37mkcu8a"
+          },
+          "query": "SELECT spread(\"302_ait_01_ro_combined_permeate_ph\") AS sp, last(\"302_ait_01_ro_combined_permeate_ph\") AS l FROM \"plc\" WHERE time > now() - 30d",
+          "rawQuery": true,
+          "refId": "K",
+          "resultFormat": "table"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT CASE f.team_id WHEN 191 THEN 'Riverview 1500' ELSE 'Riverview 2000' END AS name, avg(l.result) AS v FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE ((f.team_id = 191 AND btrim(l.location) = 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'COD') OR (f.team_id = 189 AND btrim(l.location) = 'Treated Water' AND btrim(l.type_of_lab_test) = 'TDS')) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1",
+          "refId": "L"
+        }
+      ],
+      "title": "",
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 3,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:11px;color:#8E8E8E\">Dot = most severe rule: outlet value above alarm on the latest sample or COD reduction below 60 % (red); no data, data more than 3 days behind, feed silent for 12 h, or a value constant / impossible for 30 days (purple); data 2–3 days behind, above design, key target missed, an outlet value above warning on 3+ of the last 7 days, or under 90 % of readings in the last 24 h (amber).</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git",
+    "portfolio"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Global Scientific – Portfolio (site list)",
+  "uid": "gsi-portfolio-sites"
+}

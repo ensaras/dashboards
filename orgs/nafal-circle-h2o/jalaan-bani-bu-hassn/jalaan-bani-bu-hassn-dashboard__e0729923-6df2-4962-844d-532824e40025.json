@@ -1,0 +1,2206 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 24,
+      "panels": [],
+      "title": "Lab Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = '${LabTestLocation:raw}'\n    AND type_of_lab_test = '${LabTestType:raw}'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [$LabTestLocation] - $LabTestType",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 1,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "dash": [
+                0,
+                10
+              ],
+              "fill": "dot"
+            },
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 0.1
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result as \"Free and Residual Chlorine(mg/l)\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = 'Treated Wastewater'\n    AND type_of_lab_test LIKE 'Free and Residual Chlorine%'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [Treated Wastewater] - Free and Residual Chlorine(mg/l)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 6,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "dash": [
+                0,
+                10
+              ],
+              "fill": "dot"
+            },
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result as \"Ammonia Nitrogen(mg/l)\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = 'Treated Wastewater'\n    AND type_of_lab_test LIKE 'Nitrate%'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [Treated Wastewater] - Nitrate as NO3(mg/l)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 6,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "dash": [
+                0,
+                10
+              ],
+              "fill": "dot"
+            },
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "mg/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 31,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result as \"Ammonia Nitrogen(mg/l)\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = 'Treated Wastewater'\n    AND type_of_lab_test LIKE 'Ammonia Nitrogen%'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [Treated Wastewater] - Ammonia Nitrogen(mg/l)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 800,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "dash": [
+                0,
+                10
+              ],
+              "fill": "dot"
+            },
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 400
+              },
+              {
+                "color": "#EAB839",
+                "value": 600
+              }
+            ]
+          },
+          "unit": "ml/l"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result as \"Aeration Tank\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = 'Aeration Tank'\n    AND type_of_lab_test LIKE 'Sludge Volume%'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    time_of_sample_collection,\r\n    result as \"Aeration Tank 1\"\r\nFROM \r\n    user_labtestdata \r\nWHERE \r\n    form_id = 114\r\n    AND location = 'Aeration Tank 1'\r\n    AND type_of_lab_test LIKE 'Sludge Volume%'\r\nAND\r\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    time_of_sample_collection,\r\n    result as \"Aeration Tank 2\"\r\nFROM \r\n    user_labtestdata \r\nWHERE \r\n    form_id = 114\r\n    AND location = 'Aeration Tank 2'\r\n    AND type_of_lab_test LIKE 'Sludge Volume%'\r\nAND\r\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [Aeration Tank] - Sludge Volume(ml/l)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 10,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "dash": [
+                0,
+                10
+              ],
+              "fill": "dot"
+            },
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 6.5
+              },
+              {
+                "color": "#EAB839",
+                "value": 8
+              }
+            ]
+          },
+          "unit": "s.u."
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result as \"PH Outlet\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = 'Treated Wastewater'\n    AND type_of_lab_test LIKE 'pH%'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time_of_sample_collection,\n    result as \"PH Inlet\"\nFROM \n    user_labtestdata \nWHERE \n    form_id = 114\n    AND location = 'Raw Wastewater'\n    AND type_of_lab_test = 'PH(s.u.)'\nAND\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [Raw and Treated Wastewater] - PH(s.u.)",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 23,
+      "panels": [],
+      "title": "Power and Flow Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 54,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let stpValues = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'A') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    stpValues = s.fields.find(f => f.name === 'A')?.values ?? [];\n  }\n});\n\n// Calculate total daily consumption\nlet totalDailyConsumption = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += stpValues[i] || 0;\n  if (total <= 0) {\n    total = '-';\n  }\n  totalDailyConsumption.push(total);\n}\n\n// Calculate the average total daily consumption, excluding '-'\nconst validValues = totalDailyConsumption.filter(value => value !== '-');\nconst averageTotalDailyConsumption = validValues.reduce((sum, value) => sum + value, 0) / validValues.length;\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\nreturn {\n  title: {\n    text: `Average Daily Consumption: {value|${averageTotalDailyConsumption.toFixed(2)} kwh/day}`,\n    left: 'center',\n    bottom: 0,\n    textStyle: {\n      fontSize: 20, // Increased the font size of the title text\n      rich: {\n        value: {\n          color: '#00ff00',\n          fontSize: 24, // Increased the font size of the value\n          fontWeight: 'bold'\n        }\n      }\n    }\n  },\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['STP', 'Total Power Consumption']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Daily Power Consumption',\n    nameLocation: 'middle',\n    nameGap: 70,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'STP',\n      type: 'bar',\n      stack: 'total',\n      data: stpValues\n    },\n    {\n      name: 'Total Power Consumption',\n      type: 'line',\n      data: totalDailyConsumption\n    }\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\r\n    -- Generate a series of all dates between $__timeFrom() and $__timeTo()\r\n    SELECT generate_series(\r\n        $__timeFrom()::date,  -- Start of the time filter\r\n        $__timeTo()::date,    -- End of the time filter\r\n        '1 day'::interval\r\n    )::date AS date\r\n),\r\ndaily_readings AS (\r\n    -- Fetch daily power meter readings from the database\r\n    SELECT\r\n        DATE(datetime) AS date,\r\n        CASE\r\n            WHEN reset_value != 0 THEN \r\n                reset_value\r\n            ELSE\r\n                daily_power\r\n        END AS daily_power\r\n    FROM\r\n        user_powermeterreadingdata\r\n    WHERE\r\n        form_id = 111  -- Filter by form_id\r\n        AND $__timeFilter(datetime)\r\n),\r\ndaily_consumption AS (\r\n    -- Calculate daily consumption by subtracting the current reading from the next day's reading\r\n    SELECT\r\n        ds.date,\r\n        CASE\r\n            -- WHEN dr.daily_power = 0 THEN NULL\r\n            -- ELSE COALESCE(dr.daily_power, 0) \r\n            WHEN dr.daily_power IS NOT NULL AND dr.daily_power > 0 THEN dr.daily_power\r\n            ELSE NULL\r\n        END AS daily_consumption\r\n    FROM\r\n        date_series ds\r\n    LEFT JOIN \r\n        daily_readings dr ON ds.date = dr.date  -- Join with the actual daily readings\r\n    WHERE\r\n        $__timeFilter(ds.date)\r\n        AND ds.date >= CAST($__timeFrom() AS timestamp) \r\n        AND ds.date < CAST($__timeTo() AS timestamp)\r\n)\r\nSELECT\r\n    date,  -- The date from the generated series\r\n    SUM(daily_consumption)\r\nFROM\r\n    daily_consumption\r\nGROUP BY\r\n    date\r\nORDER BY\r\n    date;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$B",
+          "hide": false,
+          "refId": "A",
+          "type": "math"
+        }
+      ],
+      "title": "Daily Power Consumption",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "id": 55,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "// Format dates\nconst formatDates = (timeData) => {\n  return timeData.map(d => {\n    const date = new Date(d);\n    const year = date.getUTCFullYear();\n    const month = date.getUTCMonth() + 1;\n    const day = date.getUTCDate();\n    let hour = date.getUTCHours() + 4;\n    const minute = date.getUTCMinutes();\n\n    const ampm = hour >= 12 ? 'PM' : 'AM';\n    hour = hour % 12;\n    hour = hour ? hour : 12;\n\n    return `${month}/${day}/${year}`;\n  });\n};\n\n// Calculate total daily inlet and outlet flow\nconst totalDailyInletFlow = context.panel.data.series.find(s => s.refId === 'Total Daily Inlet Flow')?.fields?.find(f => f.type === 'number')?.values || [];\nconst totalDailyOutletFlow = context.panel.data.series.find(s => s.refId === 'Total Daily Outlet Flow')?.fields?.find(f => f.type === 'number')?.values || [];\n// Calculate the maximum value in the data\nconst maxInletFlow = Math.max(...totalDailyInletFlow);\nconst maxOutletFlow = Math.max(...totalDailyOutletFlow);\nconst threshold = 600; // Define your threshold value\n// Check if data is empty\nif (totalDailyInletFlow.length === 0 && totalDailyOutletFlow.length === 0) {\n  return {\n    title: {\n      text: 'No data',\n      left: 'center',\n      top: 'center',\n      textStyle: {\n        fontSize: 18,\n        color: '#CCCCDCA6',\n        fontFamily: \"Inter, Helvetica, Arial, sans-serif\",\n      }\n    },\n    xAxis: {\n      type: 'category',\n      data: [],\n      show: true,\n    },\n    yAxis: {\n      type: 'value',\n      name: 'Daily Flow (m3/day)',\n      min: 'dataMin',\n      show: true,\n    },\n    series: [],\n  };\n}\n\n// Replace 0 with '-' in total daily flow data\nconst processedInletFlow = totalDailyInletFlow.map(value => (value === 0 ? '-' : value));\nconst processedOutletFlow = totalDailyOutletFlow.map(value => (value === 0 ? '-' : value));\n\n// Calculate the average, excluding 0 or '-' values\nconst validInletValues = processedInletFlow.filter(value => value !== '-' && value > 0);\nconst averageTotalDailyInletFlow = validInletValues.reduce((sum, value) => sum + value, 0) / validInletValues.length;\n\nconst validOutletValues = processedOutletFlow.filter(value => value !== '-' && value > 0);\nconst averageTotalDailyOutletFlow = validOutletValues.reduce((sum, value) => sum + value, 0) / validOutletValues.length;\nconst softMax = Math.max(threshold, maxInletFlow, maxOutletFlow);\n\n// ECharts configuration\nconst series = context.panel.data.series.map((s) => {\n  const sData = s.fields.find((f) => f.type === 'number').values.buffer || s.fields.find((f) => f.type === 'number').values;\n  const sTime = s.fields.find((f) => f.type === 'time').values.buffer || s.fields.find((f) => f.type === 'time').values;\n  const formattedDates = formatDates(sTime);\n\n  return {\n    name: s.refId,\n    type: 'line',\n    showSymbol: false,\n    areaStyle: {\n      opacity: 0.1,\n    },\n    lineStyle: {\n      width: 1,\n    },\n    data: sData.map((d, i) => [formattedDates[i], d <= 0 ? '-' : d.toFixed(2)]),\n    markLine: {\n      data: [\n        {\n          yAxis: threshold,\n          name: 'Threshold',\n          label: {\n            formatter: '',\n            color: 'red',\n          },\n        }\n      ],\n      lineStyle: {\n        color: 'red',\n        type: 'dashed',\n      },\n      symbol: 'none',\n    },\n  };\n});\n\n// ECharts configuration with consistent date format\nreturn {\n  title: [\n    {\n      text: `Average Daily Inlet Flow: {value|${averageTotalDailyInletFlow.toFixed(2)} m3/day}`,\n      left: 'center',\n      bottom: 50,\n      textStyle: {\n        fontSize: 20,\n        rich: {\n          value: {\n            color: '#00ff00',\n            fontSize: 24,\n            fontWeight: 'bold'\n          }\n        }\n      }\n    },\n    {\n      text: `Average Daily Outlet Flow: {value|${averageTotalDailyOutletFlow.toFixed(2)} m3/day}`,\n      left: 'center',\n      bottom: 10,\n      textStyle: {\n        fontSize: 20,\n        rich: {\n          value: {\n            color: '#00ff00',\n            fontSize: 24,\n            fontWeight: 'bold'\n          }\n        }\n      }\n    }\n  ],\n  legend: {\n    data: series.map(s => s.name),\n    top: 'top',\n    left: 'center',\n    textStyle: {\n      fontSize: 14,\n      color: '#ffffff',\n    }\n  },\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    },\n  },\n  xAxis: {\n    type: 'category',\n    data: series[0] ? series[0].data.map(d => d[0]) : [],\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1;\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: '',\n    min: 'dataMin',\n    max: softMax\n  },\n  grid: {\n    left: '2%',\n    right: '2%',\n    top: '12%',\n    bottom: 100,\n    containLabel: true,\n  },\n  series,\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\ninlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Inlet Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 112\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_inlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Inlet Flow\", 0) AS \"Daily Inlet Flow\"\n  FROM\n    inlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\ninlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Inlet Flow\", 0) AS \"Daily Inlet Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_inlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Inlet Flow\" > 0 THEN \n            (\"Daily Inlet Flow\")\n        ELSE \n            NULL\n    END AS \"Daily Inlet Flow\"\nFROM\n  inlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\ninlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Backwash Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 277\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_inlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Backwash Flow\", 0) AS \"Daily Backwash Flow\"\n  FROM\n    inlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\ninlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Backwash Flow\", 0) AS \"Daily Backwash Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_inlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Backwash Flow\" > 0 AND \"Daily Backwash Flow\" != 0 THEN \n            (\"Daily Backwash Flow\")\n        ELSE \n            0\n    END AS \"Daily Backwash Flow\"\nFROM\n  inlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A-$B",
+          "hide": false,
+          "refId": "Total Daily Inlet Flow",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\noutlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Outlet Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 113\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_outlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Outlet Flow\", 0) AS \"Daily Outlet Flow\"\n  FROM\n    outlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\noutlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Outlet Flow\", 0) AS \"Daily Outlet Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_outlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Outlet Flow\" > 0 THEN \n            (\"Daily Outlet Flow\")\n        ELSE \n            NULL\n    END AS \"Daily Outlet Flow\"\nFROM\n  outlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$C*1",
+          "hide": false,
+          "refId": "Total Daily Outlet Flow",
+          "type": "math"
+        }
+      ],
+      "title": "Total Daily Flow Rate",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 61
+      },
+      "id": 59,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let inlet = [], outlet = [], backwash = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'Inlet') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    inlet = s.fields.find(f => f.name === 'Inlet')?.values ?? [];\n  }\n  else if (s.refId === 'Outlet') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    outlet = s.fields.find(f => f.name === 'Outlet')?.values ?? [];\n  }\n  else if (s.refId === 'Backwash') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    backwash = s.fields.find(f => f.name === 'Backwash')?.values ?? [];\n  }\n});\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['Flow Meter(Backwash)', 'Flow Meter(Out)', 'Flow Meter(In)']\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Daily Flow Meter',\n    nameLocation: 'middle',\n    nameGap: 60,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'Flow Meter(Backwash)',\n      type: 'line',\n      data: backwash\n    },\n    {\n      name: 'Flow Meter(Out)',\n      type: 'line',\n      data: outlet\n    },\n    {\n      name: 'Flow Meter(In)',\n      type: 'line',\n      data: inlet\n    }\n  ]\n\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\ninlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Backwash Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 277\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_inlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Backwash Flow\", 0) AS \"Daily Backwash Flow\"\n  FROM\n    inlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\ninlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Backwash Flow\", 0) AS \"Daily Backwash Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_inlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Backwash Flow\" > 0 AND \"Daily Backwash Flow\" != 0 THEN \n            (\"Daily Backwash Flow\")\n        ELSE \n            NULL\n    END AS \"Daily Backwash Flow\"\nFROM\n  inlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\noutlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Outlet Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 113\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_outlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Outlet Flow\", 0) AS \"Daily Outlet Flow\"\n  FROM\n    outlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\noutlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Outlet Flow\", 0) AS \"Daily Outlet Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_outlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Outlet Flow\" > 0 AND \"Daily Outlet Flow\" != 0 THEN \n            (\"Daily Outlet Flow\")\n        ELSE \n            NULL\n    END AS \"Daily Outlet Flow\"\nFROM\n  outlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\ninlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Inlet Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 112\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_inlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Inlet Flow\", 0) AS \"Daily Inlet Flow\"\n  FROM\n    inlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\ninlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Inlet Flow\", 0) AS \"Daily Inlet Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_inlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Inlet Flow\" > 0 AND \"Daily Inlet Flow\" != 0 THEN \n            (\"Daily Inlet Flow\")\n        ELSE \n            NULL\n    END AS \"Daily Inlet Flow\"\nFROM\n  inlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "Backwash",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$B",
+          "hide": false,
+          "refId": "Outlet",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$C",
+          "hide": false,
+          "refId": "Inlet",
+          "type": "math"
+        }
+      ],
+      "title": "Daily Flow Meter",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 73
+      },
+      "id": 60,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let energyIntensity = [];\n\ncontext.panel.data.series.forEach((s) => {\n  if (s.refId === 'C') {\n    timeData = s.fields.find(f => f.name === 'Time')?.values ?? [];\n    energyIntensity = s.fields.find(f => f.name === 'C')?.values ?? [];\n  }\n});\n\n\n// Format dates\nconst formattedDates = timeData.map(d => {\n  const date = new Date(d); // Parse the ISO string directly\n  // Extract date components in UTC\n  const year = date.getUTCFullYear();\n  const month = date.getUTCMonth() + 1; // Month is zero-indexed\n  const day = date.getUTCDate();\n  let hour = date.getUTCHours() + 4; // Adjust the hour by 4 to account for your timezone\n  const minute = date.getUTCMinutes();\n\n  // Determine AM/PM and adjust hour for 12-hour format\n  const ampm = hour >= 12 ? 'PM' : 'AM';\n  hour = hour % 12;\n  hour = hour ? hour : 12; // If hour is 0, set it to 12\n\n  // Return formatted date string as 'MM/DD/YYYY, HH:mm AM/PM'\n  return `${month}/${day}/${year}`;\n});\n\nreturn {\n  tooltip: {\n    trigger: 'axis',\n    axisPointer: {\n      type: 'cross'\n    }\n  },\n  legend: {\n    data: ['Energy Intensity'],\n  },\n  grid: {\n    left: '5%',\n    right: '4%',\n    bottom: '10%',\n    containLabel: true\n  },\n  xAxis: {\n    type: 'category',\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      }\n    }\n  },\n  yAxis: {\n    type: 'value',\n    name: 'Energy Intensity (Kwh/M3)',\n    nameLocation: 'middle',\n    nameGap: 55,\n    nameTextStyle: {\n      fontSize: 12,\n      align: 'center',\n      verticalAlign: 'middle',\n    }\n  },\n  series: [\n    {\n      name: 'Energy Intensity',\n      type: 'line',\n      stack: 'total',\n      data: energyIntensity.map(value => (value === 0 || value == null) ? '-' : value.toFixed(2))\n    },\n  ]\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n    -- Generate a series of all dates between $__timeFrom() and $__timeTo()\n    SELECT generate_series(\n        $__timeFrom()::date,  -- Start of the time filter\n        $__timeTo()::date,    -- End of the time filter\n        '1 day'::interval\n    )::date AS date\n),\ndaily_readings AS (\n    -- Fetch daily power meter readings from the database\n    SELECT\n        DATE(datetime) AS date,\n        CASE\n            WHEN reset_value != 0 THEN \n                reset_value\n            ELSE\n                daily_power\n        END AS daily_power\n    FROM\n        user_powermeterreadingdata\n    WHERE\n        form_id = 111  -- Filter by form_id\n        AND $__timeFilter(datetime)\n),\ndaily_consumption AS (\n    -- Calculate daily consumption by subtracting the current reading from the next day's reading\n    SELECT\n        ds.date,\n        CASE\n            WHEN dr.daily_power <= 0 THEN 0\n            ELSE COALESCE(dr.daily_power, 0) \n        END AS daily_consumption\n    FROM\n        date_series ds\n    LEFT JOIN \n        daily_readings dr ON ds.date = dr.date  -- Join with the actual daily readings\n    WHERE\n        $__timeFilter(ds.date)\n        AND ds.date >= CAST($__timeFrom() AS timestamp) \n        AND ds.date < CAST($__timeTo() AS timestamp)\n)\nSELECT\n    date,  -- The date from the generated series\n    SUM(daily_consumption)\nFROM\n    daily_consumption\nGROUP BY\n    date\nORDER BY\n    date;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "WITH date_series AS (\n  SELECT\n    GENERATE_SERIES(\n      $__timeFrom() :: date,\n      $__timeTo() :: date,\n      '1 day' :: interval\n    ) :: date AS date\n),\noutlet_data AS (\n  SELECT\n    datetime :: date AS date,\n    CASE\n      WHEN reset_value != 0 THEN \n          reset_value\n      ELSE\n          daily_flow\n    END AS \"Daily Outlet Flow\",\n    ROW_NUMBER() OVER (\n      PARTITION BY datetime :: date\n      ORDER BY\n        datetime DESC\n    ) AS row_num\n  FROM\n    user_flowmeterreadingdata\n  WHERE\n    form_id = 113\n    AND $__timeFilter(datetime)\n    AND datetime >= CAST($__timeFrom() AS timestamp)\n    AND datetime < CAST($__timeTo() AS timestamp)\n),\nfiltered_outlet_data AS (\n  SELECT\n    date,\n    COALESCE(\"Daily Outlet Flow\", 0) AS \"Daily Outlet Flow\"\n  FROM\n    outlet_data\n  WHERE\n    row_num = 1 -- Select only the latest reading for each date\n),\noutlet_with_next AS (\n  SELECT\n    ds.date,\n    COALESCE(fid.\"Daily Outlet Flow\", 0) AS \"Daily Outlet Flow\"\n  FROM\n    date_series ds\n    LEFT JOIN filtered_outlet_data fid ON ds.date = fid.date\n)\nSELECT\n  date AS date,\n  CASE\n        WHEN \"Daily Outlet Flow\" > 0 AND \"Daily Outlet Flow\" != 0 THEN \n            (\"Daily Outlet Flow\")\n        ELSE \n            NULL\n    END AS \"Daily Outlet Flow\"\nFROM\n  outlet_with_next\nWHERE\n  $__timeFilter(date)\n  AND date >= CAST($__timeFrom() AS timestamp)\n  AND date < CAST($__timeTo() AS timestamp)\nORDER BY\n  date;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A * (1 - is_nan($A / ($B))) / ($B + is_nan($A / ($B)) * 1)",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$C*489.9",
+          "hide": true,
+          "refId": "D",
+          "type": "math"
+        }
+      ],
+      "title": "Power Intensity (Kwh/M3)",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 85
+      },
+      "id": 25,
+      "panels": [],
+      "title": "Tanker Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yellow Tanker"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Green Tanker"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Raw Date"
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 86
+      },
+      "id": 42,
+      "options": {
+        "barRadius": 0.1,
+        "barWidth": 0.85,
+        "fullHighlight": false,
+        "groupWidth": 0.5,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    TO_CHAR(\"date\", 'DD-MM-YYYY') AS \"Date\",  -- Formatted for display\n    \"date\" AS \"Raw Date\",  -- Keep the raw date for xAxis processing\n    SUM(\n        (\n            CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n        ) * tanker_capacity\n    ) AS \"Yellow Tanker\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 116\nAND\n  $__timeFilter(\"date\")\n   AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\nGROUP BY \n    \"date\"\nORDER BY\n    \"date\" DESC;\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    TO_CHAR(\"date\", 'DD-MM-YYYY') AS \"Date\",  -- Formatted for display\n    \"date\" AS \"Raw Date\",  -- Keep the raw date for xAxis processing\n    SUM(\n        (\n            CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n        ) * tanker_capacity\n    ) AS \"Green Tanker\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 174\nAND \n    $__timeFilter(date) \n     AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\nGROUP BY \n    \"date\"\nORDER BY\n    \"date\" DESC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    TO_CHAR(\"date\", 'DD-MM-YYYY') AS \"Date\",  -- Formatted for display\n    \"date\" AS \"Raw Date\",  -- Keep the raw date for xAxis processing\n    SUM(\n        (\n            CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n            CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n        ) * tanker_capacity\n    ) AS \"Indstrial Tanker\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 210\nAND\n  $__timeFilter(\"date\")\n   AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp)\nGROUP BY \n    \"date\"\nORDER BY\n    \"date\" DESC;\n",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Total Daily Tanker Capacity",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Date",
+            "mode": "outer"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 96
+      },
+      "id": 44,
+      "panels": [],
+      "title": "Plant Health",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 73,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "pattern": ".*Healthy.*",
+                "result": {
+                  "color": "dark-green",
+                  "index": 0
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": ".*Unhealthy.*",
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "noValue": "🟢 Equipments are Healthy",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 97
+      },
+      "id": 45,
+      "options": {
+        "alignValue": "center",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "mergeValues": true,
+        "rowHeight": 0.72,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH FirstValues AS (\n  SELECT \n    is_aeration_tank_foaming,\n    is_biomass_smell,\n    is_suspended_solid_clarifier_outlet_water,\n    is_solid_floating,\n    date AS first_date\n  FROM \n    user_dailycheckdata\n  WHERE \n    form_id = 185\n  AND\n    $__timeFilter(date)\n  ORDER BY \n    date DESC\n  LIMIT 1\n),\nLastChanges AS (\n  SELECT \n    MAX(CASE WHEN ud.is_aeration_tank_foaming != fv.is_aeration_tank_foaming THEN ud.date END) AS last_change_date_foaming,\n    MAX(CASE WHEN ud.is_biomass_smell != fv.is_biomass_smell THEN ud.date END) AS last_change_date_biomass_smell,\n    MAX(CASE WHEN ud.is_suspended_solid_clarifier_outlet_water != fv.is_suspended_solid_clarifier_outlet_water THEN ud.date END) AS last_change_date_suspended_solid_clarifier_outlet_water,\n    MAX(CASE WHEN ud.is_solid_floating != fv.is_solid_floating THEN ud.date END) AS last_change_date_solid_floating\n  FROM \n    user_dailycheckdata ud\n  CROSS JOIN \n    FirstValues fv\n  WHERE \n    ud.form_id = 185\n  AND\n    $__timeFilter(ud.date)\n    AND\n    ud.date >= CAST($__timeFrom() AS timestamp) \n  AND \n    ud.date < CAST($__timeTo() AS timestamp)\n),\nLastRecord AS (\n  SELECT ud.date AS last_record_date\n  FROM user_dailycheckdata ud\n  WHERE ud.form_id = 185\n  AND $__timeFilter(ud.date)\n  ORDER BY ud.date ASC\n  LIMIT 1\n),\nDefaultValues AS (\n  SELECT \n    'All Equipments are healthy' AS is_aeration_tank_foaming,\n    'All Equipments are healthy' AS is_biomass_smell,\n    'All Equipments are healthy' AS is_suspended_solid_clarifier_outlet_water,\n    'All Equipments are healthy' AS is_solid_floating,\n    NOW() AS first_date -- Default timestamp\n)\nSELECT \n  CASE \n    WHEN (SELECT COUNT(*) FROM FirstValues) = 0 THEN '🟢 All Equipments are Healthy'\n    ELSE \n      CONCAT(\n        CASE\n          -- Convert difference to total days in both cases (THEN and ELSE)\n          WHEN lc.last_change_date_foaming IS NULL THEN \n            EXTRACT(DAY FROM AGE(fv.first_date, lr.last_record_date)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lr.last_record_date)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lr.last_record_date)) * 365\n          ELSE \n            EXTRACT(DAY FROM AGE(fv.first_date, lc.last_change_date_foaming)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lc.last_change_date_foaming)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lc.last_change_date_foaming)) * 365\n        END,\n        ' days - ',\n        CASE \n          WHEN fv.is_aeration_tank_foaming = 'Yes' THEN 'Unhealthy'\n          ELSE 'Healthy'\n        END\n      )\n  END AS \"Aeration Tank Foaming\",\n\n  CASE \n    WHEN (SELECT COUNT(*) FROM FirstValues) = 0 THEN '🟢 All Equipments are Healthy'\n    ELSE \n      CONCAT(\n        CASE\n          -- Convert difference to total days in both cases (THEN and ELSE)\n          WHEN lc.last_change_date_biomass_smell IS NULL THEN \n            EXTRACT(DAY FROM AGE(fv.first_date, lr.last_record_date)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lr.last_record_date)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lr.last_record_date)) * 365\n          ELSE \n            EXTRACT(DAY FROM AGE(fv.first_date, lc.last_change_date_biomass_smell)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lc.last_change_date_biomass_smell)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lc.last_change_date_biomass_smell)) * 365\n        END,\n        ' days - ',\n        CASE \n          WHEN fv.is_biomass_smell = 'Yes' THEN 'Unhealthy'\n          ELSE 'Healthy'\n        END\n      )\n  END AS \"Biomass Smell\",\n\n  CASE \n    WHEN (SELECT COUNT(*) FROM FirstValues) = 0 THEN '🟢 All Equipments are Healthy'\n    ELSE \n      CONCAT(\n        CASE\n          -- Convert difference to total days in both cases (THEN and ELSE)\n          WHEN lc.last_change_date_suspended_solid_clarifier_outlet_water IS NULL THEN \n            EXTRACT(DAY FROM AGE(fv.first_date, lr.last_record_date)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lr.last_record_date)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lr.last_record_date)) * 365\n          ELSE \n            EXTRACT(DAY FROM AGE(fv.first_date, lc.last_change_date_suspended_solid_clarifier_outlet_water)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lc.last_change_date_suspended_solid_clarifier_outlet_water)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lc.last_change_date_suspended_solid_clarifier_outlet_water)) * 365\n        END,\n        ' days - ',\n        CASE \n          WHEN fv.is_suspended_solid_clarifier_outlet_water = 'Yes' THEN 'Unhealthy'\n          ELSE 'Healthy'\n        END\n      )\n  END AS \"Suspended Solids Clarifier Outlet Water\",\n\n  CASE \n    WHEN (SELECT COUNT(*) FROM FirstValues) = 0 THEN '🟢 All Equipments are Healthy'\n    ELSE \n      CONCAT(\n        CASE\n          -- Convert difference to total days in both cases (THEN and ELSE)\n          WHEN lc.last_change_date_solid_floating IS NULL THEN \n            EXTRACT(DAY FROM AGE(fv.first_date, lr.last_record_date)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lr.last_record_date)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lr.last_record_date)) * 365\n          ELSE \n            EXTRACT(DAY FROM AGE(fv.first_date, lc.last_change_date_solid_floating)) +\n            EXTRACT(MONTH FROM AGE(fv.first_date, lc.last_change_date_solid_floating)) * 30 +\n            EXTRACT(YEAR FROM AGE(fv.first_date, lc.last_change_date_solid_floating)) * 365\n        END,\n        ' days - ',\n        CASE \n          WHEN fv.is_solid_floating = 'Yes' THEN 'Unhealthy'\n          ELSE 'Healthy'\n        END\n      )\n  END AS \"Solids Floating\",\n\n  COALESCE(\n    lc.last_change_date_foaming, \n    lr.last_record_date,\n    NOW() -- Default timestamp if no changes or records exist\n  ) AS \"time_field\"  -- This is the time field Grafana needs to render\n\nFROM \n  FirstValues fv\nFULL OUTER JOIN \n  LastChanges lc ON true\nFULL OUTER JOIN \n  LastRecord lr ON true\nFULL OUTER JOIN \n  DefaultValues dv ON true\nWHERE\n  (SELECT COUNT(*) FROM FirstValues) > 0 OR (SELECT COUNT(*) FROM DefaultValues) > 0\n  AND (\n      fv.is_aeration_tank_foaming IS NOT NULL OR\n      fv.is_biomass_smell IS NOT NULL OR\n      fv.is_suspended_solid_clarifier_outlet_water IS NOT NULL OR\n      fv.is_solid_floating IS NOT NULL\n  ) -- Filter out records where equipment status is NULL\n\n-- Handling case when no data is returned\nUNION ALL\nSELECT \n  '🟢 All Equipments are Healthy' AS \"Aeration Tank Foaming\",\n  '🟢 All Equipments are Healthy' AS \"Biomass Smell\",\n  '🟢 All Equipments are Healthy' AS \"Suspended Solids Clarifier Outlet Water\",\n  '🟢 All Equipments are Healthy' AS \"Solids Floating\",\n  NOW() AS \"time_field\"  -- Fallback timestamp if no data exists\n\nWHERE NOT EXISTS (SELECT 1 FROM user_dailycheckdata WHERE form_id = 185 AND $__timeFilter(date)AND\n    date >= CAST($__timeFrom() AS timestamp) \n  AND \n    date < CAST($__timeTo() AS timestamp))\n\nORDER BY \"time_field\" DESC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Health Check Status",
+      "transparent": true,
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-blues"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-background"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": true
+          },
+          "mappings": [
+            {
+              "options": {
+                "No Issue": {
+                  "color": "dark-green",
+                  "index": 3
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "pattern": ".+",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "No Issue"
+                }
+              },
+              "type": "special"
+            },
+            {
+              "options": {
+                "match": "empty",
+                "result": {
+                  "color": "dark-green",
+                  "index": 2,
+                  "text": "No Issue"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "🟢 Equipment Running Smoothly",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Equipment"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 105
+      },
+      "id": 46,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    equipment AS \"Equipment\",\n    \n    CASE\n        WHEN electrical_issues IS NULL OR COALESCE(array_length(electrical_issues, 1), 0) = 0 THEN\n            'No Issue'\n        ELSE\n            array_to_string(electrical_issues, ', ') \n    END AS \"Electrical Issues\",\n    \n    CASE\n        WHEN mechanical_issues IS NULL OR COALESCE(array_length(mechanical_issues, 1), 0) = 0 THEN\n            'No Issue'\n        ELSE\n            array_to_string(mechanical_issues, ', ') \n    END AS \"Mechanical Issues\",\n\n    CASE\n        WHEN e_and_i_issues IS NULL OR COALESCE(array_length(e_and_i_issues, 1), 0) = 0 THEN\n            'No Issue'\n        ELSE\n            array_to_string(e_and_i_issues, ', ') \n    END AS \"E&I Issues\",\n    \n    CASE\n        WHEN description IS NULL OR description = '' THEN\n            'No Issue'\n        ELSE\n            description\n    END AS \"Other Issues\"\n    \nFROM\n    user_maintenancedata\nWHERE\n    form_id = 115\n    AND status = 'Breakdown'\nORDER BY\n    time_of_data_entry DESC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Equipment Breakdown",
+      "transparent": true,
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-blues"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-background"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": true
+          },
+          "mappings": [
+            {
+              "options": {
+                "No Issue": {
+                  "color": "dark-green",
+                  "index": 1
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "pattern": ".+",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "noValue": "🟢 Equipment Running Smoothly",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Equipment"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Resolved Time"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "MMM. DD, YYYY, hh:mm A"
+              },
+              {
+                "id": "custom.inspect",
+                "value": false
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Consumable Used"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "index": 0,
+                        "text": "-"
+                      }
+                    },
+                    "type": "special"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byValue",
+              "options": {
+                "op": "gte",
+                "reducer": "allIsNull",
+                "value": 0
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.inspect",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 116
+      },
+      "id": 58,
+      "options": {
+        "cellHeight": "sm",
+        "enablePagination": false,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    equipment AS \"Equipment\",\n    end_time AS \"Resolved Time\",\n\n    CASE\n        WHEN electrical_issues IS NULL OR COALESCE(array_length(electrical_issues, 1), 0) = 0 THEN\n            'No Issue'\n        ELSE\n            array_to_string(electrical_issues, ', ') \n    END AS \"Electrical Issues\",\n    \n    CASE\n        WHEN mechanical_issues IS NULL OR COALESCE(array_length(mechanical_issues, 1), 0) = 0 THEN\n            'No Issue'\n        ELSE\n            array_to_string(mechanical_issues, ', ') \n    END AS \"Mechanical Issues\",\n\n    CASE\n        WHEN e_and_i_issues IS NULL OR COALESCE(array_length(e_and_i_issues, 1), 0) = 0 THEN\n            'No Issue'\n        ELSE\n            array_to_string(e_and_i_issues, ', ') \n    END AS \"E&I Issues\",\n    \n    CASE\n        WHEN description IS NULL OR description = '' THEN\n            'No Issue'\n        ELSE\n            description\n    END AS \"Other Issues\",\n\n    CASE\n        WHEN consumable IS NULL OR consumable = '' THEN\n            '-'\n        ELSE\n            consumable\n    END AS \"Consumable Used\"\n    \nFROM\n    user_maintenancedata\nWHERE\n    form_id = 115\n    AND status = 'Resolved'\n    AND $__timeFilter(end_time) \nORDER BY\n    end_time DESC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Equipment Resolved",
+      "transparent": true,
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "Aeration Tank",
+          "value": "Aeration Tank"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+        },
+        "definition": "SELECT location_name FROM user_labtestlocationmasterdata\nWHERE team_id=17\nORDER BY location_name;",
+        "description": "",
+        "includeAll": false,
+        "name": "LabTestLocation",
+        "options": [],
+        "query": "SELECT location_name FROM user_labtestlocationmasterdata\nWHERE team_id=17\nORDER BY location_name;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "Ammonia Nitrogen",
+          "value": "Ammonia Nitrogen"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+        },
+        "definition": "SELECT test_type_name FROM user_labtesttypemasterdata\nWHERE team_id=17\nORDER BY test_type_name;",
+        "includeAll": false,
+        "name": "LabTestType",
+        "options": [],
+        "query": "SELECT test_type_name FROM user_labtesttypemasterdata\nWHERE team_id=17\nORDER BY test_type_name;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Muscat",
+  "title": "Jalaan Bani Bu Hassn Dashboard",
+  "uid": "e0729923-6df2-4962-844d-532824e40025"
+}

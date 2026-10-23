@@ -1,0 +1,928 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 94,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 403
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let fit600_01 = [], fit600_02 = [], total = [];\n\ncontext.panel.data.series.forEach((s) => {\n  //if (s.refId === 'Daily Flow FIT 600-01') {\n  timeData = s.fields.find((f) => f.name === \"Time\")?.values ?? [];\n  fit600_01 =\n    s.fields.find((f) => f.name === \"Daily Flow FIT 600-01\")?.values ?? [];\n  //} else if (s.refId === 'Daily Flow FIT 600-02') {\n  fit600_02 =\n    s.fields.find((f) => f.name === \"Daily Flow FIT 600-02\")?.values ?? [];\n  //}\n  total = s.fields.find((f) => f.name === \"Total\")?.values ?? [];\n});\n\n// let totalDailyFlow = [];\n// for (let i = 0; i < timeData.length; i++) {\n//   let total = 0;\n//   total += fit600_01[i] || 0;\n//   total += fit600_02[i] || 0;\n//   totalDailyFlow.push(total);\n// }\n\n\n// Format dates for x-axis with Asia/Kolkata timezone\nconst formattedDates = timeData.map((d) => {\n  const date = new Date(d); // Parse the date string\n\n  // Convert to Asia/Kolkata timezone\n  const kolkataDate = new Intl.DateTimeFormat(\"en-US\", {\n    timeZone: \"Asia/Kolkata\",\n    year: \"numeric\",\n    month: \"2-digit\",\n    day: \"2-digit\",\n  }).formatToParts(date);\n\n  // Extract values and format as MM/DD/YYYY\n  const month = kolkataDate.find((part) => part.type === \"month\").value;\n  const day = kolkataDate.find((part) => part.type === \"day\").value;\n  const year = kolkataDate.find((part) => part.type === \"year\").value;\n\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  tooltip: {\n    trigger: \"axis\",\n    axisPointer: { type: \"cross\" },\n    formatter: function (params) {\n      let tooltipText = `${params[0].axisValueLabel}<br />`;\n      params.forEach((item) => {\n        let value = item.data === '-' ? '-' : `${item.data} kg`;\n        tooltipText += `${item.marker} ${item.seriesName}: ${value} <br/>`;\n      });\n      return tooltipText;\n    },\n  },\n  legend: {\n    data: [\"FIT 600-01\", \"FIT 600-02\"],\n  },\n  grid: {\n    left: \"5%\",\n    right: \"4%\",\n    bottom: \"10%\",\n    containLabel: true,\n  },\n  xAxis: {\n    type: \"category\",\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      },\n    },\n  },\n  yAxis: {\n    type: \"value\",\n    axisLabel: {\n      formatter: function (val) {\n        return `${val} kg`;\n      }\n    }\n  },\n  series: [\n    {\n      name: \"FIT 600-01\",\n      type: \"bar\",\n      stack: 'total',\n      data: fit600_01.map(value => (value == null || value <= 0 ? \"-\" : Math.round(value))),\n    },\n    {\n      name: \"FIT 600-02\",\n      type: \"bar\",\n      stack: 'total',\n      data: fit600_02.map(value => (value == null || value <= 0 ? \"-\" : Math.round(value))),\n      label: {\n        show: true,\n        position: \"top\",\n        formatter: function (params) {\n          return Math.round(total[params.dataIndex]);\n        },\n      },\n    },\n  ],\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "alias": "Daily Flow FIT 600-01",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": true,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT difference\nFROM (\n  SELECT \n    (LAST(\"FIT-600-01 Total Flow In Kg\") - FIRST(\"FIT-600-01 Total Flow In Kg\")) AS difference\n  FROM \n    \"mqtt\"\n  WHERE \n    $timeFilter\n  GROUP BY \n    time(1d, 18h30m)\n) \nWHERE difference > 0\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Daily Flow FIT 600-02",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": true,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT difference\nFROM (\n  SELECT \n    (LAST(\"FIT-600-02 Total Flow In Kg\") - FIRST(\"FIT-600-02 Total Flow In Kg\")) AS difference\n  FROM \n    \"mqtt\"\n  WHERE \n    $timeFilter\n  GROUP BY \n    time(1d, 18h30m)\n) \nWHERE difference > 0\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A",
+          "hide": false,
+          "refId": "Daily Flow FIT 600-01",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$B",
+          "hide": false,
+          "refId": "Daily Flow FIT 600-02",
+          "type": "math"
+        }
+      ],
+      "title": "Total Daily CBG Production",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kg/s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "FIT-600-01"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "FIT-600-02"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 50,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "FIT-600",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"FIT-600-01 Current Flow In Kg/s\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(1m) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "FIT-600",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"FIT-600-02 Current Flow In Kg/s\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(1m) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A+$B",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
+        }
+      ],
+      "title": "CBG Flow Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 88,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "FIT PSA Inlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"FIT PSA Inlet\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "FIT PSA Outlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"FIT PSA Outlet\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "FIT Inlet and Outlet Flow Rates (15 min Avg)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 95,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let inlet = [];\nlet outlet = [];\n\ncontext.panel.data.series.forEach((s) => {\n  //if (s.refId==='Daily Flow FIT 600-01') {\n  timeData = s.fields.find((f) => f.name === \"Time\")?.values ?? [];\n  inlet = s.fields.find((f) => f.name === \"FIQ PSA Inlet\")?.values ?? [];\n  outlet = s.fields.find((f) => f.name === \"FIQ PSA Outlet\")?.values ?? [];\n});\n\nlet totalDailyFlow = [];\nfor (let i = 0; i < timeData.length; i++) {\n  let total = 0;\n  total += inlet[i] || 0;\n  total += outlet[i] || 0;\n  totalDailyFlow.push(total);\n}\n\n\n// Format dates for x-axis with Asia/Kolkata timezone\nconst formattedDates = timeData.map((d) => {\n  const date = new Date(d); // Parse the date string\n\n  // Convert to Asia/Kolkata timezone\n  const kolkataDate = new Intl.DateTimeFormat(\"en-US\", {\n    timeZone: \"Asia/Kolkata\",\n    year: \"numeric\",\n    month: \"2-digit\",\n    day: \"2-digit\",\n  }).formatToParts(date);\n\n  // Extract values and format as MM/DD/YYYY\n  const month = kolkataDate.find((part) => part.type === \"month\").value;\n  const day = kolkataDate.find((part) => part.type === \"day\").value;\n  const year = kolkataDate.find((part) => part.type === \"year\").value;\n\n  return `${month}/${day}/${year}`;\n});\n\n\nreturn {\n  tooltip: {\n    trigger: \"axis\",\n    axisPointer: { type: \"cross\" },\n  },\n  legend: {\n    data: [\"FIQ PSA Inlet\", \"FIQ PSA Outlet\"],\n  },\n  grid: {\n    left: \"5%\",\n    right: \"4%\",\n    bottom: \"10%\",\n    containLabel: true,\n  },\n  xAxis: {\n    type: \"category\",\n    data: formattedDates,\n    axisLabel: {\n      formatter: function (val) {\n        const date = new Date(val);\n        const month = date.getMonth() + 1; // Month is zero-indexed\n        const day = date.getDate();\n        return `${month}/${day}`;\n      },\n    },\n  },\n  yAxis: {\n    type: \"value\",\n  },\n  series: [\n    {\n      name: \"FIQ PSA Inlet\",\n      type: \"bar\",\n      // stack: 'total',\n      data: inlet.map(value => (value == null || value <= 0 ? \"-\" : Math.round(value))),\n    },\n    {\n      name: \"FIQ PSA Outlet\",\n      type: \"bar\",\n      // stack: 'total',\n      data: outlet.map(value => (value == null || value <= 0 ? \"-\" : Math.round(value))),\n      // label: {\n      //   show: true,\n      //   position: \"top\",\n      //   formatter: function (params) {\n      //     return totalDailyFlow[params.dataIndex].toFixed(2); // Format to 2 decimal places\n      //   },\n      // },\n    },\n  ],\n};\n",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "alias": "FIQ PSA Inlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT \n  LAST(\"FIQ PSA Inlet\") -FIRST(\"FIQ PSA Inlet\") \nFROM \n  \"mqtt\"\nWHERE\n  $timeFilter\nGROUP BY \n  time(1d, 18h30m)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "FIQ PSA Outlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": true,
+          "query": "SELECT \n  LAST(\"FIQ PSA Outlet\") - FIRST(\"FIQ PSA Outlet\") \nFROM \n  \"mqtt\"\nWHERE\n  $timeFilter\nGROUP BY \n  time(1d, 18h30m)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$A",
+          "hide": false,
+          "refId": "FIQ PSA Inlet",
+          "type": "math"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "1*$B",
+          "hide": false,
+          "refId": "FIQ PSA Outlet",
+          "type": "math"
+        }
+      ],
+      "title": "Total Daily FIT PSA Inlet and Outlet",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Time",
+            "mode": "outer"
+          }
+        }
+      ],
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "id": 93,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Cooling Water Supply 500-TT-01 Temperature Transmitter",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "query": "SELECT mean(\"Cooling Water Supply 500-TT-01 Temperature Transmitter\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cooling Water Return 500-TT-02 Temperature Transmitter",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"Cooling Water Return 500-TT-02 Temperature Transmitter\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Cooling Water Supply & Return",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 53
+      },
+      "id": 92,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "FIT PSA Inlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"FIT PSA Inlet\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FIT PSA Inlet"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "PIT PSA Outlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT mean(\"PIT PSA Outlet\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time(15m) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "PIT Outlet  (mmH2O) and FIT Inlet Flow (NM3/Hr) (15 min Avg)",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "102-A-01 Motor Status",
+          "value": "102-A-01 Motor Status"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
+        },
+        "definition": "SHOW FIELD KEYS",
+        "includeAll": false,
+        "name": "MotorSensor",
+        "options": [],
+        "query": "SHOW FIELD KEYS",
+        "refresh": 1,
+        "regex": "/(.*Motor.*|.*Trip.*|.*XV.*)/",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "CBG Production",
+  "uid": "c53aefd4-413c-4b93-8781-e866d07a2905"
+}

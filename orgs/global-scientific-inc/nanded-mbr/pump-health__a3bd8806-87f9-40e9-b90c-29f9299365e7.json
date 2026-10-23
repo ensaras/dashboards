@@ -1,0 +1,2373 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-Power/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "kwatt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-Current/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "amp"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-Speed/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "rotrpm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-Voltage/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "volt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*-Torque/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 31,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "mqtt_data",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT last($vars) AS $vars FROM \"mqtt_consumer\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Pump Details",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(?:SewageReceiving|Pre_Aeration|MBR)-PumpCtrl-P(\\d{3})(\\d{2})_(Power|Current|Voltage|Torque|Spd)Feedback$",
+            "renamePattern": "$1-P-$2-$3"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^(.*)-Spd$",
+            "renamePattern": "$1-Speed"
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "links": [],
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 6.69
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 7.5,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 100
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 6.7,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 7.49
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "kwatt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_01"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 1.89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 2.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 1.9,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 2.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_02"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 1.89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 2.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 1.9,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 2.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_03"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 1.89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 2.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 1.9,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 2.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_04"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 1.89
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 2.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 1.9,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 2.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_05"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4.79
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5.5,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4.8,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 5.49
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_06"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4.79
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5.5,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4.8,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 5.49
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_01"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 8.19
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 9.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 8.2,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 9.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_05"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 8.19
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 9.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 8.2,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 9.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_07"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 8.19
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 9.2,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 8.2,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 9.19
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_03"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 7.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 9,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 8,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 8.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_06"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 7.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 9,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 8,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 8.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_08"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 7.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 9,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 8,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 8.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 32,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"SewageReceiving-PumpCtrl-P10101_PowerFeedback\") * 2.2 / 100 AS \"101_P_01\",\n    last(\"SewageReceiving-PumpCtrl-P10102_PowerFeedback\") * 2.2 / 100 AS \"101_P_02\",\n    last(\"SewageReceiving-PumpCtrl-P10103_PowerFeedback\") * 2.2 / 100 AS \"101_P_03\",\n    last(\"SewageReceiving-PumpCtrl-P10104_PowerFeedback\") * 2.2 / 100 AS \"101_P_04\",\n    last(\"SewageReceiving-PumpCtrl-P10105_PowerFeedback\") * 5.5 / 100 AS \"101_P_05\",\n    last(\"SewageReceiving-PumpCtrl-P10106_PowerFeedback\") * 5.5 / 100 AS \"101_P_06\",\n    last(\"Pre_Aeration-PumpCtrl-P20101_PowerFeedback\")    * 7.5 / 100 AS \"201_P_01\",\n    last(\"Pre_Aeration-PumpCtrl-P20102_PowerFeedback\")    * 7.5 / 100 AS \"201_P_02\",\n    last(\"Pre_Aeration-PumpCtrl-P20103_PowerFeedback\")    * 7.5 / 100 AS \"201_P_03\",\n    last(\"Pre_Aeration-PumpCtrl-P20104_PowerFeedback\")    * 7.5 / 100 AS \"201_P_04\",\n    last(\"MBR-PumpCtrl-P20201_PowerFeedback\")             * 9.2 / 100 AS \"202_P_01\",\n    last(\"MBR-PumpCtrl-P20205_PowerFeedback\")             * 9.2 / 100 AS \"202_P_05\",\n    last(\"MBR-PumpCtrl-P20207_PowerFeedback\")             * 9.2 / 100 AS \"202_P_07\",\n    last(\"MBR-PumpCtrl-P20203_PowerFeedback\")             * 9   / 100 AS \"202_P_03\",\n    last(\"MBR-PumpCtrl-P20206_PowerFeedback\")             * 9   / 100 AS \"202_P_06\",\n    last(\"MBR-PumpCtrl-P20208_PowerFeedback\")             * 9   / 100 AS \"202_P_08\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Motor Power",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 14.29
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 15.9,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 1000
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 14.3,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 15.89
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_01"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4.49
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4.5,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 4.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_02"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4.49
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4.5,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 4.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_03"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4.49
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4.5,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 4.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_04"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 4.49
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 4.5,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 4.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_05"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 11.29
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 12.6,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 11.3,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 12.59
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "101_P_06"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 11.29
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 12.6,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 11.3,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 12.59
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_03"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 17.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 20,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 10000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 18,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 19.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_06"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 17.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 20,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 18,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 19.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_08"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 17.9
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 20,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 18,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 19.9
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_01"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 17.69
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 19.7,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 17.7,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 19.69
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_05"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 17.6
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 19.7,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 17.7,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 19.6
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_07"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 17.69
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 19.7,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 17.7,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 19.69
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 33,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "text": {},
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"SewageReceiving-PumpCtrl-P10101_CurrentFeedback\") AS \"101_P_01\",\n    last(\"SewageReceiving-PumpCtrl-P10102_CurrentFeedback\") AS \"101_P_02\",\n    last(\"SewageReceiving-PumpCtrl-P10103_CurrentFeedback\") AS \"101_P_03\",\n    last(\"SewageReceiving-PumpCtrl-P10104_CurrentFeedback\") AS \"101_P_04\",\n    last(\"SewageReceiving-PumpCtrl-P10105_CurrentFeedback\") AS \"101_P_05\",\n    last(\"SewageReceiving-PumpCtrl-P10106_CurrentFeedback\") AS \"101_P_06\",\n    last(\"Pre_Aeration-PumpCtrl-P20101_CurrentFeedback\")    AS \"201_P_01\",\n    last(\"Pre_Aeration-PumpCtrl-P20102_CurrentFeedback\")    AS \"201_P_02\",\n    last(\"Pre_Aeration-PumpCtrl-P20103_CurrentFeedback\")    AS \"201_P_03\",\n    last(\"Pre_Aeration-PumpCtrl-P20104_CurrentFeedback\")    AS \"201_P_04\",\n    last(\"MBR-PumpCtrl-P20201_CurrentFeedback\")             AS \"202_P_01\",\n    last(\"MBR-PumpCtrl-P20205_CurrentFeedback\")             AS \"202_P_05\",\n    last(\"MBR-PumpCtrl-P20207_CurrentFeedback\")             AS \"202_P_07\",\n    last(\"MBR-PumpCtrl-P20203_CurrentFeedback\")             AS \"202_P_03\",\n    last(\"MBR-PumpCtrl-P20206_CurrentFeedback\")             AS \"202_P_06\",\n    last(\"MBR-PumpCtrl-P20208_CurrentFeedback\")             AS \"202_P_08\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Motor Current",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 0.1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "rotrpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 34,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"SewageReceiving-PumpCtrl-P10101_SpdFeedback\") AS \"101_P_01\",\n    last(\"SewageReceiving-PumpCtrl-P10102_SpdFeedback\") AS \"101_P_02\",\n    last(\"SewageReceiving-PumpCtrl-P10103_SpdFeedback\") AS \"101_P_03\",\n    last(\"SewageReceiving-PumpCtrl-P10104_SpdFeedback\") AS \"101_P_04\",\n    last(\"SewageReceiving-PumpCtrl-P10105_SpdFeedback\") AS \"101_P_05\",\n    last(\"SewageReceiving-PumpCtrl-P10106_SpdFeedback\") AS \"101_P_06\",\n    last(\"Pre_Aeration-PumpCtrl-P20101_SpdFeedback\")    AS \"201_P_01\",\n    last(\"Pre_Aeration-PumpCtrl-P20102_SpdFeedback\")    AS \"201_P_02\",\n    last(\"Pre_Aeration-PumpCtrl-P20103_SpdFeedback\")    AS \"201_P_03\",\n    last(\"Pre_Aeration-PumpCtrl-P20104_SpdFeedback\")    AS \"201_P_04\",\n    last(\"MBR-PumpCtrl-P20201_SpdFeedback\")             AS \"202_P_01\",\n    last(\"MBR-PumpCtrl-P20205_SpdFeedback\")             AS \"202_P_05\",\n    last(\"MBR-PumpCtrl-P20207_SpdFeedback\")             AS \"202_P_07\",\n    last(\"MBR-PumpCtrl-P20203_SpdFeedback\")             AS \"202_P_03\",\n    last(\"MBR-PumpCtrl-P20206_SpdFeedback\")             AS \"202_P_06\",\n    last(\"MBR-PumpCtrl-P20208_SpdFeedback\")             AS \"202_P_08\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Motor Speed",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "green",
+                  "index": 0
+                },
+                "to": 372
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 415,
+                "result": {
+                  "color": "dark-red",
+                  "index": 1
+                },
+                "to": 10000
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 373,
+                "result": {
+                  "color": "dark-orange",
+                  "index": 2
+                },
+                "to": 414
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_01"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 359
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 400,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 1000000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 360,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 399
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_05"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 359
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 400,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 360,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 399
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "202_P_07"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "to": 359
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 400,
+                      "result": {
+                        "color": "dark-red",
+                        "index": 1
+                      },
+                      "to": 100000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 360,
+                      "result": {
+                        "color": "dark-orange",
+                        "index": 2
+                      },
+                      "to": 399
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 35,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"SewageReceiving-PumpCtrl-P10101_VoltageFeedback\") AS \"101_P_01\",\n    last(\"SewageReceiving-PumpCtrl-P10102_VoltageFeedback\") AS \"101_P_02\",\n    last(\"SewageReceiving-PumpCtrl-P10103_VoltageFeedback\") AS \"101_P_03\",\n    last(\"SewageReceiving-PumpCtrl-P10104_VoltageFeedback\") AS \"101_P_04\",\n    last(\"SewageReceiving-PumpCtrl-P10105_VoltageFeedback\") AS \"101_P_05\",\n    last(\"SewageReceiving-PumpCtrl-P10106_VoltageFeedback\") AS \"101_P_06\",\n    last(\"Pre_Aeration-PumpCtrl-P20101_VoltageFeedback\")    AS \"201_P_01\",\n    last(\"Pre_Aeration-PumpCtrl-P20102_VoltageFeedback\")    AS \"201_P_02\",\n    last(\"Pre_Aeration-PumpCtrl-P20103_VoltageFeedback\")    AS \"201_P_03\",\n    last(\"Pre_Aeration-PumpCtrl-P20104_VoltageFeedback\")    AS \"201_P_04\",\n    last(\"MBR-PumpCtrl-P20201_VoltageFeedback\")             AS \"202_P_01\",\n    last(\"MBR-PumpCtrl-P20205_VoltageFeedback\")             AS \"202_P_05\",\n    last(\"MBR-PumpCtrl-P20207_VoltageFeedback\")             AS \"202_P_07\",\n    last(\"MBR-PumpCtrl-P20203_VoltageFeedback\")             AS \"202_P_03\",\n    last(\"MBR-PumpCtrl-P20206_VoltageFeedback\")             AS \"202_P_06\",\n    last(\"MBR-PumpCtrl-P20208_VoltageFeedback\")             AS \"202_P_08\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Motor Voltage",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "text",
+                  "index": 0
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 0.1,
+                "result": {
+                  "color": "green",
+                  "index": 1
+                },
+                "to": 999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 36,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "a5fee67e-ec5a-42c5-bff1-c00e68811cf4"
+          },
+          "query": "SELECT\n    last(\"SewageReceiving-PumpCtrl-P10101_TorqueFeedback\") AS \"101_P_01\",\n    last(\"SewageReceiving-PumpCtrl-P10102_TorqueFeedback\") AS \"101_P_02\",\n    last(\"SewageReceiving-PumpCtrl-P10103_TorqueFeedback\") AS \"101_P_03\",\n    last(\"SewageReceiving-PumpCtrl-P10104_TorqueFeedback\") AS \"101_P_04\",\n    last(\"SewageReceiving-PumpCtrl-P10105_TorqueFeedback\") AS \"101_P_05\",\n    last(\"SewageReceiving-PumpCtrl-P10106_TorqueFeedback\") AS \"101_P_06\",\n    last(\"Pre_Aeration-PumpCtrl-P20101_TorqueFeedback\")    AS \"201_P_01\",\n    last(\"Pre_Aeration-PumpCtrl-P20102_TorqueFeedback\")    AS \"201_P_02\",\n    last(\"Pre_Aeration-PumpCtrl-P20103_TorqueFeedback\")    AS \"201_P_03\",\n    last(\"Pre_Aeration-PumpCtrl-P20104_TorqueFeedback\")    AS \"201_P_04\",\n    last(\"MBR-PumpCtrl-P20201_TorqueFeedback\")             AS \"202_P_01\",\n    last(\"MBR-PumpCtrl-P20205_TorqueFeedback\")             AS \"202_P_05\",\n    last(\"MBR-PumpCtrl-P20207_TorqueFeedback\")             AS \"202_P_07\",\n    last(\"MBR-PumpCtrl-P20203_TorqueFeedback\")             AS \"202_P_03\",\n    last(\"MBR-PumpCtrl-P20206_TorqueFeedback\")             AS \"202_P_06\",\n    last(\"MBR-PumpCtrl-P20208_TorqueFeedback\")             AS \"202_P_08\"\nFROM \"mqtt_consumer\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Motor Torque",
+      "transparent": true,
+      "type": "bargauge"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "\"SewageReceiving-PumpCtrl-P10101_CurrentFeedback\"",
+          "value": "\"SewageReceiving-PumpCtrl-P10101_CurrentFeedback\""
+        },
+        "includeAll": false,
+        "name": "vars",
+        "options": [
+          {
+            "selected": true,
+            "text": "\"SewageReceiving-PumpCtrl-P10101_CurrentFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10101_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10102_CurrentFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10102_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10103_CurrentFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10103_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10104_CurrentFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10104_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10105_CurrentFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10105_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10106_CurrentFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10106_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20101_CurrentFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20101_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20102_CurrentFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20102_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20103_CurrentFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20103_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20104_CurrentFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20104_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20201_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20201_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20203_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20203_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20204_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20204_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20205_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20205_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20206_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20206_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20207_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20207_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20208_CurrentFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20208_CurrentFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10101_SpdFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10101_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10102_SpdFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10102_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10103_SpdFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10103_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10104_SpdFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10104_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10105_SpdFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10105_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10106_SpdFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10106_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20101_SpdFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20101_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20102_SpdFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20102_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20103_SpdFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20103_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20104_SpdFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20104_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20201_SpdFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20201_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20203_SpdFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20203_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20205_SpdFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20205_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20206_SpdFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20206_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20207_SpdFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20207_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20208_SpdFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20208_SpdFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10101_VoltageFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10101_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10102_VoltageFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10102_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10103_VoltageFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10103_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10104_VoltageFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10104_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10105_VoltageFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10105_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10106_VoltageFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10106_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20101_VoltageFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20101_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20102_VoltageFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20102_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20103_VoltageFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20103_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20104_VoltageFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20104_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20201_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20201_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20203_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20203_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20204_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20204_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20205_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20205_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20206_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20206_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20207_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20207_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20208_VoltageFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20208_VoltageFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10101_TorqueFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10101_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10102_TorqueFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10102_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10103_TorqueFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10103_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10104_TorqueFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10104_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10105_TorqueFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10105_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"SewageReceiving-PumpCtrl-P10106_TorqueFeedback\"",
+            "value": "\"SewageReceiving-PumpCtrl-P10106_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20101_TorqueFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20101_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20102_TorqueFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20102_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20103_TorqueFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20103_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"Pre_Aeration-PumpCtrl-P20104_TorqueFeedback\"",
+            "value": "\"Pre_Aeration-PumpCtrl-P20104_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20201_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20201_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20203_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20203_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20204_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20204_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20205_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20205_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20206_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20206_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20207_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20207_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-PumpCtrl-P20208_TorqueFeedback\"",
+            "value": "\"MBR-PumpCtrl-P20208_TorqueFeedback\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-FIT20211mqtt\"",
+            "value": "\"MBR-Instruments-FIT20211mqtt\""
+          },
+          {
+            "selected": false,
+            "text": "\"MBR-Instruments-FIT20231mqtt\"",
+            "value": "\"MBR-Instruments-FIT20231mqtt\""
+          }
+        ],
+        "query": "\"SewageReceiving-PumpCtrl-P10101_CurrentFeedback\",\n\"SewageReceiving-PumpCtrl-P10102_CurrentFeedback\",\n\"SewageReceiving-PumpCtrl-P10103_CurrentFeedback\",\n\"SewageReceiving-PumpCtrl-P10104_CurrentFeedback\",\n\"SewageReceiving-PumpCtrl-P10105_CurrentFeedback\",\n\"SewageReceiving-PumpCtrl-P10106_CurrentFeedback\",\n\"Pre_Aeration-PumpCtrl-P20101_CurrentFeedback\",\n\"Pre_Aeration-PumpCtrl-P20102_CurrentFeedback\",\n\"Pre_Aeration-PumpCtrl-P20103_CurrentFeedback\",\n\"Pre_Aeration-PumpCtrl-P20104_CurrentFeedback\",\n\"MBR-PumpCtrl-P20201_CurrentFeedback\",\n\"MBR-PumpCtrl-P20203_CurrentFeedback\",\n\"MBR-PumpCtrl-P20204_CurrentFeedback\",\n\"MBR-PumpCtrl-P20205_CurrentFeedback\",\n\"MBR-PumpCtrl-P20206_CurrentFeedback\",\n\"MBR-PumpCtrl-P20207_CurrentFeedback\",\n\"MBR-PumpCtrl-P20208_CurrentFeedback\",\n\"SewageReceiving-PumpCtrl-P10101_SpdFeedback\",\n\"SewageReceiving-PumpCtrl-P10102_SpdFeedback\",\n\"SewageReceiving-PumpCtrl-P10103_SpdFeedback\",\n\"SewageReceiving-PumpCtrl-P10104_SpdFeedback\",\n\"SewageReceiving-PumpCtrl-P10105_SpdFeedback\",\n\"SewageReceiving-PumpCtrl-P10106_SpdFeedback\",\n\"Pre_Aeration-PumpCtrl-P20101_SpdFeedback\",\n\"Pre_Aeration-PumpCtrl-P20102_SpdFeedback\",\n\"Pre_Aeration-PumpCtrl-P20103_SpdFeedback\",\n\"Pre_Aeration-PumpCtrl-P20104_SpdFeedback\",\n\"MBR-PumpCtrl-P20201_SpdFeedback\",\n\"MBR-PumpCtrl-P20203_SpdFeedback\",\n\"MBR-PumpCtrl-P20205_SpdFeedback\",\n\"MBR-PumpCtrl-P20206_SpdFeedback\",\n\"MBR-PumpCtrl-P20207_SpdFeedback\",\n\"MBR-PumpCtrl-P20208_SpdFeedback\",\n\"SewageReceiving-PumpCtrl-P10101_VoltageFeedback\",\n\"SewageReceiving-PumpCtrl-P10102_VoltageFeedback\",\n\"SewageReceiving-PumpCtrl-P10103_VoltageFeedback\",\n\"SewageReceiving-PumpCtrl-P10104_VoltageFeedback\",\n\"SewageReceiving-PumpCtrl-P10105_VoltageFeedback\",\n\"SewageReceiving-PumpCtrl-P10106_VoltageFeedback\",\n\"Pre_Aeration-PumpCtrl-P20101_VoltageFeedback\",\n\"Pre_Aeration-PumpCtrl-P20102_VoltageFeedback\",\n\"Pre_Aeration-PumpCtrl-P20103_VoltageFeedback\",\n\"Pre_Aeration-PumpCtrl-P20104_VoltageFeedback\",\n\"MBR-PumpCtrl-P20201_VoltageFeedback\",\n\"MBR-PumpCtrl-P20203_VoltageFeedback\",\n\"MBR-PumpCtrl-P20204_VoltageFeedback\",\n\"MBR-PumpCtrl-P20205_VoltageFeedback\",\n\"MBR-PumpCtrl-P20206_VoltageFeedback\",\n\"MBR-PumpCtrl-P20207_VoltageFeedback\",\n\"MBR-PumpCtrl-P20208_VoltageFeedback\",\n\"SewageReceiving-PumpCtrl-P10101_TorqueFeedback\",\n\"SewageReceiving-PumpCtrl-P10102_TorqueFeedback\",\n\"SewageReceiving-PumpCtrl-P10103_TorqueFeedback\",\n\"SewageReceiving-PumpCtrl-P10104_TorqueFeedback\",\n\"SewageReceiving-PumpCtrl-P10105_TorqueFeedback\",\n\"SewageReceiving-PumpCtrl-P10106_TorqueFeedback\",\n\"Pre_Aeration-PumpCtrl-P20101_TorqueFeedback\",\n\"Pre_Aeration-PumpCtrl-P20102_TorqueFeedback\",\n\"Pre_Aeration-PumpCtrl-P20103_TorqueFeedback\",\n\"Pre_Aeration-PumpCtrl-P20104_TorqueFeedback\",\n\"MBR-PumpCtrl-P20201_TorqueFeedback\",\n\"MBR-PumpCtrl-P20203_TorqueFeedback\",\n\"MBR-PumpCtrl-P20204_TorqueFeedback\",\n\"MBR-PumpCtrl-P20205_TorqueFeedback\",\n\"MBR-PumpCtrl-P20206_TorqueFeedback\",\n\"MBR-PumpCtrl-P20207_TorqueFeedback\",\n\"MBR-PumpCtrl-P20208_TorqueFeedback\",\n\"MBR-Instruments-FIT20211mqtt\",\n\"MBR-Instruments-FIT20231mqtt\"",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Pump Health",
+  "uid": "a3bd8806-87f9-40e9-b90c-29f9299365e7"
+}

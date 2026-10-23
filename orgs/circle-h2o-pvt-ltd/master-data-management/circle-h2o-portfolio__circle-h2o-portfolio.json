@@ -1,0 +1,487 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "dashboard",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Jabalpur CBG – Site Performance",
+      "tooltip": "Open the site page",
+      "type": "link",
+      "url": "/grafana/d/jabalpur-cbg-site-performance?orgId=21"
+    }
+  ],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:13px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> on target &nbsp; <span style=\"color:#D9B84A\">●</span> below target &nbsp; <span style=\"color:#E0707B\">●</span> well below target &nbsp; <span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; white = no limit set &nbsp;·&nbsp; ⌀ 30-day average &nbsp;·&nbsp; days are midnight to midnight IST &nbsp;·&nbsp; For leadership · click a site name in the links above for its full page</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "panels": [],
+      "title": "Jabalpur CBG · CBG",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "CBG filled (kg) from the daily statistics table (circleh2o_jabalpurplant_stats). Design capacity 4,800 kg/day. The 30-day average leaves out days below 5 % of design (plant stopped or data outage). Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Latest day"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: kg"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: kg"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 3
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT daily_cbgfilled FROM circleh2o_jabalpurplant_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM circleh2o_jabalpurplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled IS NOT NULL)) AS \"Latest day\", (SELECT 100 * daily_cbgfilled / 4800 FROM circleh2o_jabalpurplant_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM circleh2o_jabalpurplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled IS NOT NULL)) AS \"% of design\", (SELECT avg(daily_cbgfilled) FROM circleh2o_jabalpurplant_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled >= 240) AS \"⌀ 30 days\"",
+          "refId": "A"
+        }
+      ],
+      "title": "CBG filled · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "Raw gas over the last 30 days ÷ feed over the same days (m³ per tonne), matching the 30-day digester retention time. Target = (100 m³/t × pressmud + 40 m³/t × cow manure) ÷ total feed. Days without a gas figure or a feed entry are left out; needs at least 20 days with data. Green at 80 % of target or more, amber 60–80 %, red below 60 %. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of target"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#E0707B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 60
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 80
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Actual"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/t"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Target"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³/t"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 3
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^(Actual|Target|% of target)$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH d AS (SELECT \"Date\", daily_rawgas AS g, COALESCE(0,0) AS p, COALESCE(daily_cowmanure,0) AS c FROM circleh2o_jabalpurplant_stats WHERE \"Date\" >= current_date - 60),\nv AS (SELECT \"Date\", CASE WHEN g IS NOT NULL AND p + c > 0 THEN g END AS g, CASE WHEN g IS NOT NULL AND p + c > 0 THEN p END AS p, CASE WHEN g IS NOT NULL AND p + c > 0 THEN c END AS c, CASE WHEN g IS NOT NULL AND p + c > 0 THEN 1 ELSE 0 END AS ok FROM d),\nr AS (SELECT \"Date\", SUM(g) OVER w AS g30, SUM(p) OVER w AS p30, SUM(c) OVER w AS c30, SUM(ok) OVER w AS n FROM v WINDOW w AS (ORDER BY \"Date\" RANGE BETWEEN INTERVAL '29 days' PRECEDING AND CURRENT ROW))\nSELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, CASE WHEN n >= 20 THEN g30 / (p30 + c30) END AS \"Actual\", CASE WHEN n >= 20 THEN (100 * p30 + 40 * c30) / (p30 + c30) END AS \"Target\", CASE WHEN n >= 20 THEN 100 * g30 / (100 * p30 + 40 * c30) END AS \"% of target\", n AS \"Days with data\"\nFROM r WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Raw gas yield · 30-day rolling",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "Plant energy ÷ CBG filled (kWh/kg). Days with the plant stopped, and days above twice the 30-day median (implausible), are left out. Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "suffix: kWh/kg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 3
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT \"Date\", daily_power / NULLIF(daily_cbgfilled, 0) AS se FROM circleh2o_jabalpurplant_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled >= 240 AND daily_power > 0), m AS (SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY se) AS med FROM e) SELECT (SELECT se FROM e WHERE \"Date\" = (SELECT max(\"Date\") FROM circleh2o_jabalpurplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled IS NOT NULL) AND se <= 2 * (SELECT med FROM m)) AS \"Latest day\", (SELECT avg(se) FROM e WHERE se <= 2 * (SELECT med FROM m)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Specific energy · latest day",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+      },
+      "description": "Methane in the product gas (cascade lab result). Specification to be confirmed (≥ 95 % or > 96 %). Shows the latest day with statistics (normally yesterday; before the morning statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 3
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ffe58154-ef66-4f24-b6d3-4417c6bce133"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (SELECT daily_avg_ch4_cascade FROM circleh2o_jabalpurplant_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM circleh2o_jabalpurplant_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_cbgfilled IS NOT NULL)) AS \"Latest day\", (SELECT avg(daily_avg_ch4_cascade) FROM circleh2o_jabalpurplant_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 30) AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS \"⌀ 30 days\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Product CH₄ (cascade, lab)",
+      "type": "stat"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git",
+    "performance",
+    "portfolio"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Circle H2O – Portfolio",
+  "uid": "circle-h2o-portfolio"
+}

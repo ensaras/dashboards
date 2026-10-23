@@ -1,0 +1,689 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:12px;color:#9fa2a8;padding-top:6px\"><span style=\"color:#73BF69\">●</span> nothing to report &nbsp;<span style=\"color:#D9B84A\">●</span> needs attention &nbsp;<span style=\"color:#E0707B\">●</span> alarm &nbsp;<span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; bar: % of design (white line = 100 %) &nbsp;·&nbsp; trend: daily treated flow, last 30 days (dashed = design) &nbsp;·&nbsp; within limits: days within all limits ÷ days sampled (green ≥ 95 %, amber 80–95 %, red &lt; 80 %)</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Sites whose latest reading is from yesterday or today.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#D9B84A",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH t(team, name, des, fp) AS (VALUES (13,'Ibra',4500,'Flow Meter%Out%'),(12,'Al-Mudhaibi',1800,'Flow Meter (In - New Plant)%'),(20,'Masirah',1800,'Flow Meter%Out%'),(16,'Jalaan Bani Bu Ali',1200,'Flow Meter%Out%'),(17,'Jalaan Bani Bu Hassan',600,'Flow Meter%Out%'),(11,'Wadi Bani Khalid',500,'Flow Meter%Out%'),(21,'New Haima',450,'Flow Meter%Out%'),(14,'Bidiya',300,'Flow Meter%Out%'),(18,'Al-Kamil Wafi',250,'Flow Meter%Out%'),(15,'Al-Qabil',250,'Flow Meter%Out%')),\ntoday AS (SELECT (now() AT TIME ZONE 'Asia/Muscat')::date AS d),\nfl AS (SELECT t.team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_flow END) AS v FROM t JOIN user_customform f ON f.team_id = t.team AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE t.fp JOIN user_flowmeterreadingdata x ON x.form_id = f.id WHERE x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nflv AS (SELECT fl.* FROM fl JOIN t ON t.team = fl.team WHERE fl.v BETWEEN 0 AND t.des * 5),\nupto AS (SELECT f.team_id AS team, max((x.datetime AT TIME ZONE 'Asia/Muscat')::date) AS d FROM user_flowmeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND x.datetime < now() GROUP BY 1),\npw AS (SELECT f.team_id AS team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_power END) AS v FROM user_powermeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE 'Power Meter - %STP%' AND x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nse AS (SELECT flv.team, flv.day, pw.v AS kwh, flv.v AS m3 FROM flv JOIN pw ON pw.team = flv.team AND pw.day = flv.day WHERE flv.v > 0 AND pw.v > 0 AND pw.v / flv.v < 10),\nlab AS (SELECT f.team_id AS team, (l.time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date AS day,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Ammonia Nitrogen') AS nh,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Free and Residual Chlorine') AS cl,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Nitrate Nitrogen') AS no3,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'pH') AS ph,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Aeration%' AND btrim(l.type_of_lab_test) = 'Sludge Volume') AS sv\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id IN (SELECT team FROM t) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2),\ns AS (SELECT t.team, t.name, t.des, u.d AS up_to, (SELECT d FROM today) - 1 - u.d AS behind,\n  (SELECT avg(v) FROM flv WHERE flv.team = t.team) AS flow30,\n  (SELECT string_agg(COALESCE(round(flv.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') AS g(day) LEFT JOIN flv ON flv.team = t.team AND flv.day = g.day::date) AS series,\n  (SELECT sum(kwh) / NULLIF(sum(m3), 0) FROM se WHERE se.team = t.team) AS se30,\n  (SELECT avg(nh) FROM lab WHERE lab.team = t.team) AS nh, (SELECT avg(cl) FROM lab WHERE lab.team = t.team) AS cl, (SELECT avg(no3) FROM lab WHERE lab.team = t.team) AS no3,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL) AS lab_n,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL AND (nh IS NULL OR nh < 5) AND (cl IS NULL OR cl BETWEEN 0.1 AND 0.5) AND (ph IS NULL OR (ph >= 6.5 AND ph < 8)) AND (sv IS NULL OR sv BETWEEN 400 AND 600)) AS lab_ok,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND nh >= 5) AS nh_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (cl < 0.1 OR cl > 0.5)) AS cl_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (ph < 6.5 OR ph >= 8)) AS ph_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (sv < 400 OR sv > 600)) AS sv_out7,\n  (SELECT max(day) FROM lab WHERE lab.team = t.team AND nh IS NOT NULL) AS nh_last,\n  (SELECT bool_or(n >= 7 AND mn = mx AND mx > 0) FROM (SELECT count(no3) n, min(no3) mn, max(no3) mx FROM lab WHERE lab.team = t.team UNION ALL SELECT count(ph), min(ph), max(ph) FROM lab WHERE lab.team = t.team UNION ALL SELECT count(nh), min(nh), max(nh) FROM lab WHERE lab.team = t.team) c) AS constant\n FROM t LEFT JOIN upto u ON u.team = t.team),\nr AS (SELECT s.*, CASE\n  WHEN up_to IS NULL OR behind > 3 OR constant THEN 'purple'\n  WHEN behind > 1 OR flow30 > des OR nh_out7 >= 3 OR cl_out7 >= 3 OR ph_out7 >= 3 OR sv_out7 >= 3 OR (behind <= 1 AND (nh_last IS NULL OR nh_last < (SELECT d FROM today) - 3)) THEN 'amber'\n  ELSE 'ok' END AS sev FROM s) SELECT count(*) FILTER (WHERE behind <= 1) || ' of ' || count(*) AS \"Sites with readings up to yesterday or today\" FROM r",
+          "refId": "A"
+        }
+      ],
+      "title": "Data current",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Sites where an attention rule applies: data behind, above design, a lab value outside its limit on 3+ of the last 7 days, a constant lab value, or no recent ammonia sample.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#D9B84A",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH t(team, name, des, fp) AS (VALUES (13,'Ibra',4500,'Flow Meter%Out%'),(12,'Al-Mudhaibi',1800,'Flow Meter (In - New Plant)%'),(20,'Masirah',1800,'Flow Meter%Out%'),(16,'Jalaan Bani Bu Ali',1200,'Flow Meter%Out%'),(17,'Jalaan Bani Bu Hassan',600,'Flow Meter%Out%'),(11,'Wadi Bani Khalid',500,'Flow Meter%Out%'),(21,'New Haima',450,'Flow Meter%Out%'),(14,'Bidiya',300,'Flow Meter%Out%'),(18,'Al-Kamil Wafi',250,'Flow Meter%Out%'),(15,'Al-Qabil',250,'Flow Meter%Out%')),\ntoday AS (SELECT (now() AT TIME ZONE 'Asia/Muscat')::date AS d),\nfl AS (SELECT t.team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_flow END) AS v FROM t JOIN user_customform f ON f.team_id = t.team AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE t.fp JOIN user_flowmeterreadingdata x ON x.form_id = f.id WHERE x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nflv AS (SELECT fl.* FROM fl JOIN t ON t.team = fl.team WHERE fl.v BETWEEN 0 AND t.des * 5),\nupto AS (SELECT f.team_id AS team, max((x.datetime AT TIME ZONE 'Asia/Muscat')::date) AS d FROM user_flowmeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND x.datetime < now() GROUP BY 1),\npw AS (SELECT f.team_id AS team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_power END) AS v FROM user_powermeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE 'Power Meter - %STP%' AND x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nse AS (SELECT flv.team, flv.day, pw.v AS kwh, flv.v AS m3 FROM flv JOIN pw ON pw.team = flv.team AND pw.day = flv.day WHERE flv.v > 0 AND pw.v > 0 AND pw.v / flv.v < 10),\nlab AS (SELECT f.team_id AS team, (l.time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date AS day,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Ammonia Nitrogen') AS nh,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Free and Residual Chlorine') AS cl,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Nitrate Nitrogen') AS no3,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'pH') AS ph,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Aeration%' AND btrim(l.type_of_lab_test) = 'Sludge Volume') AS sv\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id IN (SELECT team FROM t) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2),\ns AS (SELECT t.team, t.name, t.des, u.d AS up_to, (SELECT d FROM today) - 1 - u.d AS behind,\n  (SELECT avg(v) FROM flv WHERE flv.team = t.team) AS flow30,\n  (SELECT string_agg(COALESCE(round(flv.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') AS g(day) LEFT JOIN flv ON flv.team = t.team AND flv.day = g.day::date) AS series,\n  (SELECT sum(kwh) / NULLIF(sum(m3), 0) FROM se WHERE se.team = t.team) AS se30,\n  (SELECT avg(nh) FROM lab WHERE lab.team = t.team) AS nh, (SELECT avg(cl) FROM lab WHERE lab.team = t.team) AS cl, (SELECT avg(no3) FROM lab WHERE lab.team = t.team) AS no3,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL) AS lab_n,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL AND (nh IS NULL OR nh < 5) AND (cl IS NULL OR cl BETWEEN 0.1 AND 0.5) AND (ph IS NULL OR (ph >= 6.5 AND ph < 8)) AND (sv IS NULL OR sv BETWEEN 400 AND 600)) AS lab_ok,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND nh >= 5) AS nh_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (cl < 0.1 OR cl > 0.5)) AS cl_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (ph < 6.5 OR ph >= 8)) AS ph_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (sv < 400 OR sv > 600)) AS sv_out7,\n  (SELECT max(day) FROM lab WHERE lab.team = t.team AND nh IS NOT NULL) AS nh_last,\n  (SELECT bool_or(n >= 7 AND mn = mx AND mx > 0) FROM (SELECT count(no3) n, min(no3) mn, max(no3) mx FROM lab WHERE lab.team = t.team UNION ALL SELECT count(ph), min(ph), max(ph) FROM lab WHERE lab.team = t.team UNION ALL SELECT count(nh), min(nh), max(nh) FROM lab WHERE lab.team = t.team) c) AS constant\n FROM t LEFT JOIN upto u ON u.team = t.team),\nr AS (SELECT s.*, CASE\n  WHEN up_to IS NULL OR behind > 3 OR constant THEN 'purple'\n  WHEN behind > 1 OR flow30 > des OR nh_out7 >= 3 OR cl_out7 >= 3 OR ph_out7 >= 3 OR sv_out7 >= 3 OR (behind <= 1 AND (nh_last IS NULL OR nh_last < (SELECT d FROM today) - 3)) THEN 'amber'\n  ELSE 'ok' END AS sev FROM s) SELECT count(*) FILTER (WHERE sev <> 'ok') || ' of ' || count(*) AS \"Sites with a coloured dot\" FROM r",
+          "refId": "A"
+        }
+      ],
+      "title": "Need attention",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "30-day average treated flow as % of design, averaged across sites with data.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH t(team, name, des, fp) AS (VALUES (13,'Ibra',4500,'Flow Meter%Out%'),(12,'Al-Mudhaibi',1800,'Flow Meter (In - New Plant)%'),(20,'Masirah',1800,'Flow Meter%Out%'),(16,'Jalaan Bani Bu Ali',1200,'Flow Meter%Out%'),(17,'Jalaan Bani Bu Hassan',600,'Flow Meter%Out%'),(11,'Wadi Bani Khalid',500,'Flow Meter%Out%'),(21,'New Haima',450,'Flow Meter%Out%'),(14,'Bidiya',300,'Flow Meter%Out%'),(18,'Al-Kamil Wafi',250,'Flow Meter%Out%'),(15,'Al-Qabil',250,'Flow Meter%Out%')),\ntoday AS (SELECT (now() AT TIME ZONE 'Asia/Muscat')::date AS d),\nfl AS (SELECT t.team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_flow END) AS v FROM t JOIN user_customform f ON f.team_id = t.team AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE t.fp JOIN user_flowmeterreadingdata x ON x.form_id = f.id WHERE x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nflv AS (SELECT fl.* FROM fl JOIN t ON t.team = fl.team WHERE fl.v BETWEEN 0 AND t.des * 5),\nupto AS (SELECT f.team_id AS team, max((x.datetime AT TIME ZONE 'Asia/Muscat')::date) AS d FROM user_flowmeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND x.datetime < now() GROUP BY 1),\npw AS (SELECT f.team_id AS team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_power END) AS v FROM user_powermeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE 'Power Meter - %STP%' AND x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nse AS (SELECT flv.team, flv.day, pw.v AS kwh, flv.v AS m3 FROM flv JOIN pw ON pw.team = flv.team AND pw.day = flv.day WHERE flv.v > 0 AND pw.v > 0 AND pw.v / flv.v < 10),\nlab AS (SELECT f.team_id AS team, (l.time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date AS day,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Ammonia Nitrogen') AS nh,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Free and Residual Chlorine') AS cl,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Nitrate Nitrogen') AS no3,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'pH') AS ph,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Aeration%' AND btrim(l.type_of_lab_test) = 'Sludge Volume') AS sv\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id IN (SELECT team FROM t) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2),\ns AS (SELECT t.team, t.name, t.des, u.d AS up_to, (SELECT d FROM today) - 1 - u.d AS behind,\n  (SELECT avg(v) FROM flv WHERE flv.team = t.team) AS flow30,\n  (SELECT string_agg(COALESCE(round(flv.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') AS g(day) LEFT JOIN flv ON flv.team = t.team AND flv.day = g.day::date) AS series,\n  (SELECT sum(kwh) / NULLIF(sum(m3), 0) FROM se WHERE se.team = t.team) AS se30,\n  (SELECT avg(nh) FROM lab WHERE lab.team = t.team) AS nh, (SELECT avg(cl) FROM lab WHERE lab.team = t.team) AS cl, (SELECT avg(no3) FROM lab WHERE lab.team = t.team) AS no3,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL) AS lab_n,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL AND (nh IS NULL OR nh < 5) AND (cl IS NULL OR cl BETWEEN 0.1 AND 0.5) AND (ph IS NULL OR (ph >= 6.5 AND ph < 8)) AND (sv IS NULL OR sv BETWEEN 400 AND 600)) AS lab_ok,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND nh >= 5) AS nh_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (cl < 0.1 OR cl > 0.5)) AS cl_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (ph < 6.5 OR ph >= 8)) AS ph_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (sv < 400 OR sv > 600)) AS sv_out7,\n  (SELECT max(day) FROM lab WHERE lab.team = t.team AND nh IS NOT NULL) AS nh_last,\n  (SELECT bool_or(n >= 7 AND mn = mx AND mx > 0) FROM (SELECT count(no3) n, min(no3) mn, max(no3) mx FROM lab WHERE lab.team = t.team UNION ALL SELECT count(ph), min(ph), max(ph) FROM lab WHERE lab.team = t.team UNION ALL SELECT count(nh), min(nh), max(nh) FROM lab WHERE lab.team = t.team) c) AS constant\n FROM t LEFT JOIN upto u ON u.team = t.team),\nr AS (SELECT s.*, CASE\n  WHEN up_to IS NULL OR behind > 3 OR constant THEN 'purple'\n  WHEN behind > 1 OR flow30 > des OR nh_out7 >= 3 OR cl_out7 >= 3 OR ph_out7 >= 3 OR sv_out7 >= 3 OR (behind <= 1 AND (nh_last IS NULL OR nh_last < (SELECT d FROM today) - 3)) THEN 'amber'\n  ELSE 'ok' END AS sev FROM s) SELECT avg(flow30 / des * 100) AS \"Average of sites\" FROM r WHERE flow30 IS NOT NULL",
+          "refId": "A"
+        }
+      ],
+      "title": "Output vs design",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "Total STP power ÷ total treated flow over the last 30 days, all sites with both readings.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "noValue": "—",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: kWh/m³"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH t(team, name, des, fp) AS (VALUES (13,'Ibra',4500,'Flow Meter%Out%'),(12,'Al-Mudhaibi',1800,'Flow Meter (In - New Plant)%'),(20,'Masirah',1800,'Flow Meter%Out%'),(16,'Jalaan Bani Bu Ali',1200,'Flow Meter%Out%'),(17,'Jalaan Bani Bu Hassan',600,'Flow Meter%Out%'),(11,'Wadi Bani Khalid',500,'Flow Meter%Out%'),(21,'New Haima',450,'Flow Meter%Out%'),(14,'Bidiya',300,'Flow Meter%Out%'),(18,'Al-Kamil Wafi',250,'Flow Meter%Out%'),(15,'Al-Qabil',250,'Flow Meter%Out%')),\ntoday AS (SELECT (now() AT TIME ZONE 'Asia/Muscat')::date AS d),\nfl AS (SELECT t.team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_flow END) AS v FROM t JOIN user_customform f ON f.team_id = t.team AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE t.fp JOIN user_flowmeterreadingdata x ON x.form_id = f.id WHERE x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nflv AS (SELECT fl.* FROM fl JOIN t ON t.team = fl.team WHERE fl.v BETWEEN 0 AND t.des * 5),\nupto AS (SELECT f.team_id AS team, max((x.datetime AT TIME ZONE 'Asia/Muscat')::date) AS d FROM user_flowmeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND x.datetime < now() GROUP BY 1),\npw AS (SELECT f.team_id AS team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_power END) AS v FROM user_powermeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE 'Power Meter - %STP%' AND x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nse AS (SELECT flv.team, flv.day, pw.v AS kwh, flv.v AS m3 FROM flv JOIN pw ON pw.team = flv.team AND pw.day = flv.day WHERE flv.v > 0 AND pw.v > 0 AND pw.v / flv.v < 10),\nlab AS (SELECT f.team_id AS team, (l.time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date AS day,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Ammonia Nitrogen') AS nh,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Free and Residual Chlorine') AS cl,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Nitrate Nitrogen') AS no3,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'pH') AS ph,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Aeration%' AND btrim(l.type_of_lab_test) = 'Sludge Volume') AS sv\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id IN (SELECT team FROM t) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2),\ns AS (SELECT t.team, t.name, t.des, u.d AS up_to, (SELECT d FROM today) - 1 - u.d AS behind,\n  (SELECT avg(v) FROM flv WHERE flv.team = t.team) AS flow30,\n  (SELECT string_agg(COALESCE(round(flv.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') AS g(day) LEFT JOIN flv ON flv.team = t.team AND flv.day = g.day::date) AS series,\n  (SELECT sum(kwh) / NULLIF(sum(m3), 0) FROM se WHERE se.team = t.team) AS se30,\n  (SELECT avg(nh) FROM lab WHERE lab.team = t.team) AS nh, (SELECT avg(cl) FROM lab WHERE lab.team = t.team) AS cl, (SELECT avg(no3) FROM lab WHERE lab.team = t.team) AS no3,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL) AS lab_n,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL AND (nh IS NULL OR nh < 5) AND (cl IS NULL OR cl BETWEEN 0.1 AND 0.5) AND (ph IS NULL OR (ph >= 6.5 AND ph < 8)) AND (sv IS NULL OR sv BETWEEN 400 AND 600)) AS lab_ok,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND nh >= 5) AS nh_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (cl < 0.1 OR cl > 0.5)) AS cl_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (ph < 6.5 OR ph >= 8)) AS ph_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (sv < 400 OR sv > 600)) AS sv_out7,\n  (SELECT max(day) FROM lab WHERE lab.team = t.team AND nh IS NOT NULL) AS nh_last,\n  (SELECT bool_or(n >= 7 AND mn = mx AND mx > 0) FROM (SELECT count(no3) n, min(no3) mn, max(no3) mx FROM lab WHERE lab.team = t.team UNION ALL SELECT count(ph), min(ph), max(ph) FROM lab WHERE lab.team = t.team UNION ALL SELECT count(nh), min(nh), max(nh) FROM lab WHERE lab.team = t.team) c) AS constant\n FROM t LEFT JOIN upto u ON u.team = t.team),\nr AS (SELECT s.*, CASE\n  WHEN up_to IS NULL OR behind > 3 OR constant THEN 'purple'\n  WHEN behind > 1 OR flow30 > des OR nh_out7 >= 3 OR cl_out7 >= 3 OR ph_out7 >= 3 OR sv_out7 >= 3 OR (behind <= 1 AND (nh_last IS NULL OR nh_last < (SELECT d FROM today) - 3)) THEN 'amber'\n  ELSE 'ok' END AS sev FROM s) SELECT sum(kwh) / NULLIF(sum(m3), 0) AS \"Flow-weighted\" FROM se",
+          "refId": "A"
+        }
+      ],
+      "title": "Specific energy ⌀",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "description": "One row per active site (Sur discontinued). Lab values are 30-day averages, amber when outside the limits in the existing Nafal dashboards. Nitrate limit (50, labelled \"as NO₃\") pending unit confirmation. Trend: daily treated flow over the last 30 days.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#ccccdc",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "pattern": "^(.*)\\|ok$",
+                "result": {
+                  "color": "#73BF69",
+                  "index": 0,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|amber$",
+                "result": {
+                  "color": "#FADE2A",
+                  "index": 1,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|red$",
+                "result": {
+                  "color": "#F2495C",
+                  "index": 2,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|purple$",
+                "result": {
+                  "color": "#B877D9",
+                  "index": 3,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^(.*)\\|muted$",
+                "result": {
+                  "color": "#8e8e8e",
+                  "index": 4,
+                  "text": "$1"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "gauge",
+                  "valueDisplayMode": "text"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 150
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#5794F2",
+                      "value": 0
+                    },
+                    {
+                      "color": "#FADE2A",
+                      "value": 100.5
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.minWidth",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Trend #B"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 1,
+                  "type": "sparkline"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5794F2",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.minWidth",
+                "value": 140
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Flow ⌀ 30 d"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Site"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 150
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "md",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH z AS (WITH t(team, name, des, fp) AS (VALUES (13,'Ibra',4500,'Flow Meter%Out%'),(12,'Al-Mudhaibi',1800,'Flow Meter (In - New Plant)%'),(20,'Masirah',1800,'Flow Meter%Out%'),(16,'Jalaan Bani Bu Ali',1200,'Flow Meter%Out%'),(17,'Jalaan Bani Bu Hassan',600,'Flow Meter%Out%'),(11,'Wadi Bani Khalid',500,'Flow Meter%Out%'),(21,'New Haima',450,'Flow Meter%Out%'),(14,'Bidiya',300,'Flow Meter%Out%'),(18,'Al-Kamil Wafi',250,'Flow Meter%Out%'),(15,'Al-Qabil',250,'Flow Meter%Out%')),\ntoday AS (SELECT (now() AT TIME ZONE 'Asia/Muscat')::date AS d),\nfl AS (SELECT t.team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_flow END) AS v FROM t JOIN user_customform f ON f.team_id = t.team AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE t.fp JOIN user_flowmeterreadingdata x ON x.form_id = f.id WHERE x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nflv AS (SELECT fl.* FROM fl JOIN t ON t.team = fl.team WHERE fl.v BETWEEN 0 AND t.des * 5),\nupto AS (SELECT f.team_id AS team, max((x.datetime AT TIME ZONE 'Asia/Muscat')::date) AS d FROM user_flowmeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND x.datetime < now() GROUP BY 1),\npw AS (SELECT f.team_id AS team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_power END) AS v FROM user_powermeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE 'Power Meter - %STP%' AND x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nse AS (SELECT flv.team, flv.day, pw.v AS kwh, flv.v AS m3 FROM flv JOIN pw ON pw.team = flv.team AND pw.day = flv.day WHERE flv.v > 0 AND pw.v > 0 AND pw.v / flv.v < 10),\nlab AS (SELECT f.team_id AS team, (l.time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date AS day,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Ammonia Nitrogen') AS nh,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Free and Residual Chlorine') AS cl,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Nitrate Nitrogen') AS no3,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'pH') AS ph,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Aeration%' AND btrim(l.type_of_lab_test) = 'Sludge Volume') AS sv\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id IN (SELECT team FROM t) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2),\ns AS (SELECT t.team, t.name, t.des, u.d AS up_to, (SELECT d FROM today) - 1 - u.d AS behind,\n  (SELECT avg(v) FROM flv WHERE flv.team = t.team) AS flow30,\n  (SELECT string_agg(COALESCE(round(flv.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') AS g(day) LEFT JOIN flv ON flv.team = t.team AND flv.day = g.day::date) AS series,\n  (SELECT sum(kwh) / NULLIF(sum(m3), 0) FROM se WHERE se.team = t.team) AS se30,\n  (SELECT avg(nh) FROM lab WHERE lab.team = t.team) AS nh, (SELECT avg(cl) FROM lab WHERE lab.team = t.team) AS cl, (SELECT avg(no3) FROM lab WHERE lab.team = t.team) AS no3,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL) AS lab_n,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL AND (nh IS NULL OR nh < 5) AND (cl IS NULL OR cl BETWEEN 0.1 AND 0.5) AND (ph IS NULL OR (ph >= 6.5 AND ph < 8)) AND (sv IS NULL OR sv BETWEEN 400 AND 600)) AS lab_ok,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND nh >= 5) AS nh_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (cl < 0.1 OR cl > 0.5)) AS cl_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (ph < 6.5 OR ph >= 8)) AS ph_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (sv < 400 OR sv > 600)) AS sv_out7,\n  (SELECT max(day) FROM lab WHERE lab.team = t.team AND nh IS NOT NULL) AS nh_last,\n  (SELECT bool_or(n >= 7 AND mn = mx AND mx > 0) FROM (SELECT count(no3) n, min(no3) mn, max(no3) mx FROM lab WHERE lab.team = t.team UNION ALL SELECT count(ph), min(ph), max(ph) FROM lab WHERE lab.team = t.team UNION ALL SELECT count(nh), min(nh), max(nh) FROM lab WHERE lab.team = t.team) c) AS constant\n FROM t LEFT JOIN upto u ON u.team = t.team),\nr AS (SELECT s.*, CASE\n  WHEN up_to IS NULL OR behind > 3 OR constant THEN 'purple'\n  WHEN behind > 1 OR flow30 > des OR nh_out7 >= 3 OR cl_out7 >= 3 OR ph_out7 >= 3 OR sv_out7 >= 3 OR (behind <= 1 AND (nh_last IS NULL OR nh_last < (SELECT d FROM today) - 3)) THEN 'amber'\n  ELSE 'ok' END AS sev FROM s) SELECT name, des, to_char(up_to, 'DD Mon') AS up_to, behind, sev, flow30, (SELECT v FROM flv WHERE flv.team = r.team ORDER BY day DESC LIMIT 1) / des * 100 AS pct, series, se30, nh, cl, no3, lab_ok, lab_n FROM r ORDER BY des DESC, name)\nSELECT CASE sev WHEN 'purple' THEN '● Data problem|purple' WHEN 'amber' THEN '● Attention|amber' WHEN 'red' THEN '● Alarm|red' ELSE '● OK|ok' END AS \"Status\",\n name AS \"Site\", des AS \"Design m³/d\",\n COALESCE(up_to, 'no data') || CASE WHEN up_to IS NULL OR behind > 3 THEN '|purple' WHEN behind > 1 THEN '|amber' ELSE '' END AS \"Data up to\",\n round(flow30) AS \"Flow ⌀ 30 d\", round(flow30 / des * 100) AS \"% of design\", round(se30::numeric, 2) AS \"kWh/m³\",\n COALESCE(round(nh::numeric, 1)::text || CASE WHEN nh >= 5 THEN '|amber' ELSE '' END, '—') AS \"NH₄-N\",\n COALESCE(round(cl::numeric, 2)::text || CASE WHEN cl < 0.1 OR cl > 0.5 THEN '|amber' ELSE '' END, 'not measured|muted') AS \"Res. Cl\",\n COALESCE(round(no3::numeric, 1)::text || CASE WHEN no3 >= 50 THEN '|amber' ELSE '' END, 'not measured|muted') AS \"Nitrate\",\n CASE WHEN lab_n > 0 THEN lab_ok || ' / ' || lab_n || CASE WHEN lab_ok >= 0.95 * lab_n THEN '|ok' WHEN lab_ok >= 0.8 * lab_n THEN '|amber' ELSE '|red' END ELSE 'no samples|muted' END AS \"Within limits\"\nFROM z ORDER BY des DESC, name",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH t(team, name, des, fp) AS (VALUES (13,'Ibra',4500,'Flow Meter%Out%'),(12,'Al-Mudhaibi',1800,'Flow Meter (In - New Plant)%'),(20,'Masirah',1800,'Flow Meter%Out%'),(16,'Jalaan Bani Bu Ali',1200,'Flow Meter%Out%'),(17,'Jalaan Bani Bu Hassan',600,'Flow Meter%Out%'),(11,'Wadi Bani Khalid',500,'Flow Meter%Out%'),(21,'New Haima',450,'Flow Meter%Out%'),(14,'Bidiya',300,'Flow Meter%Out%'),(18,'Al-Kamil Wafi',250,'Flow Meter%Out%'),(15,'Al-Qabil',250,'Flow Meter%Out%')),\ntoday AS (SELECT (now() AT TIME ZONE 'Asia/Muscat')::date AS d),\nfl AS (SELECT t.team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_flow END) AS v FROM t JOIN user_customform f ON f.team_id = t.team AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE t.fp JOIN user_flowmeterreadingdata x ON x.form_id = f.id WHERE x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nflv AS (SELECT fl.* FROM fl JOIN t ON t.team = fl.team WHERE fl.v BETWEEN 0 AND t.des * 5),\nupto AS (SELECT f.team_id AS team, max((x.datetime AT TIME ZONE 'Asia/Muscat')::date) AS d FROM user_flowmeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND x.datetime < now() GROUP BY 1),\npw AS (SELECT f.team_id AS team, (x.datetime AT TIME ZONE 'Asia/Muscat')::date AS day, sum(CASE WHEN x.is_override THEN x.reset_value ELSE x.daily_power END) AS v FROM user_powermeterreadingdata x JOIN user_customform f ON f.id = x.form_id WHERE f.team_id IN (SELECT team FROM t) AND f.is_enabled AND COALESCE(NULLIF(f.title_override,''), f.name) ILIKE 'Power Meter - %STP%' AND x.datetime > now() - interval '31 days' AND x.datetime < now() GROUP BY 1, 2),\nse AS (SELECT flv.team, flv.day, pw.v AS kwh, flv.v AS m3 FROM flv JOIN pw ON pw.team = flv.team AND pw.day = flv.day WHERE flv.v > 0 AND pw.v > 0 AND pw.v / flv.v < 10),\nlab AS (SELECT f.team_id AS team, (l.time_of_sample_collection AT TIME ZONE 'Asia/Muscat')::date AS day,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Ammonia Nitrogen') AS nh,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Free and Residual Chlorine') AS cl,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'Nitrate Nitrogen') AS no3,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Treated Wastewater' AND btrim(l.type_of_lab_test) = 'pH') AS ph,\n  avg(l.result) FILTER (WHERE btrim(l.location) ILIKE 'Aeration%' AND btrim(l.type_of_lab_test) = 'Sludge Volume') AS sv\n FROM user_labtestdata l JOIN user_customform f ON f.id = l.form_id WHERE f.team_id IN (SELECT team FROM t) AND l.time_of_sample_collection > now() - interval '31 days' AND l.time_of_sample_collection < now() GROUP BY 1, 2),\ns AS (SELECT t.team, t.name, t.des, u.d AS up_to, (SELECT d FROM today) - 1 - u.d AS behind,\n  (SELECT avg(v) FROM flv WHERE flv.team = t.team) AS flow30,\n  (SELECT string_agg(COALESCE(round(flv.v)::text, ''), ',' ORDER BY g.day) FROM generate_series((SELECT d FROM today) - 30, (SELECT d FROM today) - 1, interval '1 day') AS g(day) LEFT JOIN flv ON flv.team = t.team AND flv.day = g.day::date) AS series,\n  (SELECT sum(kwh) / NULLIF(sum(m3), 0) FROM se WHERE se.team = t.team) AS se30,\n  (SELECT avg(nh) FROM lab WHERE lab.team = t.team) AS nh, (SELECT avg(cl) FROM lab WHERE lab.team = t.team) AS cl, (SELECT avg(no3) FROM lab WHERE lab.team = t.team) AS no3,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL) AS lab_n,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND COALESCE(nh, cl, ph, sv) IS NOT NULL AND (nh IS NULL OR nh < 5) AND (cl IS NULL OR cl BETWEEN 0.1 AND 0.5) AND (ph IS NULL OR (ph >= 6.5 AND ph < 8)) AND (sv IS NULL OR sv BETWEEN 400 AND 600)) AS lab_ok,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND nh >= 5) AS nh_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (cl < 0.1 OR cl > 0.5)) AS cl_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (ph < 6.5 OR ph >= 8)) AS ph_out7,\n  (SELECT count(*) FROM lab WHERE lab.team = t.team AND lab.day > (SELECT d FROM today) - 7 AND (sv < 400 OR sv > 600)) AS sv_out7,\n  (SELECT max(day) FROM lab WHERE lab.team = t.team AND nh IS NOT NULL) AS nh_last,\n  (SELECT bool_or(n >= 7 AND mn = mx AND mx > 0) FROM (SELECT count(no3) n, min(no3) mn, max(no3) mx FROM lab WHERE lab.team = t.team UNION ALL SELECT count(ph), min(ph), max(ph) FROM lab WHERE lab.team = t.team UNION ALL SELECT count(nh), min(nh), max(nh) FROM lab WHERE lab.team = t.team) c) AS constant\n FROM t LEFT JOIN upto u ON u.team = t.team),\nr AS (SELECT s.*, CASE\n  WHEN up_to IS NULL OR behind > 3 OR constant THEN 'purple'\n  WHEN behind > 1 OR flow30 > des OR nh_out7 >= 3 OR cl_out7 >= 3 OR ph_out7 >= 3 OR sv_out7 >= 3 OR (behind <= 1 AND (nh_last IS NULL OR nh_last < (SELECT d FROM today) - 3)) THEN 'amber'\n  ELSE 'ok' END AS sev FROM s) SELECT (flv.day::timestamp) AS time, t.name AS \"Site\", flv.v AS value FROM flv JOIN t ON t.team = flv.team ORDER BY 1",
+          "refId": "B"
+        }
+      ],
+      "title": "Sites",
+      "transformations": [
+        {
+          "filter": {
+            "id": "byRefId",
+            "options": "B"
+          },
+          "id": "prepareTimeSeries",
+          "options": {
+            "format": "multi"
+          }
+        },
+        {
+          "id": "timeSeriesTable",
+          "options": {}
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Site",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "% of design": 5,
+              "Data up to": 3,
+              "Design m³/d": 2,
+              "Flow ⌀ 30 d": 4,
+              "NH₄-N": 8,
+              "Nitrate": 10,
+              "Res. Cl": 9,
+              "Site": 1,
+              "Status": 0,
+              "Trend #B": 6,
+              "Within limits": 11,
+              "kWh/m³": 7
+            },
+            "renameByName": {
+              "Trend #B": "Trend · 30 d"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 7,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:11px;color:#8E8E8E\">Dot = most severe attention rule: data more than 3 days behind, no data, or a lab value constant for 30 days (purple); data 2–3 days behind, above design, ammonia / chlorine / pH / SV30 outside limits on 3+ of the last 7 days, or no ammonia sample for 3+ days (amber). Within limits counts a day only if every parameter sampled that day is within its limit: ammonia &lt; 5, chlorine 0.1–0.5, pH 6.5–8, SV30 400–600 mL/L.</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "type": "text"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git",
+    "new",
+    "portfolio"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Muscat",
+  "title": "Nafal – Portfolio",
+  "uid": "nafal-portfolio"
+}

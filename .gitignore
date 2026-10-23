@@ -29,3 +29,6 @@ Thumbs.db
 .coverage
 htmlcov/
 .ruff_cache/
+
+# AI
+.scratchpad

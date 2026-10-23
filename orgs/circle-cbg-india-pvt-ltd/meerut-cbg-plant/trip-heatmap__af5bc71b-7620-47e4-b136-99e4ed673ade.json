@@ -1,0 +1,1257 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "interval": "1d",
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "max": 24,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 36
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "102-P-01 Temp Sw",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "query": "SELECT\n  COUNT(\"102-P-01 Temp Sw\")/60 AS \"102-P-01 Temp Sw\"\nFROM\n  \"mqtt\"\nWHERE\n  $timeFilter AND \"102-P-01 Temp Sw\" = true\nGROUP BY\n  time(1d) fill(null);",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-P-02 Temp Sw",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-02 Temp Sw\")/60 AS \"102-P-02 Temp Sw\"\nFROM\n  \"mqtt\"\nWHERE\n  $timeFilter AND \"102-P-02 Temp Sw\" = true\nGROUP BY\n  time(1d) fill(null);",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-P-03 Temp Sw",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-03 Temp Sw\")/60 AS \"102-P-03 Temp Sw\"\nFROM\n  \"mqtt\"\nWHERE\n  $timeFilter AND \"102-P-03 Temp Sw\" = true\nGROUP BY\n  time(1d) fill(null);",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-P-04 Temp Sw",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-04 Temp Sw\")/60\nFROM\n  \"mqtt\"\nWHERE\n  $timeFilter AND \"102-P-04 Temp Sw\" = true\nGROUP BY\n  time(1d) fill(null);",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Temp Switches",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "interval": "1d",
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 36
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "PS-05",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"PS-05\")/60 AS \"PS-05\"\nFROM\n  \"mqtt\"\nWHERE\n  $timeFilter AND \"PS-05\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-06",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"PS-06\")/60 AS \"PS-06\"\nFROM\n  \"mqtt\"\nWHERE\n  $timeFilter AND \"PS-06\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-07",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"PS-07\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"PS-07\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-08",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"PS-08\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"PS-08\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "400-PS-01",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch 400-PS-01\")/60\nFROM\n  \"mqtt\"\nWHERE\n   $timeFilter AND  \"Pressure Switch 400-PS-01\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-09",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-09\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-09\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-10",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-10\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-10\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-11",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-11\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-11\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "H",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-12",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-12\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-12\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "I",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-13",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-13\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-13\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "J",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-14",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-14\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-14\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "K",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-15",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-15\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-15\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "L",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-16",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-16\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-16\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "M",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-17",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-17\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-17\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "N",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-18",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-18\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-18\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "O",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-19",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-19\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-19\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "P",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "PS-20",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Pressure Switch PS-20\")/60\nFROM\n  \"mqtt\"\nWHERE\n    $timeFilter AND \"Pressure Switch PS-20\" = true\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "Q",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Pressure Switches",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "id": 3,
+      "interval": "1d",
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "max": 24,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "102-A-01 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-A-01 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n\"102-A-01 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-A-02 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-A-02 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n\"102-A-02 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-A-03 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-A-03 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n\"102-A-03 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-A-04 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-A-04 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n\"102-A-04 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Agitator Trip Status",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "id": 6,
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "max": 24,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "102-G-01 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-G-01 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n\"102-G-01 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-G-02 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-G-02 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n\"102-G-02 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Grinder Trip Status",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "max": 24,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Cooling Tower Pump 1 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cooling Tower Pump 1 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cooling Tower Pump 1 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cooling Tower Pump 2 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cooling Tower Pump 2 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cooling Tower Pump 2 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cooling Tower Pump 3 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cooling Tower Pump 3 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cooling Tower Pump 3 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cooling Tower Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cooling Tower Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cooling Tower Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "H",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Cooling Tower Trip Status",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "max": 24,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "102-P-01 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-01 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"102-P-01 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "I",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-P-02 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-02 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"102-P-02 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-P-03 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-03 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"102-P-03 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "102-P-04 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"102-P-04 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"102-P-04 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time(1d) fill(0);",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-01 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-01 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-01 Status\" = 4 OR \"Digester Pump 200-P-01 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-02 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-02 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-02 Status\" = 4 OR \"Digester Pump 200-P-02 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-03 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-03 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-03 Status\" = 4 OR \"Digester Pump 200-P-03 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-04 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-04 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-04 Status\" = 4 OR \"Digester Pump 200-P-04 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-05 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-05 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-05 Status\" = 4 OR \"Digester Pump 200-P-05 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "H",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-06 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-06 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-06 Status\" = 4 OR \"Digester Pump 200-P-06 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "J",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-07 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-07 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-07 Status\" = 4 OR \"Digester Pump 200-P-07 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "K",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-08 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-08 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-08 Status\" = 4 OR \"Digester Pump 200-P-08 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "L",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-09 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-09 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-09 Status\" = 4 OR \"Digester Pump 200-P-09 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "M",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-10 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-10 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-10 Status\" = 4 OR \"Digester Pump 200-P-10 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "N",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-11 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-11 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-11 Status\" = 4 OR \"Digester Pump 200-P-11 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "O",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Digester Pump 200-P-11 Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Digester Pump 200-P-12 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Digester Pump 200-P-12 Status\" = 4 OR \"Digester Pump 200-P-12 Status\" = 5) AND $timeFilter\nGROUP BY\n  time(1d) fill(0);\n",
+          "rawQuery": true,
+          "refId": "P",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Pumps",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "id": 9,
+      "interval": "1d",
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "color": {
+          "exponent": 0.5,
+          "fill": "red",
+          "max": 24,
+          "min": 0,
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": -30
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "right",
+          "reverse": false
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Cover Air Blower 200-B-01 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-01 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-01 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "I",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-02 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-02 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-02 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-03 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-03 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-03 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-04 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-04 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-04 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-05 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-05 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-05 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-06 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-06 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-06 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-07 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-07 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-07 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "F",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-08 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-08 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-08 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "G",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-09 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-09 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-09 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "H",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-10 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-10 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-10 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "J",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-11 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-11 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-11 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "K",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Cover Air Blower 200-B-12 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Cover Air Blower 200-B-12 Trip Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  \"Cover Air Blower 200-B-12 Trip Status\" = true AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);",
+          "rawQuery": true,
+          "refId": "L",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Blower 400-B-06 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Blower 400-B-06 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Blower 400-B-06 Status\" = 4 OR \"Blower 400-B-06 Status\" = 5) AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);\n",
+          "rawQuery": true,
+          "refId": "M",
+          "resultFormat": "time_series"
+        },
+        {
+          "alias": "Blower 400-B-07 Trip Status",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT\n  COUNT(\"Blower 400-B-07 Status\")/60\nFROM\n  \"mqtt\"\nWHERE\n  (\"Blower 400-B-07 Status\" = 4 OR \"Blower 400-B-07 Status\" = 5) AND $timeFilter\nGROUP BY\n  time($__interval) fill(null);\n",
+          "rawQuery": true,
+          "refId": "N",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Blower Status",
+      "type": "heatmap"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Trip Heatmap",
+  "uid": "af5bc71b-7620-47e4-b136-99e4ed673ade"
+}

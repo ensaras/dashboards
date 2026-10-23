@@ -1,0 +1,35 @@
+site:
+  name: "Techtic-Test"
+  slug: "techtic-test"
+  org_id: 26
+  timezone: "Asia/Kolkata"
+
+team_folders:
+  master-data-management:
+    name: "Master Data Management"
+    folder_uid: "b2d39be1-1e42-4c42-ae31-a111d2100017"
+  engineer:
+    name: "Engineer"
+    folder_uid: "f71b459d-a78f-4b8d-a767-31be20c7fad5"
+  project-analytics:
+    name: "Project Analytics"
+    folder_uid: "ec9dacde-e903-4f72-888f-cab1ec8e1e39"
+  ntiems:
+    name: "NTIEMS"
+    folder_uid: "fa46a557-95c2-4c6b-9f17-dfbee5d5763c"
+  measuring-test-location:
+    name: "Measuring Test Location"
+    folder_uid: "b1e9165e-4887-4613-961e-a2601214d09b"
+  liberin-team:
+    name: "Liberin team"
+    folder_uid: "fd826c2a-0600-4e6b-8424-5014b68a5c36"
+  nokia:
+    name: "Nokia"
+    folder_uid: "dfq7407zw6s5ca"
+  test-data:
+    name: "Test Data"
+    folder_uid: "dfugl28tz37k0f"
+
+datasources:
+  influxdb: "influx-techtic-test"
+  postgres: "pg-techtic-test"

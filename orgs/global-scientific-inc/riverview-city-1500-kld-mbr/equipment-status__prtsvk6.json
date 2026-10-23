@@ -1,0 +1,461 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT \n  non_negative_difference(last(\"100_p_01_lift_station_pump_runtime_hr_total\")) AS \"Lift Station Pump 1\",\n  non_negative_difference(last(\"100_p_02_lift_station_pump_runtime_hr_total\")) AS \"Lift Station Pump 2\",\n  non_negative_difference(last(\"101_p_01_equalization_transfer_pump_runtime_hr_total\")) AS \"EQ Transfer Pump\",\n  non_negative_difference(last(\"101_bs_02_auto_screen_runtime_hr_total\")) AS \"Auto Screen\",\n  non_negative_difference(last(\"202_fs_01_finescreen_runtime_hr_total\")) AS \"Fine Screen 1\",\n  non_negative_difference(last(\"202_fs_02_finescreen_runtime_hr_total\")) AS \"Fine Screen 2\",\n  non_negative_difference(last(\"201_b_01_aeration_blower_runtime_hr_total\")) AS \"Aeration Blower 1\",\n  non_negative_difference(last(\"201_b_02_aeration_blower_runtime_hr_total\")) AS \"Aeration Blower 2\",\n  non_negative_difference(last(\"202_ag_01_anaerobic_agitator_runtime_hr_total\")) AS \"Anaerobic Agitator\",\n  non_negative_difference(last(\"202_ag_02_anoxic_agitator_runtime_hr_total\")) AS \"Anoxic Agitator\",\n  non_negative_difference(last(\"202_b_01_mbr_blower_runtime_hr_total\")) AS \"MBR Scour Blower 1\",\n  non_negative_difference(last(\"202_b_02_mbr_blower_runtime_hr_total\")) AS \"MBR Scour Blower 2\",\n  non_negative_difference(last(\"202_p_01_mbr_permeate_pump_running_hour\")) AS \"MBR Permeate Pump\",\n  non_negative_difference(last(\"202_p_05_cip_pump_runtime_hr_total\")) AS \"CIP Pump\",\n  non_negative_difference(last(\"501_p_01_dewatering_feed_pump_runtime_hr_total\")) AS \"Dewatering Feed Pump 1\",\n  non_negative_difference(last(\"501_p_02_dewatering_feed_pump_runtime_hr_total\")) AS \"Dewatering Feed Pump 2\",\n  non_negative_difference(last(\"401_p_01_dwpe_dosing_pump_runtime_hr_total\")) AS \"DWPE Dosing Pump\"\nFROM \"plc\" \nWHERE $timeFilter \nGROUP BY time(1d) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Daily Runtime Hours",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-green",
+                  "index": 0,
+                  "text": "Normal"
+                },
+                "1": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "ALARM"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 3,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT last(/_lsl_|_lsh_|_psh_/) FROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Active Alarms",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Status 1782382446023": "Status",
+              "Time": "",
+              "last_100_lsh_02_lift_station_level_high": "Lift Station - High",
+              "last_100_lsl_01_lift_station_level_low": "Lift Station - Low",
+              "last_101_lsh_02_auto_screen_level_high": "Auto Screen  - High",
+              "last_101_lsh_04_equalization_tank_level_high": "Equalization Tank - High",
+              "last_101_lsl_01_manual_screen_level_high": "Manual Screen - High",
+              "last_101_lsl_03_equalization_tank_level_low": "Equalization Tank - Low",
+              "last_202_psh_04_mbr_permeate_pump_suction_pressure_high": "MBR Permeate Pump Suction Pressure - High",
+              "last_202_psh_05_mbr_permeate_pump_discharge_pressure_high": "MBR Permeate Pump Discharge Pressure - High",
+              "last_401_lsl_01_dwpe_tank_level_low": "DWPE Tank Level  - Low",
+              "last_501_psh_01_volute_press_pump_pressure_high": "PSH 01 Volute Press Pump Pressure - High",
+              "last_501_psh_02_volute_press_pump_pressure_high": "PSH 02 Volute Press Pump Pressure - High"
+            }
+          }
+        }
+      ],
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT \n  last(\"100_p_01_lift_station_pump_runtime_hr_total\") AS \"Lift Station Pump 1\",\n  last(\"100_p_02_lift_station_pump_runtime_hr_total\") AS \"Lift Station Pump 2\",\n  last(\"101_p_01_equalization_transfer_pump_runtime_hr_total\") AS \"EQ Transfer Pump\",\n  last(\"101_bs_02_auto_screen_runtime_hr_total\") AS \"Auto Screen\",\n  last(\"202_fs_01_finescreen_runtime_hr_total\") AS \"Fine Screen 1\",\n  last(\"202_fs_02_finescreen_runtime_hr_total\") AS \"Fine Screen 2\",\n  last(\"201_b_01_aeration_blower_runtime_hr_total\") AS \"Aeration Blower 1\",\n  last(\"201_b_02_aeration_blower_runtime_hr_total\") AS \"Aeration Blower 2\",\n  last(\"202_ag_01_anaerobic_agitator_runtime_hr_total\") AS \"Anaerobic Agitator\",\n  last(\"202_ag_02_anoxic_agitator_runtime_hr_total\") AS \"Anoxic Agitator\",\n  last(\"202_b_01_mbr_blower_runtime_hr_total\") AS \"MBR Scour Blower 1\",\n  last(\"202_b_02_mbr_blower_runtime_hr_total\") AS \"MBR Scour Blower 2\",\n  last(\"202_p_01_mbr_permeate_pump_running_hour\") AS \"MBR Permeate Pump\",\n  last(\"202_p_05_cip_pump_runtime_hr_total\") AS \"CIP Pump\",\n  last(\"501_p_01_dewatering_feed_pump_runtime_hr_total\") AS \"Dewatering Feed Pump 1\",\n  last(\"501_p_02_dewatering_feed_pump_runtime_hr_total\") AS \"Dewatering Feed Pump 2\",\n  last(\"401_p_01_dwpe_dosing_pump_runtime_hr_total\") AS \"DWPE Dosing Pump\"\nFROM \"plc\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Runtime Hours",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#808080",
+                  "index": 0,
+                  "text": "Stopped"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Running"
+                },
+                "2": {
+                  "color": "dark-red",
+                  "index": 2,
+                  "text": "Tripped"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "always",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Inlet",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "query": "SELECT \n  (last(\"100_p_01_lift_station_pump_run_fb\") * 1) + (last(\"100_p_01_lift_station_pump_trip_fb\") * 2) AS \"Lift Pump 1\",\n  (last(\"100_p_02_lift_station_pump_run_fb\") * 1) + (last(\"100_p_02_lift_station_pump_trip_fb\") * 2) AS \"Lift Pump 2\",\n  (last(\"101_p_01_equalization_transfer_pump_run_fb\") * 1) + (last(\"101_p_01_equalization_transfer_pump_trip_fb\") * 2) AS \"EQ Transfer Pump\",\n  (last(\"101_bs_02_auto_screen_run_fb\") * 1) + (last(\"101_bs_02_auto_screen_trip_fb\") * 2) AS \"Auto Screen\",\n  (last(\"202_fs_01_finescreen_run_fb\") * 1) + (last(\"202_fs_01_finescreen_trip_fb\") * 2) AS \"Fine Screen 1\",\n  (last(\"202_fs_02_finescreen_run_fb\") * 1) + (last(\"202_fs_02_finescreen_trip_fb\") * 2) AS \"Fine Screen 2\"\nFROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(previous)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        },
+        {
+          "alias": "Biology",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "hide": false,
+          "query": "SELECT \n  (last(\"201_b_01_aeration_blower_run_fb\") * 1) + (last(\"201_b_01_aeration_blower_trip_fb\") * 2) AS \"Aeration Blower 1\",\n  (last(\"201_b_02_aeration_blower_run_fb\") * 1) + (last(\"201_b_02_aeration_blower_trip_fb\") * 2) AS \"Aeration Blower 2\",\n  (last(\"202_ag_01_anaerobic_agitator_run_fb\") * 1) + (last(\"202_ag_01_anaerobic_agitator_trip_fb\") * 2) AS \"Anaerobic Agitator\",\n  (last(\"202_ag_02_anoxic_agitator_run_fb\") * 1) + (last(\"202_ag_02_anoxic_agitator_trip_fb\") * 2) AS \"Anoxic Agitator\"\nFROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(previous)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        },
+        {
+          "alias": "MBR",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "hide": false,
+          "query": "SELECT \n  (last(\"202_b_01_mbr_blower_run_fb\") * 1) + (last(\"202_b_01_mbr_blower_trip_fb\") * 2) AS \"MBR Scour Blower 1\",\n  (last(\"202_b_02_mbr_blower_run_fb\") * 1) + (last(\"202_b_02_mbr_blower_trip_fb\") * 2) AS \"MBR Scour Blower 2\",\n  (last(\"202_p_01_mbr_permeate_pump_run_fb\") * 1) + (last(\"202_p_01_mbr_permeate_pump_trip_fb\") * 2) AS \"MBR Permeate Pump\",\n  (last(\"202_p_05_cip_pump_run_fb\") * 1) + (last(\"202_p_05_cip_pump_trip_fb\") * 2) AS \"CIP Pump\"\nFROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(previous)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "table"
+        },
+        {
+          "alias": "Sludge",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "f002a530-d543-4f49-8df1-9a74862768e8"
+          },
+          "hide": false,
+          "query": "SELECT \n  (last(\"501_p_01_dewatering_feed_pump_run_fb\") * 1) + (last(\"501_p_01_dewatering_feed_pump_trip_fb\") * 2) AS \"Dewatering Pump 1\",\n  (last(\"501_p_02_dewatering_feed_pump_run_fb\") * 1) + (last(\"501_p_02_dewatering_feed_pump_trip_fb\") * 2) AS \"Dewatering Pump 2\",\n  (last(\"401_p_01_dwpe_dosing_pump_run_fb\") * 1) + (last(\"401_p_01_dwpe_dosing_pump_trip_fb\") * 2) AS \"DWPE Dosing Pump\"\nFROM \"plc\" WHERE $timeFilter GROUP BY time($__interval) fill(previous)",
+          "rawQuery": true,
+          "refId": "D",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Equipment Run Status",
+      "type": "state-timeline"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Equipment Status",
+  "uid": "prtsvk6"
+}

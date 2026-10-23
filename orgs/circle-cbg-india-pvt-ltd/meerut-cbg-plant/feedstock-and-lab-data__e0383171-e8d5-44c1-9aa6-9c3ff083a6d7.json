@@ -1,0 +1,1805 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 15,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Total Daily Digester Flow",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT res\nFROM (\n    SELECT ABS(SUM(\"Combined Digester Feed Flow\"))   / 60 AS res \n    FROM \"mqtt\" \n    WHERE $timeFilter \n    GROUP BY time(1d , 18h30m)\n)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Total Daily Digester Flow (M3)",
+      "transformations": [
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "MM/DD",
+            "timeField": "Time",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 13,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Total Hourly Digester Flow",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "hide": false,
+          "query": "SELECT res\nFROM (\n    SELECT ABS(SUM(\"Combined Digester Feed Flow\"))   / 60 AS res \n    FROM \"mqtt\" \n    WHERE $timeFilter \n    GROUP BY time(1h , 0m)\n)\n",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Total Hourly Digester Flow (M3)",
+      "transformations": [
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "MM/DD",
+            "timeField": "Time",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let date_fed_into_eq_tank, pressmud_quantity, cow_manure_quantity, borewell_water, filtrate_water;\ncontext.panel.data.series.map((s) => {\n  if (s.fields.find((f) => f.name === \"Date Fed into EQ Tank\") != null) {\n    date_fed_into_eq_tank = s.fields.find((f) => f.name === \"Date Fed into EQ Tank\").values;\n    pressmud_quantity = s.fields.find((f) => f.name === \"Pressmud quantity (tons)\").values;\n    cow_manure_quantity = s.fields.find((f) => f.name === \"Cow manure quantity (tons)\").values;\n    borewell_water = s.fields.find((f) => f.name === \"Borewell water (m3)\").values;\n    filtrate_water = s.fields.find((f) => f.name === \"Filtrate water (m3)\").values;\n  }\n});\n\nconst options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric' };\n\nif (date_fed_into_eq_tank != null) {\n  date_fed_into_eq_tank = date_fed_into_eq_tank.map((d, i) => new Intl.DateTimeFormat('en-US', options).format(new Date(d)))\n}\n\nreturn {\n  tooltip: {},\n  legend: {},\n  grid: {\n    left: '3%',\n    right: '4%',\n    bottom: '3%',\n    containLabel: true\n  },\n  xAxis: {\n    data: date_fed_into_eq_tank,\n  },\n  yAxis: {},\n  series: [\n    {\n      name: \"Pressmud quantity (tons)\",\n      type: 'bar',\n      data: pressmud_quantity\n    },\n    {\n      name: \"Cow manure quantity (tons)\",\n      type: 'bar',\n      data: cow_manure_quantity\n    },\n    {\n      name: \"Borewell water (m3)\",\n      type: 'bar',\n      data: borewell_water\n    },\n    {\n      name: \"Filtrate water (m3)\",\n      type: 'bar',\n      data: filtrate_water\n    }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH sperate AS (\r\n  SELECT\r\n    date_fed_into_eq_tank,\r\n    pressmud_quantity,\r\n    cow_manure_quantity,\r\n    borewell_water,\r\n    filtrate_water\r\n  FROM\r\n    user_feedstockdata\r\n  WHERE\r\n    form_id = 3\r\n    AND eq_tank_fed = '${EQTankFed:raw}'\r\n    AND '${EQTankFed:raw}' != 'Total'\r\n    AND $__timeFilter(date_fed_into_eq_tank)\r\n),\r\ntotal AS (\r\n  SELECT\r\n    date_fed_into_eq_tank,\r\n    COALESCE(SUM(pressmud_quantity), 0) AS pressmud_quantity,\r\n    COALESCE(SUM(cow_manure_quantity), 0) AS cow_manure_quantity,\r\n    COALESCE(SUM(borewell_water), 0) AS borewell_water,\r\n    COALESCE(SUM(filtrate_water), 0) AS filtrate_water\r\n  FROM\r\n    user_feedstockdata\r\n  WHERE\r\n    form_id = 3\r\n    AND '${EQTankFed:raw}' = 'Total'\r\n    AND $__timeFilter(date_fed_into_eq_tank)\r\n  GROUP BY\r\n    date_fed_into_eq_tank\r\n)\r\n-- select * from total;\r\nSELECT\r\n  COALESCE(s.date_fed_into_eq_tank, t.date_fed_into_eq_tank) AS \"Date Fed into EQ Tank\",\r\n  COALESCE(s.pressmud_quantity, t.pressmud_quantity) AS \"Pressmud quantity (tons)\",\r\n  COALESCE(s.cow_manure_quantity, t.cow_manure_quantity) AS \"Cow manure quantity (tons)\",\r\n  COALESCE(s.borewell_water, t.borewell_water) AS \"Borewell water (m3)\",\r\n  COALESCE(s.filtrate_water, t.filtrate_water) AS \"Filtrate water (m3)\"\r\nFROM\r\n  sperate s\r\nFULL JOIN\r\n  total t\r\nON\r\n  s.date_fed_into_eq_tank = t.date_fed_into_eq_tank\r\nORDER BY \"Date Fed into EQ Tank\" ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Feedstock [$EQTankFed]",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "m^3/hr"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 14,
+      "interval": "1m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "Combined Digester Feed Flow",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+          },
+          "query": "SELECT mean(\"Combined Digester Feed Flow\") FROM \"mqtt\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Combined Digester Feed Flow",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "(mg/l)"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 1: 202-P-01'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 1: 202-P-01\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 1: 202-P-07'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 1: 202-P-07\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 2: 202-P-02'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 2: 202-P-02\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 2: 202-P-08'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 2: 202-P-08\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 3: 202-P-03'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 3: 202-P-03\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 3: 202-P-09'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 3: 202-P-09\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "F",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 4: 202-P-04'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 4: 202-P-04\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "G",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 4: 202-P-10'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 4: 202-P-10\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "H",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 5: 202-P-05'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 5: 202-P-05\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "I",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 5: 202-P-11'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 5: 202-P-11\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "J",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 6: 202-P-06'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 6: 202-P-06\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "K",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH cte AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 6: 202-P-12'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  time_of_sample_collection,\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" AS \"digester 6: 202-P-12\"\r\nFROM\r\n  cte\r\nWHERE\r\n  \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL;",
+          "refId": "L",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Volatile Acids",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 0.3
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 1: 202-P-01'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 1: 202-P-01'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 1: 202-P-01\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 1: 202-P-07'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 1: 202-P-07'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 1: 202-P-07\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 2: 202-P-02'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 2: 202-P-02'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 2: 202-P-02\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 2: 202-P-08'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 2: 202-P-08'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 2: 202-P-08\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "D",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 3: 202-P-03'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 3: 202-P-03'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 3: 202-P-03\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "E",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 3: 202-P-09'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 3: 202-P-09'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 3: 202-P-09\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "F",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 4: 202-P-04'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 4: 202-P-04'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 4: 202-P-04\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "G",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 4: 202-P-10'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 4: 202-P-10'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 4: 202-P-10\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "H",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 5: 202-P-05'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 5: 202-P-05'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 5: 202-P-05\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "I",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 5: 202-P-11'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 5: 202-P-11'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 5: 202-P-11\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "J",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 6: 202-P-06'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 6: 202-P-06'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 6: 202-P-06\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "K",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH alkalinity AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Alkalinity' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 6: 202-P-12'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n),\r\nvolatileacids AS (\r\n  SELECT\r\n    time_of_sample_collection,\r\n    CASE\r\n      WHEN type_of_lab_test = 'Volatile Acids' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\"\r\n  FROM\r\n    user_labtestdata\r\n  WHERE\r\n    form_id = 2\r\n    AND location = 'digester 6: 202-P-12'\r\n    AND $__timeFilter(time_of_sample_collection)\r\n)\r\nSELECT\r\n  a.time_of_sample_collection,\r\n  va.\"Volatile_Acids (mg/l Acetic Acid)\" / a.\"Alkalinity (mg/l CaCO3)\" AS \"digester 6: 202-P-12\"\r\nFROM\r\n  (\r\n    SELECT\r\n      *\r\n    FROM\r\n      alkalinity\r\n    WHERE\r\n      \"Alkalinity (mg/l CaCO3)\" is NOT NULL\r\n  ) a\r\n  INNER JOIN (\r\n    SELECT\r\n      *\r\n    FROM\r\n      volatileacids\r\n    WHERE\r\n      \"Volatile_Acids (mg/l Acetic Acid)\" is NOT NULL\r\n  ) va ON a.time_of_sample_collection = va.time_of_sample_collection;",
+          "refId": "L",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Ratio of Volatile Acids / Alkalinity",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    time_of_sample_collection,\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'pH%' THEN result\r\n    END AS \"pH (s.u.)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'Temperature%' THEN result\r\n    END AS \"Temperature (Celsius)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'Alkalinity%' THEN result\r\n    END AS \"Alkalinity (mg/l CaCO3)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'COD%' THEN result\r\n    END AS \"COD (mg/l)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'Volatile Acids%' THEN result\r\n    END AS \"Volatile_Acids (mg/l Acetic Acid)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'VSS%' THEN result\r\n    END AS \"VSS (mg/l)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'TSS%' THEN result\r\n    END AS \"TSS (mg/l)\",\r\n    CASE \r\n        WHEN type_of_lab_test LIKE 'TKN%' THEN result\r\n    END AS \"TKN (mg/l)\"\r\nFROM \r\n    user_labtestdata \r\nWHERE \r\n    form_id = 2\r\n    AND location = '${LabTestLocation:raw}'\r\nAND\r\n  $__timeFilter(time_of_sample_collection);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Lab Test [$LabTestLocation]",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 6,
+      "options": {
+        "baidu": {
+          "callback": "bmapReady",
+          "key": ""
+        },
+        "editor": {
+          "format": "auto",
+          "height": 600
+        },
+        "editorMode": "code",
+        "gaode": {
+          "key": "",
+          "plugin": "AMap.Scale,AMap.ToolBar"
+        },
+        "getOption": "let day, run_time;\ncontext.panel.data.series.map((s) => {\n  if (s.fields.find((f) => f.name === 'Day') != null) {\n    day = s.fields.find((f) => f.name === 'Day').values;\n    run_time = s.fields.find((f) => f.name === 'Total Run Time (hours)').values;\n  }\n});\n\nconst options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric' };\n\nif (day != null) {\n  day = day.map((d, i) => new Intl.DateTimeFormat('en-US', options).format(new Date(d)))\n}\n\nreturn {\n  tooltip: {},\n  legend: {},\n  grid: {\n    left: '3%',\n    right: '4%',\n    bottom: '3%',\n    containLabel: true\n  },\n  xAxis: {\n    data: day,\n  },\n  yAxis: {},\n  series: [\n    {\n      name: \"Total Run Time (hours)\",\n      type: 'bar',\n      data: run_time\n    }\n  ]\n};",
+        "google": {
+          "callback": "gmapReady",
+          "key": ""
+        },
+        "map": "none",
+        "renderer": "canvas",
+        "themeEditor": {
+          "config": "{}",
+          "height": 400,
+          "name": "default"
+        },
+        "visualEditor": {
+          "code": "return {\n  dataset: context.editor.dataset,\n  series: context.editor.series,\n  xAxis: {\n    type: 'time',\n  },\n  yAxis: {\n    type: 'value',\n    min: 'dataMin',\n  },\n}\n",
+          "dataset": [],
+          "series": []
+        }
+      },
+      "pluginVersion": "7.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  date_trunc('day', start_time) AS \"Day\",\r\n  SUM(EXTRACT(EPOCH FROM (end_time - start_time)) / 3600) AS \"Total Run Time (hours)\"\r\nFROM\r\n  user_equipmentruntimedata\r\nWHERE\r\n  form_id = 6\r\n  AND\r\n  equipment_tag = '${EquipmentTag:raw}'\r\n  AND $__timeFilter(start_time)\r\nGROUP BY\r\n  \"Day\"\r\nORDER BY \"Day\" ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Equipment Run Time [$EquipmentTag]",
+      "transparent": true,
+      "type": "volkovlabs-echarts-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 9,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  date_trunc('day', failure_time) AS \"Day\",\r\n  SUM(EXTRACT(EPOCH FROM (restore_time - failure_time)) / 3600) AS \"Total Power Outage Duration (hours)\",\r\n  COUNT(failure_time) AS \"Total Power Outage Count\"\r\nFROM\r\n  user_poweroutagedata \r\nWHERE\r\n  form_id = 8\r\n  AND $__timeFilter(failure_time)\r\nGROUP BY\r\n  \"Day\";",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Power Outage",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "dateFormat": "YYYY-MM-DD",
+                "destinationType": "string",
+                "targetField": "Day"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "centrifuge: 300-C-01 centrate",
+          "value": "centrifuge: 300-C-01 centrate"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "cd00a2da-df1a-49f5-844c-61f5380ab50b"
+        },
+        "definition": "SELECT location_name FROM user_labtestlocationmasterdata WHERE team_id=$TeamId ORDER BY location_name;",
+        "includeAll": false,
+        "name": "LabTestLocation",
+        "options": [],
+        "query": "SELECT location_name FROM user_labtestlocationmasterdata WHERE team_id=$TeamId ORDER BY location_name;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "Total",
+          "value": "Total"
+        },
+        "includeAll": false,
+        "name": "EQTankFed",
+        "options": [
+          {
+            "selected": false,
+            "text": "EQ Tank 1",
+            "value": "EQ Tank 1"
+          },
+          {
+            "selected": false,
+            "text": "EQ Tank 2",
+            "value": "EQ Tank 2"
+          },
+          {
+            "selected": true,
+            "text": "Total",
+            "value": "Total"
+          }
+        ],
+        "query": "EQ Tank 1, EQ Tank 2, Total",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "102-A-01",
+          "value": "102-A-01"
+        },
+        "includeAll": false,
+        "name": "EquipmentTag",
+        "options": [
+          {
+            "selected": true,
+            "text": "102-A-01",
+            "value": "102-A-01"
+          },
+          {
+            "selected": false,
+            "text": "102-A-02",
+            "value": "102-A-02"
+          },
+          {
+            "selected": false,
+            "text": "102-A-03",
+            "value": "102-A-03"
+          },
+          {
+            "selected": false,
+            "text": "102-A-04",
+            "value": "102-A-04"
+          },
+          {
+            "selected": false,
+            "text": "102-G-01",
+            "value": "102-G-01"
+          },
+          {
+            "selected": false,
+            "text": "102-G-02",
+            "value": "102-G-02"
+          },
+          {
+            "selected": false,
+            "text": "102-P-01",
+            "value": "102-P-01"
+          },
+          {
+            "selected": false,
+            "text": "102-P-02",
+            "value": "102-P-02"
+          },
+          {
+            "selected": false,
+            "text": "102-P-03",
+            "value": "102-P-03"
+          },
+          {
+            "selected": false,
+            "text": "102-P-04",
+            "value": "102-P-04"
+          },
+          {
+            "selected": false,
+            "text": "200-P-01",
+            "value": "200-P-01"
+          },
+          {
+            "selected": false,
+            "text": "200-P-07",
+            "value": "200-P-07"
+          },
+          {
+            "selected": false,
+            "text": "200-P-02",
+            "value": "200-P-02"
+          },
+          {
+            "selected": false,
+            "text": "200-P-08",
+            "value": "200-P-08"
+          },
+          {
+            "selected": false,
+            "text": "200-P-03",
+            "value": "200-P-03"
+          },
+          {
+            "selected": false,
+            "text": "200-P-09",
+            "value": "200-P-09"
+          },
+          {
+            "selected": false,
+            "text": "200-P-04",
+            "value": "200-P-04"
+          },
+          {
+            "selected": false,
+            "text": "200-P-10",
+            "value": "200-P-10"
+          },
+          {
+            "selected": false,
+            "text": "200-P-05",
+            "value": "200-P-05"
+          },
+          {
+            "selected": false,
+            "text": "200-P-11",
+            "value": "200-P-11"
+          },
+          {
+            "selected": false,
+            "text": "200-P-06",
+            "value": "200-P-06"
+          },
+          {
+            "selected": false,
+            "text": "200-P-12",
+            "value": "200-P-12"
+          },
+          {
+            "selected": false,
+            "text": "Flare",
+            "value": "Flare"
+          },
+          {
+            "selected": false,
+            "text": "PSA Blower",
+            "value": "PSA Blower"
+          },
+          {
+            "selected": false,
+            "text": "400-B-06",
+            "value": "400-B-06"
+          },
+          {
+            "selected": false,
+            "text": "400-B-07",
+            "value": "400-B-07"
+          }
+        ],
+        "query": "102-A-01,102-A-02,102-A-03,102-A-04,102-G-01,102-G-02,102-P-01,102-P-02,102-P-03,102-P-04,200-P-01,200-P-07,200-P-02,200-P-08,200-P-03,200-P-09,200-P-04,200-P-10,200-P-05,200-P-11,200-P-06,200-P-12,Flare,PSA Blower, 400-B-06, 400-B-07",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "5",
+          "value": "5"
+        },
+        "hide": 2,
+        "name": "TeamId",
+        "query": "5",
+        "skipUrlSync": true,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Feedstock and Lab Data",
+  "uid": "e0383171-e8d5-44c1-9aa6-9c3ff083a6d7"
+}

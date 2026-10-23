@@ -1,0 +1,659 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "kwatt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP1_VFD_POWER_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP2_VFD_POWER_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP3_VFD_POWER_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP4_VFD_POWER_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P4"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$tag_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+          },
+          "hide": false,
+          "query": "SELECT last(\"data\")\nFROM \"mqtt-jabalpur\"\nWHERE \n  \"name\" = 'TANK1_MIXING_PUMP1_VFD_POWER_FB' OR\n  \"name\" = 'TANK1_MIXING_PUMP2_VFD_POWER_FB' OR\n  \"name\" = 'TANK2_MIXING_PUMP3_VFD_POWER_FB' OR\n  \"name\" = 'TANK2_MIXING_PUMP4_VFD_POWER_FB'\nAND $timeFilter\nGROUP BY \"name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Power",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "rotrpm"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP1_VFD_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP2_VFD_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP3_VFD_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP4_VFD_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P4"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$tag_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+          },
+          "hide": false,
+          "query": "SELECT last(\"data\")\nFROM \"mqtt-jabalpur\"\nWHERE \n  \"name\" = 'TANK1_MIXING_PUMP1_VFD_SPEED_FB' OR\n  \"name\" = 'TANK1_MIXING_PUMP2_VFD_SPEED_FB' OR\n  \"name\" = 'TANK2_MIXING_PUMP3_VFD_SPEED_FB' OR\n  \"name\" = 'TANK2_MIXING_PUMP4_VFD_SPEED_FB'\nAND $timeFilter\nGROUP BY \"name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Speed",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "rotrpm"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP1_VFD_ROTATION_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP2_VFD_ROTATION_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP3_VFD_ROTATION_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP4_VFD_ROTATION_SPEED_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P4"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 1,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$tag_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+          },
+          "hide": false,
+          "query": "SELECT last(\"data\")\nFROM \"mqtt-jabalpur\"\nWHERE \"name\" = 'TANK1_MIXING_PUMP1_VFD_ROTATION_SPEED_FB' OR\n\"name\" = 'TANK1_MIXING_PUMP2_VFD_ROTATION_SPEED_FB' OR\n\"name\" = 'TANK2_MIXING_PUMP3_VFD_ROTATION_SPEED_FB' OR\n\"name\" = 'TANK2_MIXING_PUMP4_VFD_ROTATION_SPEED_FB' AND $timeFilter GROUP BY \"name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Rotation",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP1_VFD_CURRENT_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK1_MIXING_PUMP2_VFD_CURRENT_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T1_P2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP3_VFD_CURRENT_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TANK2_MIXING_PUMP4_VFD_CURRENT_FB"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "mqtt-jabalpur.T2_P4"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$tag_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+          },
+          "query": "SELECT last(\"data\")\nFROM \"mqtt-jabalpur\"\nWHERE\n\t\"name\" = 'TANK1_MIXING_PUMP1_VFD_CURRENT_FB' OR\n\t\"name\" = 'TANK1_MIXING_PUMP2_VFD_CURRENT_FB' OR\n\t\"name\" = 'TANK2_MIXING_PUMP3_VFD_CURRENT_FB' OR\n\t\"name\" = 'TANK2_MIXING_PUMP4_VFD_CURRENT_FB' AND\n\t$timeFilter\nGROUP BY \"name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "logs"
+        }
+      ],
+      "title": "Current",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "hours"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 5,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$tag_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fd3abc45-62e7-430f-86c9-b2b2d7522070"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \n  LAST(\"data\") - FIRST(\"data\") AS \"run_hours\"\nFROM \"mqtt-jabalpur\"\nWHERE \n  \"name\" = 'TANK1_MIXING_PUMP1_VFD_OPERATION_TIME' OR\n  \"name\" = 'TANK1_MIXING_PUMP2_VFD_OPERATION_TIME' OR\n  \"name\" = 'TANK2_MIXING_PUMP3_VFD_OPERATION_TIME' OR\n  \"name\" = 'TANK2_MIXING_PUMP4_VFD_OPERATION_TIME'\nAND $timeFilter\nGROUP BY time(1d, 18h30m), \"name\"\nfill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Daily Total Run Hours",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Pump Health",
+  "uid": "f7386382-9d02-447f-9182-e23325446357"
+}

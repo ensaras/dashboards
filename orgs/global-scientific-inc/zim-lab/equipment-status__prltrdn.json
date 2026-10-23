@@ -1,0 +1,383 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT\n  non_negative_difference(last(\"202_b_01_mbr_blower_runtime_hr_total\")) AS \"MBR Scour Blower 1\",\n  non_negative_difference(last(\"501_p_01_dewatering_feed_pump_runtime_hr_total\")) AS \"Dewatering Feed Pump 1\" FROM \"plc\" \nWHERE $timeFilter \nGROUP BY time(1d) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Daily Runtime Hours",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 3,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT\n  non_negative_difference(last(\"202_b_01_mbr_blower_runtime_hr_total\")) AS \"MBR Blower 202-B-01\",\n  non_negative_difference(last(\"202_p_02_mbr_backwash_pump_runtime_hr_total\")) AS \"MBR Backwash Pump 202-P-02\",\n  non_negative_difference(last(\"301_p_01_ro_mcf_feed_pump_runtime_hr_total\")) AS \"MCF Feed Pump 301-P-01\",\n  non_negative_difference(last(\"301_p_02_ro_cip_pump_runtime_hr_total\")) AS \"RO CIP Pump 301-P-02\",\n  non_negative_difference(last(\"301_p_03_caustic_dosing_pump_runtime_hr_total\")) AS \"Caustic Pump 301-P-03\",\n  non_negative_difference(last(\"301_p_04_smbs_dosing_pump_runtime_hr_total\")) AS \"SMBS Pump 301-P-04\",\n  non_negative_difference(last(\"301_p_05_antiscalant_dosing_pump_runtime_hr_total\")) AS \"Antiscalant Pump 301-P-05\",\n  non_negative_difference(last(\"302_p_01_ro_hp_pump_a_runtime_hr_total\")) AS \"RO HP Pump A 302-P-01\",\n  non_negative_difference(last(\"302_b_01_degasser_blower_a_runtime_hr_total\")) AS \"Degasser Blower A 302-B-01\",\n  non_negative_difference(last(\"302_b_02_degasser_blower_b_runtime_hr_total\")) AS \"Degasser Blower B 302-B-02\",\n  non_negative_difference(last(\"501_p_01_dewatering_feed_pump_runtime_hr_total\")) AS \"Dewatering Feed Pump 501-P-01\" FROM \"plc\"\nWHERE $timeFilter\nGROUP BY time(1d) tz('Asia/Kolkata')",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Runtime Hours",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT\n  last(\"202_b_01_mbr_blower_runtime_hr_total\") AS \"MBR Blower 202-B-01\",\n  last(\"202_p_02_mbr_backwash_pump_runtime_hr_total\") AS \"MBR Backwash Pump 202-P-02\",\n  last(\"301_p_01_ro_mcf_feed_pump_runtime_hr_total\") AS \"MCF Feed Pump 301-P-01\",\n  last(\"301_p_02_ro_cip_pump_runtime_hr_total\") AS \"RO CIP Pump 301-P-02\",\n  last(\"301_p_03_caustic_dosing_pump_runtime_hr_total\") AS \"Caustic Pump 301-P-03\",\n  last(\"301_p_04_smbs_dosing_pump_runtime_hr_total\") AS \"SMBS Pump 301-P-04\",\n  last(\"301_p_05_antiscalant_dosing_pump_runtime_hr_total\") AS \"Antiscalant Pump 301-P-05\",\n  last(\"302_p_01_ro_hp_pump_a_runtime_hr_total\") AS \"RO HP Pump A 302-P-01\",\n  last(\"302_b_01_degasser_blower_a_runtime_hr_total\") AS \"Degasser Blower A 302-B-01\",\n  last(\"302_b_02_degasser_blower_b_runtime_hr_total\") AS \"Degasser Blower B 302-B-02\",\n  last(\"501_p_01_dewatering_feed_pump_runtime_hr_total\") AS \"Dewatering Feed Pump 501-P-01\" FROM \"plc\"\nWHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Runtime Hours per Day",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "bfj8ahkh4ketce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#808080",
+                  "index": 0,
+                  "text": "Stopped"
+                },
+                "1": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Running"
+                },
+                "2": {
+                  "color": "dark-red",
+                  "index": 2,
+                  "text": "Tripped"
+                },
+                "3": {
+                  "color": "dark-red",
+                  "index": 3,
+                  "text": "Tripped"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "always",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "bfj8ahkh4ketce"
+          },
+          "query": "SELECT\n  last(\"202_b_01_mbr_blower_run_fb\") + (last(\"202_b_01_mbr_blower_trip_fb\") * 2) AS \"MBR Blower 202-B-01\",\n  last(\"202_p_02_mbr_backwash_pump_run_fb\") + (last(\"202_p_02_mbr_backwash_pump_trip_fb\") * 2) AS \"MBR Backwash Pump 202-P-02\",\n  -- RO Feed & Dosing\n  last(\"301_p_01_ro_mcf_feed_pump_run_fb\") + (last(\"301_p_01_ro_mcf_feed_pump_trip_fb\") * 2) AS \"MCF Feed Pump 301-P-01\",\n  last(\"301_p_02_ro_cip_pump_run_fb\") + (last(\"301_p_02_ro_cip_pump_trip_fb\") * 2) AS \"RO CIP Pump 301-P-02\",\n  last(\"301_p_03_caustic_dosing_pump_run_fb\") + (last(\"301_p_03_caustic_dosing_pump_trip_fb\") * 2) AS \"Caustic Pump 301-P-03\",\n  last(\"301_p_04_smbs_dosing_pump_run_fb\") + (last(\"301_p_04_smbs_dosing_pump_trip_fb\") * 2) AS \"SMBS Pump 301-P-04\",\n  last(\"301_p_05_antiscalant_dosing_pump_run_fb\") + (last(\"301_p_05_antiscalant_dosing_pump_trip_fb\") * 2) AS \"Antiscalant Pump 301-P-05\",\n  -- RO & Polishing\n  last(\"302_p_01_ro_hp_pump_a_run_fb\") AS \"RO HP Pump A 302-P-01\",\n  last(\"302_p_02_ro_hp_pump_b_run_fb\") AS \"RO HP Pump B 302-P-02\",\n  last(\"302_b_01_degasser_blower_a_run_fb\") + (last(\"302_b_01_degasser_blower_a_trip_fb\") * 2) AS \"Degasser Blower A 302-B-01\",\n  last(\"302_b_02_degasser_blower_b_run_fb\") + (last(\"302_b_02_degasser_blower_b_trip_fb\") * 2) AS \"Degasser Blower B 302-B-02\",\n  -- Dewatering\n  last(\"501_p_01_dewatering_feed_pump_run_fb\") + (last(\"501_p_01_dewatering_feed_pump_trip_fb\") * 2) AS \"Dewatering Feed Pump 501-P-01\"\nFROM \"plc\"\nWHERE $timeFilter\nGROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Equipment Run Status",
+      "type": "state-timeline"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "Equipment Status",
+  "uid": "prltrdn"
+}

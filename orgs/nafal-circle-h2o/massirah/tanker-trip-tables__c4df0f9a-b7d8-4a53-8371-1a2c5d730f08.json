@@ -1,0 +1,387 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Code"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 81
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Capacity"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 93
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Number of Trips"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 133
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Capacity"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 139
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \"date\" as \"Date\", \n    plate_number as \"Plate Number\", \n    code as \"Code\", \n    tanker_capacity as \"Capacity\",\n    (\n        CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n    ) as \"Number of Trips\",\n    (\n        CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n    ) * tanker_capacity AS \"Total Capacity\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 97\n    AND \"date\" >= CAST($__timeFrom() AS timestamp) \n    AND \"date\" < CAST($__timeTo() AS timestamp)\n    AND $__timeFilter(\"date\")\nORDER BY\n\"date\" DESC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Yellow Tanker Trips",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Code"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 81
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Capacity"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 93
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Number of Trips"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 133
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Capacity"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 139
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "e8829897-819c-483b-88a4-8ce697058483"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \"date\" as \"Date\", \n    plate_number as \"Plate Number\", \n    code as \"Code\", \n    tanker_capacity as \"Capacity\",\n    (\n        CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n    ) as \"Number of Trips\",\n    (\n        CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n    ) * tanker_capacity AS \"Total Capacity\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 171\n    AND \"date\" >= CAST($__timeFrom() AS timestamp) \n    AND \"date\" < CAST($__timeTo() AS timestamp)\n    AND $__timeFilter(\"date\")\nORDER BY\n\"date\" DESC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Green Tanker Trips",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a6cc4fab-3b61-49be-af55-8d2fced45350"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \"date\" as \"Date\", \n    plate_number as \"Plate Number\", \n    code as \"Code\", \n    tanker_capacity as \"Capacity\",\n    (\n        CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n    ) as \"Number of Trips\",\n    (\n        CASE WHEN trip_time1 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time2 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time3 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time4 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time5 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time6 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time7 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time8 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time9 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time10 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time11 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time12 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time13 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time14 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time15 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time16 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time17 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time18 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time19 IS NOT NULL THEN 1 ELSE 0 END +\n        CASE WHEN trip_time20 IS NOT NULL THEN 1 ELSE 0 END\n    ) * tanker_capacity AS \"Total Capacity\"\nFROM \n    user_tankerdata \nWHERE \n    form_id = 207\n    AND \"date\" >= CAST($__timeFrom() AS timestamp) \n    AND \"date\" < CAST($__timeTo() AS timestamp)\n    AND $__timeFilter(\"date\")\nORDER BY\n\"date\" DESC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Industrial Tanker Trips",
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [
+    "managed-by-git"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Muscat",
+  "title": "Tanker Trip Tables",
+  "uid": "c4df0f9a-b7d8-4a53-8371-1a2c5d730f08"
+}

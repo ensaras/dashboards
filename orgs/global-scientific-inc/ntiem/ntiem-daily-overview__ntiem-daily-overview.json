@@ -1,0 +1,1881 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"font-size:12px;color:#9fa2a8;padding-top:4px\"><span style=\"color:#73BF69\">●</span> normal &nbsp;<span style=\"color:#D9B84A\">●</span> warning &nbsp;<span style=\"color:#E0707B\">●</span> alarm &nbsp;<span style=\"color:#B877D9\">●</span> data problem &nbsp;·&nbsp; ⌀ 30-day avg &nbsp;·&nbsp; yesterday = from this morning's readings &nbsp;·&nbsp; ⓘ details &nbsp;·&nbsp; <b>New dashboard for review</b>: limits not yet set, so values show in white</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Treated outflow yesterday. Design 100,000 m³/day. Shows the latest day with statistics (normally yesterday; until the daily statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latest day"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: m³"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% of design"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "% of design"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Day"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Day"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT to_char((SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL), 'DD Mon') AS \"Day\", daily_flow_out AS \"Yesterday\", 100 * daily_flow_out / 100000 AS \"% of design\" FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL)",
+          "refId": "q0"
+        }
+      ],
+      "title": "Treated outflow",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Plant energy yesterday. Shows the latest day with statistics (normally yesterday; until the daily statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latest day"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kWh"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT daily_power_total AS \"Yesterday\" FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL)",
+          "refId": "q1"
+        }
+      ],
+      "title": "Power",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Energy ÷ treated outflow. Shows the latest day with statistics (normally yesterday; until the daily statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latest day"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kWh/m³"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌀ 30 days"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "⌀ 30 days"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: kWh/m³"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT daily_power_total / NULLIF(daily_flow_out, 0) AS \"Yesterday\", (SELECT avg(daily_power_total / NULLIF(daily_flow_out, 0)) FROM gsi_ntiem_stats WHERE \"Date\" BETWEEN ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) - 29 AND ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS \"⌀ 30 days\" FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL)",
+          "refId": "q2"
+        }
+      ],
+      "title": "Specific energy",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Inlet to outlet COD removed. Target ≥ 80 % (existing lab dashboard). Shows the latest day with statistics (normally yesterday; until the daily statistics run, the day before).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#E0707B",
+                "value": 0
+              },
+              {
+                "color": "#73BF69",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latest day"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT 100 * (daily_avg_inlet_cod - daily_avg_outlet_cod) / NULLIF(daily_avg_inlet_cod, 0) AS \"Yesterday\" FROM gsi_ntiem_stats WHERE \"Date\" = (SELECT max(\"Date\") FROM gsi_ntiem_stats WHERE \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) AND daily_flow_out IS NOT NULL)",
+          "refId": "q3"
+        }
+      ],
+      "title": "COD reduction",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Core forms with a reading dated yesterday: flow, power, lab.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#D9B84A",
+                "value": 0
+              },
+              {
+                "color": "#73BF69",
+                "value": 3
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 2
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 11,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT (CASE WHEN EXISTS (SELECT 1 FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) AND (datetime AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) THEN 1 ELSE 0 END + CASE WHEN EXISTS (SELECT 1 FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) AND (datetime AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) THEN 1 ELSE 0 END + CASE WHEN EXISTS (SELECT 1 FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) AND (time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) THEN 1 ELSE 0 END) AS \"of 3\"",
+          "refId": "q4"
+        }
+      ],
+      "title": "Readings entered",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Latest lab COD at each stage (yesterday, or the latest sample within 3 days). Stage targets from the existing lab dashboard: primary ≥ 20 %, secondary ≥ 70 %.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Inlet COD"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Inlet"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Primary COD"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Primary"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Primary reduction"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Primary reduction"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#E0707B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 20
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Biological COD"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Biological"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Secondary reduction"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Secondary reduction"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#E0707B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 70
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH l AS (SELECT btrim(location) AS loc, btrim(type_of_lab_test) AS test, result, (time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) AND time_of_sample_collection > now() - interval '6 days'), ld AS (SELECT loc, test, max(day) AS day FROM l WHERE day <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) GROUP BY loc, test) SELECT (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Inlet' AND l.test = 'COD') AS \"Inlet COD\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'PC%' AND l.test = 'COD') AS \"Primary COD\", 100 * (1 - (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'PC%' AND l.test = 'COD') / NULLIF((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Inlet' AND l.test = 'COD'), 0)) AS \"Primary reduction\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI%-ClarifierOut' AND l.test = 'COD') AS \"Biological COD\", 100 * (1 - (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI%-ClarifierOut' AND l.test = 'COD') / NULLIF((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'PC%' AND l.test = 'COD'), 0)) AS \"Secondary reduction\"",
+          "refId": "q5"
+        }
+      ],
+      "title": "Treatment stages · COD",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Latest DO (mg/L), MLSS (mg/L) and SV30 (mL/L) per unit.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CFI 1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CFI 1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CFI 2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CFI 2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CFI 3"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CFI 3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CFI 4"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CFI 4"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH l AS (SELECT btrim(location) AS loc, btrim(type_of_lab_test) AS test, result, (time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) AND time_of_sample_collection > now() - interval '6 days'), ld AS (SELECT loc, test, max(day) AS day FROM l WHERE day <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) GROUP BY loc, test) SELECT NULLIF(concat_ws(' · ', 'DO ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI1-Aeration' AND l.test = 'DO')::numeric, 1), 'MLSS ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI1-Aeration' AND l.test = 'MLSS')::numeric), 'SV30 ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI1-Aeration' AND l.test = 'SV30')::numeric)), '') AS \"CFI 1\", NULLIF(concat_ws(' · ', 'DO ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI2-Aeration' AND l.test = 'DO')::numeric, 1), 'MLSS ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI2-Aeration' AND l.test = 'MLSS')::numeric), 'SV30 ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI2-Aeration' AND l.test = 'SV30')::numeric)), '') AS \"CFI 2\", NULLIF(concat_ws(' · ', 'DO ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI3-Aeration' AND l.test = 'DO')::numeric, 1), 'MLSS ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI3-Aeration' AND l.test = 'MLSS')::numeric), 'SV30 ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI3-Aeration' AND l.test = 'SV30')::numeric)), '') AS \"CFI 3\", NULLIF(concat_ws(' · ', 'DO ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI4-Aeration' AND l.test = 'DO')::numeric, 1), 'MLSS ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI4-Aeration' AND l.test = 'MLSS')::numeric), 'SV30 ' || round((SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'CFI4-Aeration' AND l.test = 'SV30')::numeric)), '') AS \"CFI 4\"",
+          "refId": "q6"
+        }
+      ],
+      "title": "Biological units",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "Latest outlet lab results. Limits: COD 225/250, TSS 80/100, ammonia (TAN) 40/50 mg/L (existing NTIEM lab dashboard); pH 6.5–8.5 (same as AHSPA). No limits for TDS and temperature.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "COD"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "COD"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 225
+                    },
+                    {
+                      "color": "#E0707B",
+                      "value": 250
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TSS"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TSS"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 80
+                    },
+                    {
+                      "color": "#E0707B",
+                      "value": 100
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pH"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "pH"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 14.0001,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": 1000000000
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#E0707B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#73BF69",
+                      "value": 6.5
+                    },
+                    {
+                      "color": "#E0707B",
+                      "value": 8.5001
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ammonia (TAN)"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Ammonia (TAN)"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 40
+                    },
+                    {
+                      "color": "#E0707B",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TDS"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TDS"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: mg/L"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Colour"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Colour"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: Hazen"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Turbidity"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Turbidity"
+              },
+              {
+                "id": "unit",
+                "value": "suffix: NTU"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Temperature"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Temperature"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": -1000000000,
+                      "result": {
+                        "color": "#B877D9",
+                        "text": "Bad data"
+                      },
+                      "to": -0.0001
+                    },
+                    "type": "range"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 6
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH l AS (SELECT btrim(location) AS loc, btrim(type_of_lab_test) AS test, result, (time_of_sample_collection AT TIME ZONE 'Asia/Kolkata')::date AS day FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) AND time_of_sample_collection > now() - interval '6 days'), ld AS (SELECT loc, test, max(day) AS day FROM l WHERE day <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) GROUP BY loc, test) SELECT (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'COD') AS \"COD\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'TSS') AS \"TSS\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'pH') AS \"pH\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'TAN') AS \"Ammonia (TAN)\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'TDS') AS \"TDS\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'Colour') AS \"Colour\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'Turbidity') AS \"Turbidity\", (SELECT avg(l.result) FROM l JOIN ld ON ld.loc = l.loc AND ld.test = l.test AND ld.day = l.day WHERE l.loc ILIKE 'Outlet' AND l.test = 'Temperature') AS \"Temperature\"",
+          "refId": "q7"
+        }
+      ],
+      "title": "Outlet quality",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: m³"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 15
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, daily_flow_out AS \"Outflow\" FROM gsi_ntiem_stats WHERE $__timeFilter(\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AND \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Treated outflow per day · m³",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#E0707B",
+                "value": 0
+              },
+              {
+                "color": "#5d7fb3",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 15
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, 100 * (daily_avg_inlet_cod - daily_avg_outlet_cod) / NULLIF(daily_avg_inlet_cod, 0) AS \"COD reduction\" FROM gsi_ntiem_stats WHERE $__timeFilter(\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AND \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "COD reduction per day · %",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5d7fb3",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "suffix: mg/L"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 15
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT (\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AS time, daily_avg_outlet_cod AS \"Outlet COD\" FROM gsi_ntiem_stats WHERE $__timeFilter(\"Date\"::timestamp AT TIME ZONE 'Asia/Kolkata') AND \"Date\" <= ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1) ORDER BY 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Outlet COD per day · mg/L",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+      },
+      "description": "A daily form is one entered on at least 20 of the last 30 days (from its own history). Missed = no entry dated yesterday (IST).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "missed"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#73BF69",
+                      "value": 0
+                    },
+                    {
+                      "color": "#D9B84A",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 0,
+        "y": 22
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 26
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cf69552b-a590-45d1-ae8d-05eff2266e10"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH e AS (SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_cbgcascadedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_chemicalstocktrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_coverprotectiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_dailycheckdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentflowaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_effluentphaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipment WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentcurrentdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentnoisedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentruntimemeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmenttemperaturedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvibrationdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_equipmentvoltagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_farmersurveydata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_feedstockdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_fertilizersalestrackingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_flowmeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_gascompositiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_labtestdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_location WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_maintenancedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_mbrcleaninglogandchemicalconsumptiondata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacconsumptionaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pacorderaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_powermeterreadingdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_poweroutagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_pumpdischargepressuredata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_quantitativelimit WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_retailoutletmeterdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgecaketrackerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_sludgewastagedata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankerdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tankermerutdata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM user_tanklevelaciddata WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id UNION ALL SELECT form_id, count(*) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS entries_30d, count(DISTINCT (time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date) FILTER (WHERE time_of_data_entry > now() - interval '30 days') AS days_30d, max(time_of_data_entry) AS last_ever, bool_or((time_of_data_entry AT TIME ZONE 'Asia/Kolkata')::date = ((now() AT TIME ZONE 'Asia/Kolkata')::date - 1)) AS had_yday FROM weighment_data WHERE form_id IN (SELECT id FROM user_customform WHERE team_id = 25) GROUP BY form_id), s AS (SELECT COALESCE(NULLIF(f.title_override,''), f.name) AS form, COALESCE(e.entries_30d,0) AS entries_30d, COALESCE(e.days_30d,0) AS days_30d, e.last_ever, COALESCE(e.had_yday,false) AS had_yday FROM user_customform f LEFT JOIN e ON e.form_id = f.id WHERE f.is_enabled AND f.is_active AND f.team_id = 25) SELECT count(*) FILTER (WHERE days_30d >= 20 AND NOT had_yday) AS \"missed\", count(*) FILTER (WHERE days_30d >= 20) AS \"daily forms\" FROM s",
+          "refId": "A"
+        }
+      ],
+      "title": "Daily forms missed yesterday",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 16,
+        "x": 8,
+        "y": 22
+      },
+      "id": 14,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Site Performance · existing lab and official dashboards",
+        "mode": "markdown"
+      },
+      "pluginVersion": "12.3.1+security-01",
+      "title": "Detail dashboards",
+      "type": "text"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 42,
+  "tags": [
+    "cetp",
+    "daily",
+    "managed-by-git",
+    "new",
+    "ntiem"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Asia/Kolkata",
+  "title": "NTIEM – Daily Overview",
+  "uid": "ntiem-daily-overview"
+}
