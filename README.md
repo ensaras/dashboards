@@ -28,7 +28,7 @@ uv run python -m grafana_dashboards.tools.validate
 uv run python -m grafana_dashboards.tools.validate --base-ref origin/development --head-ref HEAD
 ```
 
-The validator checks JSON structure, path and UID consistency, per-Org UID uniqueness, per-folder title uniqueness, configured datasource types, same-Org Grafana links, `editable: false`, the `managed-by-git` tag, and dashboard removals. A retired dashboard remains in Git with `retired: true`; it can also be placed in `orgs/<org_slug>/Retired/` when a team is removed.
+The validator checks the bundled Grafana Classic dashboard schema (`schemaVersion: 42`), path and UID consistency, per-Org UID uniqueness, per-folder title uniqueness, configured datasource types, same-Org Grafana links, `editable: false`, the `managed-by-git` tag, and dashboard removals. A retired dashboard remains in Git with `retired: true`; it can also be placed in `orgs/<org_slug>/Retired/` when a team is removed. See [the schema profile](docs/dashboard-schema.md) for its scope and version source.
 
 Deploy only changed dashboard files by supplying the previous and current Git refs:
 

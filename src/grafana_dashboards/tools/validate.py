@@ -8,21 +8,35 @@ import logging
 import re
 import subprocess
 import sys
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 import yaml
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 
 from grafana_dashboards.tools.export import load_site_config
 
 logger = logging.getLogger(__name__)
 ORG_ROOT = Path("orgs")
 SITE_ROOT = Path("sites")
+SCHEMA_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tools/schemas/grafana_v12_classic_dashboard_v42.schema.json"
+)
 UID_SUFFIX = re.compile(r"^[^/\\]+__(.+)\.json$")
 DATASOURCE_KEYS = {
     "postgres": {"postgres", "postgresql", "grafana-postgresql-datasource"},
     "influxdb": {"influxdb", "influx"},
 }
+
+
+@lru_cache(maxsize=1)
+def _dashboard_schema_validator() -> Draft202012Validator:
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    return Draft202012Validator(schema)
 
 
 def _walk_datasources(value: Any):
@@ -84,6 +98,17 @@ def _validate_dashboard(
     if not isinstance(data, dict):
         errors.append(f"{path}: dashboard JSON root must be an object")
         return org_slug, None
+
+    try:
+        schema_errors = sorted(
+            _dashboard_schema_validator().iter_errors(data),
+            key=lambda error: (list(map(str, error.absolute_path)), error.message),
+        )
+        for error in schema_errors:
+            location = "/".join(str(part) for part in error.absolute_path) or "$"
+            errors.append(f"{path}: Grafana dashboard schema error at {location}: {error.message}")
+    except (OSError, json.JSONDecodeError, SchemaError, ValueError) as exc:
+        errors.append(f"{SCHEMA_PATH}: could not load Grafana dashboard schema: {exc}")
 
     uid = data.get("uid")
     title = data.get("title")
