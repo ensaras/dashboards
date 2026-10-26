@@ -26,6 +26,9 @@ SCHEMA_PATH = (
     / "tools/schemas/grafana_v12_classic_dashboard_v42.schema.json"
 )
 UID_SUFFIX = re.compile(r"^[^/\\]+__(.+)\.json$")
+GRAFANA_DASHBOARD_URL_UID = re.compile(
+    r"/(?:d|d-solo)/([A-Za-z0-9_-]{1,40})(?:/|[?#]|$)"
+)
 DATASOURCE_KEYS = {
     "postgres": {"postgres", "postgresql", "grafana-postgresql-datasource"},
     "influxdb": {"influxdb", "influx"},
@@ -216,6 +219,7 @@ def validate_repository(
     titles: dict[tuple[str, str], dict[str, Path]] = {}
     retired_uids: dict[tuple[str, str], Path] = {}
     dashboard_links: list[tuple[str, Path, str]] = []
+    known_dashboard_uids: set[tuple[str, str]] = set()
     dashboards = sorted(orgs_dir.rglob("*.json")) if orgs_dir.exists() else []
     for path in dashboards:
         try:
@@ -233,10 +237,12 @@ def validate_repository(
         checked_org, title = _validate_dashboard(path, orgs_dir, data, config, errors)
         uid = data.get("uid") if isinstance(data, dict) else None
         if isinstance(data, dict):
+            if isinstance(uid, str):
+                known_dashboard_uids.add((org_slug, uid))
             if rel.parts[1].casefold() == "retired" and isinstance(uid, str):
                 retired_uids[(org_slug, uid)] = path
             for url in _walk_link_urls(data):
-                linked = re.search(r"/d/([A-Za-z0-9_-]+)(?:/|\?|$)", url)
+                linked = GRAFANA_DASHBOARD_URL_UID.search(url)
                 if linked:
                     dashboard_links.append((org_slug, path, linked.group(1)))
         if checked_org and isinstance(uid, str):
@@ -258,6 +264,10 @@ def validate_repository(
                 titles[key][title.casefold()] = path
 
     for org_slug, source_path, linked_uid in dashboard_links:
+        if (org_slug, linked_uid) not in known_dashboard_uids:
+            errors.append(
+                f"{source_path}: dashboard link target UID {linked_uid!r} does not exist in this Org's repository"
+            )
         retired_path = retired_uids.get((org_slug, linked_uid))
         if retired_path and source_path != retired_path:
             errors.append(

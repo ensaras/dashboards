@@ -21,25 +21,32 @@ Export reads dashboards from Grafana and writes normalized JSON into the reposit
 
 ## Validation and deployment
 
-Run static checks without Grafana credentials:
+Run the local blocking checks without Grafana credentials:
 
 ```powershell
+make check
 uv run python -m grafana_dashboards.tools.validate
 uv run python -m grafana_dashboards.tools.validate --base-ref origin/development --head-ref HEAD
 ```
 
 The validator checks the bundled Grafana Classic dashboard schema (`schemaVersion: 42`), path and UID consistency, per-Org UID uniqueness, per-folder title uniqueness, configured datasource types, same-Org Grafana links, `editable: false`, the `managed-by-git` tag, and dashboard removals. A retired dashboard remains in Git with `retired: true`; it can also be placed in `orgs/<org_slug>/Retired/` when a team is removed. See [the schema profile](docs/dashboard-schema.md) for its scope and version source.
 
-Deploy only changed dashboard files by supplying the previous and current Git refs:
+Production deployment applies only changed dashboard files. The `make deploy` target and GitHub workflow target production; the development branch does not deploy to a staging Grafana because that environment has no production data.
 
 ```powershell
-$env:GRAFANA_STAGING_URL = "https://test.ensaras.com/grafana"
-$env:GRAFANA_STAGING_TOKEN = "<environment secret>"
-uv run python -m grafana_dashboards.tools.deploy --environment staging --base-ref $env:GITHUB_EVENT_BEFORE --head-ref $env:GITHUB_SHA
+$env:GRAFANA_PROD_URL = "https://grafana.example.com"
+$env:GRAFANA_PROD_TOKEN = "<production service-account token>"
+make deploy BASE=origin/main HEAD=HEAD
 ```
 
-Production uses `GRAFANA_PROD_URL` and `GRAFANA_PROD_TOKEN`. Each site YAML must define the target environment's organization ID, team folder UIDs, and (for staging) a `datasource_uid_map` from checked-in datasource UIDs to staging datasource UIDs. Missing environment mappings fail before writing. Deployment uses existing Portal-created team folders, ensures the organization's Admin-only `Retired` Grafana folder when needed, and skips a dashboard already equal to its target state.
+Each site YAML defines the production organization ID, team folder UIDs, and datasource identifiers. Missing mappings fail before writing. Deployment uses existing Portal-created team folders, ensures the organization's Admin-only `Retired` Grafana folder when needed, and skips a dashboard already equal to its target state.
+
+To manually publish a PR preview, provide the Org slug, base ref, PR number, and optionally the title. This uses the production Preview folder and requires the same production Grafana credentials as the PR workflow:
+
+```powershell
+make preview ORG=<org-slug> BASE=origin/main PR=<number> TITLE="<pull request title>"
+```
 
 ## Intended deployment flow
 
-Changes merged into `development` run validation and deploy to staging. A pull request from `development` to `main` deploys production previews for Admin review. Merging to `main` deploys the changes to production. Dashboard changes are made through Git; direct Grafana dashboard editing is disabled.
+Changes pushed to `development` run offline validation only. A pull request from `development` to `main` deploys production previews for Admin review. Closing or merging that PR removes its previews. Merging to `main` deploys the changes to production. Dashboard changes are made through Git; direct Grafana dashboard editing is disabled.

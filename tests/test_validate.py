@@ -133,6 +133,39 @@ def test_retired_dashboard_with_flag_passes_without_team_mapping(tmp_path: Path)
     assert validate_repository(orgs_dir, sites_dir) == []
 
 
+def test_dashboard_link_target_must_exist_in_same_org(tmp_path: Path):
+    orgs_dir, sites_dir = repository(tmp_path)
+    write_dashboard(
+        orgs_dir,
+        "team-a",
+        dashboard(
+            "source-uid",
+            "Source",
+            links=[{"url": "/grafana/d/missing-uid/target"}],
+        ),
+    )
+
+    errors = validate_repository(orgs_dir, sites_dir)
+
+    assert any("dashboard link target UID 'missing-uid'" in error for error in errors)
+
+
+def test_dashboard_link_to_existing_same_org_target_passes(tmp_path: Path):
+    orgs_dir, sites_dir = repository(tmp_path)
+    write_dashboard(orgs_dir, "team-a", dashboard("target-uid", "Target"))
+    write_dashboard(
+        orgs_dir,
+        "team-a",
+        dashboard(
+            "source-uid",
+            "Source",
+            links=[{"url": "/grafana/d/target-uid/target"}],
+        ),
+    )
+
+    assert validate_repository(orgs_dir, sites_dir) == []
+
+
 def test_retirement_is_blocked_when_active_dashboard_links_to_uid(tmp_path: Path):
     orgs_dir, sites_dir = repository(tmp_path)
     write_dashboard(

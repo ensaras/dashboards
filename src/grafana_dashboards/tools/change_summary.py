@@ -7,7 +7,6 @@ import json
 import re
 import subprocess
 import sys
-import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -16,6 +15,7 @@ from urllib.parse import quote
 import yaml
 
 from grafana_dashboards.tools.export import slugify
+from grafana_dashboards.tools.preview_identity import preview_uid
 
 ORG_ROOT = Path("orgs")
 SITE_ROOT = Path("sites")
@@ -192,12 +192,9 @@ def _preview_url(
         return "—"
     if not isinstance(org_id, int):
         return "—"
-    preview_uid = uuid.uuid5(
-        uuid.NAMESPACE_URL,
-        f"grafana-preview:{change.org_slug}:{pr_number}:{change.uid}",
-    ).hex[:40]
-    title_slug = slugify(f"PR #{pr_number}: {change.title}")
-    url = f"{base_url.rstrip('/')}/d/{quote(preview_uid)}/{quote(title_slug)}?orgId={org_id}"
+    dashboard_preview_uid = preview_uid(change.org_slug, change.uid, pr_number)
+    title_slug = slugify(f"PR {pr_number} · {change.title}")
+    url = f"{base_url.rstrip('/')}/d/{quote(dashboard_preview_uid)}/{quote(title_slug)}?orgId={org_id}"
     return f"[Preview]({url})"
 
 

@@ -8,7 +8,6 @@ import logging
 import os
 import subprocess
 import sys
-import uuid
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +17,7 @@ from grafana_dashboards.tools.client import GrafanaAPIError, GrafanaClient
 from grafana_dashboards.tools.deploy import changed_dashboard_paths
 from grafana_dashboards.tools.export import load_site_config, slugify
 from grafana_dashboards.tools.normalizer import MANAGED_TAG
+from grafana_dashboards.tools.preview_identity import preview_uid
 from grafana_dashboards.tools.validate import validate_repository
 
 logger = logging.getLogger(__name__)
@@ -27,15 +27,12 @@ PREVIEW_TITLE = "Preview"
 PREVIEW_TAG = "pr-preview"
 
 
-def _preview_uid(org_slug: str, dashboard_uid: str, pr_number: int) -> str:
-    """Return a stable, Grafana-length-safe UID for this PR dashboard."""
-    return uuid.uuid5(
-        uuid.NAMESPACE_URL, f"grafana-preview:{org_slug}:{pr_number}:{dashboard_uid}"
-    ).hex[:40]
-
-
 def _get_or_create_preview_folder(client: GrafanaClient, org_id: int) -> str:
-    matches = [folder for folder in client.get_folders(org_id) if folder.get("title") == PREVIEW_TITLE]
+    matches = [
+        folder
+        for folder in client.get_folders(org_id)
+        if folder.get("title") == PREVIEW_TITLE
+    ]
     if len(matches) > 1:
         raise ValueError(f"Grafana org {org_id} has multiple {PREVIEW_TITLE!r} folders")
     folder = matches[0] if matches else client.create_folder(org_id, PREVIEW_TITLE)
@@ -43,7 +40,9 @@ def _get_or_create_preview_folder(client: GrafanaClient, org_id: int) -> str:
     if not isinstance(folder_uid, str) or not folder_uid:
         raise ValueError("Grafana did not return a UID for the Preview folder")
     # Reassert the ACL on each run so accidental permission drift is corrected.
-    client.set_folder_permissions(org_id, folder_uid, [{"role": "Admin", "permission": 4}])
+    client.set_folder_permissions(
+        org_id, folder_uid, [{"role": "Admin", "permission": 4}]
+    )
     return folder_uid
 
 
@@ -69,7 +68,7 @@ def preview_paths(
         source_uid = dashboard.get("uid")
         if not isinstance(source_uid, str) or not source_uid:
             raise ValueError(f"{path}: dashboard UID is missing")
-        expected_uids.add(_preview_uid(org_slug, source_uid, pr_number))
+        expected_uids.add(preview_uid(org_slug, source_uid, pr_number))
 
     # Keep the open PR preview in sync with its current diff, while preserving
     # dashboards that are still part of the PR so their UIDs update in place.
@@ -87,12 +86,12 @@ def preview_paths(
         source_uid = dashboard.get("uid")
         if not isinstance(source_uid, str) or not source_uid:
             raise ValueError(f"{path}: dashboard UID is missing")
-        dashboard["uid"] = _preview_uid(org_slug, source_uid, pr_number)
+        dashboard["uid"] = preview_uid(org_slug, source_uid, pr_number)
         dashboard.pop("id", None)
         dashboard.pop("version", None)
         dashboard["editable"] = False
         source_title = str(dashboard.get("title", source_uid))
-        dashboard["title"] = f"PR #{pr_number}: {source_title}"
+        dashboard["title"] = f"PR {pr_number} · {source_title}"
         tags = {str(tag) for tag in dashboard.get("tags", []) if tag}
         tags.update({MANAGED_TAG, PREVIEW_TAG, f"{PREVIEW_TAG}-{pr_number}"})
         dashboard["tags"] = sorted(tags)
@@ -111,7 +110,9 @@ def preview_paths(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Publish Admin-only Grafana PR previews.")
+    parser = argparse.ArgumentParser(
+        description="Publish Admin-only Grafana PR previews."
+    )
     parser.add_argument("--org", required=True)
     parser.add_argument("--base-ref", required=True)
     parser.add_argument("--head-ref", default="HEAD")
@@ -120,27 +121,46 @@ def main() -> int:
     parser.add_argument("--sites-dir", type=Path, default=SITE_ROOT)
     parser.add_argument("--orgs-dir", type=Path, default=ORG_ROOT)
     args = parser.parse_args()
-    errors = validate_repository(args.orgs_dir, args.sites_dir, args.base_ref, args.head_ref)
+    errors = validate_repository(
+        args.orgs_dir, args.sites_dir, args.base_ref, args.head_ref
+    )
     if errors:
         for error in errors:
             logger.error(error)
         return 1
     try:
         paths = changed_dashboard_paths(args.base_ref, args.head_ref, args.orgs_dir)
-        paths = [path for path in paths if path.relative_to(args.orgs_dir).parts[0] == args.org]
+        paths = [
+            path
+            for path in paths
+            if path.relative_to(args.orgs_dir).parts[0] == args.org
+        ]
         url = os.environ.get("GRAFANA_PROD_URL")
         token = os.environ.get("GRAFANA_PROD_TOKEN")
         if not url or not token:
             raise ValueError("GRAFANA_PROD_URL and GRAFANA_PROD_TOKEN are required")
         client = GrafanaClient(base_url=url, token=token)
         links = preview_paths(
-            paths, args.org, args.sites_dir, client, args.pr_number,
-            args.pr_title, args.head_ref, args.orgs_dir,
+            paths,
+            args.org,
+            args.sites_dir,
+            client,
+            args.pr_number,
+            args.pr_title,
+            args.head_ref,
+            args.orgs_dir,
         )
         for link in links:
             print(link)
         return 0
-    except (GrafanaAPIError, OSError, TypeError, ValueError, yaml.YAMLError, subprocess.CalledProcessError) as exc:
+    except (
+        GrafanaAPIError,
+        OSError,
+        TypeError,
+        ValueError,
+        yaml.YAMLError,
+        subprocess.CalledProcessError,
+    ) as exc:
         logger.error("Preview deployment failed: %s", exc)
         return 1
 
