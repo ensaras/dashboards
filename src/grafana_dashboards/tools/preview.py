@@ -61,7 +61,7 @@ def preview_paths(
     config = load_site_config(sites_dir / f"{org_slug}.yaml")
     org_id = config.get("site", {}).get("org_id")
     if not isinstance(org_id, int):
-        raise ValueError(f"sites/{org_slug}.yaml is missing an integer site.org_id")
+        raise TypeError(f"sites/{org_slug}.yaml is missing an integer site.org_id")
     folder_uid = _get_or_create_preview_folder(client, org_id)
     expected_uids: set[str] = set()
     for path in paths:

@@ -6,7 +6,7 @@ import argparse
 import logging
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from grafana_dashboards.tools.client import GrafanaAPIError, GrafanaClient
 from grafana_dashboards.tools.deploy import RETIRED_FOLDER_TITLE
@@ -17,7 +17,7 @@ RETENTION_DAYS = 90
 
 def purge_retired(client: GrafanaClient, org_id: int, now: datetime | None = None) -> int:
     """Delete retired dashboards whose Grafana updated time is at least 90 days old."""
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     matches = [folder for folder in client.get_folders(org_id) if folder.get("title") == RETIRED_FOLDER_TITLE]
     if len(matches) > 1:
         raise ValueError(f"Grafana org {org_id} has multiple {RETIRED_FOLDER_TITLE!r} folders")
@@ -42,12 +42,12 @@ def purge_retired(client: GrafanaClient, org_id: int, now: datetime | None = Non
             logger.warning("Skipping Retired dashboard %s: no Grafana updated timestamp", uid)
             continue
         try:
-            updated_at = datetime.fromisoformat(updated.replace("Z", "+00:00"))
+            updated_at = datetime.fromisoformat(updated)
         except ValueError:
             logger.warning("Skipping Retired dashboard %s: invalid updated timestamp", uid)
             continue
         if updated_at.tzinfo is None:
-            updated_at = updated_at.replace(tzinfo=timezone.utc)
+            updated_at = updated_at.replace(tzinfo=UTC)
         if updated_at <= cutoff:
             client.delete_dashboard(org_id, uid)
             logger.info("Purged Retired dashboard %s (updated %s)", uid, updated)

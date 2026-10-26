@@ -106,7 +106,9 @@ def _validate_dashboard(
         )
         for error in schema_errors:
             location = "/".join(str(part) for part in error.absolute_path) or "$"
-            errors.append(f"{path}: Grafana dashboard schema error at {location}: {error.message}")
+            errors.append(
+                f"{path}: Grafana dashboard schema error at {location}: {error.message}"
+            )
     except (OSError, json.JSONDecodeError, SchemaError, ValueError) as exc:
         errors.append(f"{SCHEMA_PATH}: could not load Grafana dashboard schema: {exc}")
 
@@ -212,6 +214,8 @@ def validate_repository(
 
     uids: dict[str, dict[str, Path]] = {}
     titles: dict[tuple[str, str], dict[str, Path]] = {}
+    retired_uids: dict[tuple[str, str], Path] = {}
+    dashboard_links: list[tuple[str, Path, str]] = []
     dashboards = sorted(orgs_dir.rglob("*.json")) if orgs_dir.exists() else []
     for path in dashboards:
         try:
@@ -228,6 +232,13 @@ def validate_repository(
             continue
         checked_org, title = _validate_dashboard(path, orgs_dir, data, config, errors)
         uid = data.get("uid") if isinstance(data, dict) else None
+        if isinstance(data, dict):
+            if rel.parts[1].casefold() == "retired" and isinstance(uid, str):
+                retired_uids[(org_slug, uid)] = path
+            for url in _walk_link_urls(data):
+                linked = re.search(r"/d/([A-Za-z0-9_-]+)(?:/|\?|$)", url)
+                if linked:
+                    dashboard_links.append((org_slug, path, linked.group(1)))
         if checked_org and isinstance(uid, str):
             prior = uids.setdefault(checked_org, {}).get(uid)
             if prior:
@@ -245,6 +256,13 @@ def validate_repository(
                 )
             else:
                 titles[key][title.casefold()] = path
+
+    for org_slug, source_path, linked_uid in dashboard_links:
+        retired_path = retired_uids.get((org_slug, linked_uid))
+        if retired_path and source_path != retired_path:
+            errors.append(
+                f"{retired_path}: retirement blocked; dashboard {source_path} links to UID {linked_uid!r}"
+            )
 
     if base_ref:
         try:
