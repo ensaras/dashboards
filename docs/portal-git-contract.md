@@ -16,7 +16,7 @@ Portal remains authoritative for organizations, teams, and Grafana folders. The 
 - An organization is represented under `orgs/<org_slug>/`; a team is represented beneath it at `orgs/<org_slug>/<team_slug>/`.
 - Portal-generated scaffold changes add `.gitkeep` where needed so empty organization and team directories are tracked.
 - `sites/<org_slug>.yaml` contains the site's organization identity and timezone, the mapping from team slug to display name and Grafana folder UID, and datasource identifiers. It contains no credentials.
-- PostgreSQL datasource configuration is organization-level. InfluxDB datasource/database configuration is team-level where present; InfluxDB uses the existing read-only account.
+- Both PostgreSQL and InfluxDB datasource configurations are organization-level in `sites/<org_slug>.yaml` (matching all checked-in dashboards). `Team.influx_database_name` in Portal is the internal timeseries database name used by MQTT ingestion and alert services, not a separate per-team Grafana datasource.
 - Portal is the authoritative source for these mappings. The repository copy is generated or refreshed from Portal and remains available for offline validation.
 
 ## Provisioning events
