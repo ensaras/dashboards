@@ -54,6 +54,7 @@ list(DailyReportMetric.objects.exclude(redirect_url="").values_list("redirect_ur
 
 Check any URL containing the retiring dashboard UID, update the relevant report configuration through its normal Portal workflow, and confirm no references remain before merging. This is a manual database-backed check; the dashboards repository cannot inspect the production Portal database.
 
-## Org deletion lifecycle blocker
+## Org deletion lifecycle (Implemented)
 
-Do not use the current Portal Org-delete endpoint to enact the agreed 90-day lifecycle. The code currently deletes the Grafana Org immediately and calls Django `org.delete()`, despite endpoint documentation describing a soft delete. The agreed workflow requires keeping the Org and its Grafana/Git assets during the 90-day Portal soft-delete period, blocking its users from login, and purging Grafana and Git only after retention. Portal code changes and tests are required before this lifecycle can be verified.
+The agreed 90-day Org lifecycle is now implemented in Portal. Deleting an Org performs a soft delete (`is_active = False`, cascades to deactivate teams, forms, and users) and preserves Grafana and Git assets during the 90-day retention period. Users of inactive Orgs are blocked from authentication (OIDC, Partner Client Credentials, userinfo). The scheduled Celery task `purge_retained_organizations` purges Grafana assets, creates a Git PR removing Org assets, and permanently hard-deletes the Org record after the 90-day retention window.
+
