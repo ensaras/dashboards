@@ -35,10 +35,12 @@ The Portal worker needs these runtime settings:
 - `DASHBOARDS_GIT_PROVISIONING_ENABLED=true`
 - `DASHBOARDS_GITHUB_REPOSITORY=ensaras/dashboards`
 - `DASHBOARDS_GITHUB_BASE_BRANCH=development`
-- `DASHBOARDS_GITHUB_TOKEN_SSM_PARAMETER=<the exact SSM parameter name containing the GitHub token>`
+- `DASHBOARDS_GITHUB_APP_SSM_PARAMETER=<the exact SSM parameter name containing the GitHub App credentials>`
 - `REGION_NAME=<AWS region containing that parameter>`
 
-Grant the worker's AWS identity `ssm:GetParameter` and, for a SecureString encrypted with a customer-managed key, `kms:Decrypt` on that specific parameter/key. Give the GitHub token the repository access needed to create branches, write contents, and create/update pull requests. Then verify one Org creation and one Team creation queue a task and create/update the expected per-Org PR without blocking the Portal request. These are Portal worker settings, not GitHub Actions settings.
+Store a JSON document as an SSM `SecureString` at the configured parameter, with `app_id`, `installation_id`, and `private_key` fields. Install the GitHub App only on `ensaras/dashboards`; grant it repository metadata read, contents write, and pull requests write permissions. Grant the worker's AWS identity `ssm:GetParameter` on that parameter and, for a customer-managed key, `kms:Decrypt`. Portal creates a short-lived installation token scoped to the configured repository for each provisioning task. Do not store a personal access token or installation token in SSM. Ensure the worker has network access to `api.github.com`.
+
+Then verify one Org creation and one Team creation queue a task and create/update the expected per-Org PR without blocking the Portal request. Confirm Portal exposes the provisioning state, error, retry count, and PR link in its admin/API view, and that admins can retry a failed active Org or Team.
 
 ## Retirement reference check
 
