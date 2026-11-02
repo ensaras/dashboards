@@ -12,6 +12,11 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
+
+concurrency:
+  group: grafana-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -35,7 +40,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-      - name: Deploy changed dashboards by Org
+      - name: Deploy changed dashboards in every affected Org
         shell: bash
         env:
           GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
@@ -43,16 +48,126 @@ jobs:
           BASE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
         run: |
-          set -euo pipefail
+          set -uo pipefail
           orgs="$(git diff --name-only "$BASE_SHA..$HEAD_SHA" -- orgs/ | awk -F/ 'NF >= 3 && !seen[$2]++ {print $2}')"
           if [[ -z "$orgs" ]]; then
             echo "No changed dashboard JSON files."
             exit 0
           fi
+          result_file="$(mktemp)"
+          any_failed=false
           while IFS= read -r org; do
             [[ -z "$org" ]] && continue
-            token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"
-            GRAFANA_PROD_TOKEN="$token" uv run python -m grafana_dashboards.tools.deploy \
-              --environment production --org "$org" --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA"
-            unset token
+            if token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"; then
+              if GRAFANA_PROD_TOKEN="$token" uv run python -m grafana_dashboards.tools.deploy \
+                --environment production --org "$org" --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA"; then
+                printf '%s\n' "- **$org:** Deployment succeeded for commit $HEAD_SHA." >> "$result_file"
+              else
+                any_failed=true
+                printf '%s\n' "- **$org:** Deployment failed for commit $HEAD_SHA; see the workflow log." >> "$result_file"
+              fi
+              unset token
+            else
+              any_failed=true
+              printf '%s\n' "- **$org:** Could not retrieve the Grafana token; see the workflow log." >> "$result_file"
+            fi
           done <<< "$orgs"
+          echo "## Per-Org production deployment results" >> "$GITHUB_STEP_SUMMARY"
+          cat "$result_file" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$any_failed" == true ]]; then
+            exit 1
+          fi
+
+  cleanup-merged-pr-previews:
+    needs: deploy
+    if: success()
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: uv sync --locked
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Find merged development-to-main PR for this commit
+        id: merged-pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = context.sha;
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: sha,
+            });
+            const pr = prs.find(candidate =>
+              candidate.base.ref === 'main' &&
+              candidate.head.ref === 'development' &&
+              candidate.head.repo?.full_name === candidate.base.repo?.full_name &&
+              candidate.merged_at
+            );
+            core.setOutput('number', pr ? String(pr.number) : '');
+            if (pr) {
+              const files = await github.paginate(github.rest.pulls.listFiles, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                per_page: 100,
+              });
+              const orgs = [...new Set(files
+                .map(file => file.filename.match(/^orgs\/([^/]+)\/.*\.json$/)?.[1])
+                .filter(Boolean))].sort();
+              core.setOutput('orgs', orgs.join('\n'));
+            } else {
+              core.setOutput('orgs', '');
+            }
+            if (pr) core.info(`Found merged PR #${pr.number} for ${sha}.`);
+            else core.info(`No merged development-to-main PR is associated with ${sha}; no previews to clean.`);
+      - name: Clean merged PR previews in every Org
+        if: steps.merged-pr.outputs.number != '' && steps.merged-pr.outputs.orgs != ''
+        shell: bash
+        env:
+          GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
+          TOKEN_PREFIX: ${{ vars.GRAFANA_PROD_TOKEN_SSM_PREFIX || '/grafana/dashboards/production' }}
+          PR_NUMBER: ${{ steps.merged-pr.outputs.number }}
+          ORGS: ${{ steps.merged-pr.outputs.orgs }}
+        run: |
+          set -uo pipefail
+          result_file="$(mktemp)"
+          any_failed=false
+          while IFS= read -r org; do
+            [[ -z "$org" ]] && continue
+            config="sites/${org}.yaml"
+            org_id="$(uv run python -c 'import sys,yaml; print(yaml.safe_load(open(sys.argv[1], encoding="utf-8"))["site"]["org_id"])' "$config")"
+            if token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"; then
+              if GRAFANA_PROD_TOKEN="$token" uv run python -m grafana_dashboards.tools.cleanup \
+                --org-id "$org_id" --pr-number "$PR_NUMBER"; then
+                printf '%s\n' "- **$org:** Preview cleanup succeeded for PR #$PR_NUMBER." >> "$result_file"
+              else
+                any_failed=true
+                printf '%s\n' "- **$org:** Preview cleanup failed for PR #$PR_NUMBER; see the workflow log." >> "$result_file"
+              fi
+              unset token
+            else
+              any_failed=true
+              printf '%s\n' "- **$org:** Could not retrieve the Grafana token; see the workflow log." >> "$result_file"
+            fi
+          done <<< "$ORGS"
+          echo "## Per-Org merged-PR preview cleanup results" >> "$GITHUB_STEP_SUMMARY"
+          cat "$result_file" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$any_failed" == true ]]; then
+            exit 1
+          fi
