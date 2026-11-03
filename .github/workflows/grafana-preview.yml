@@ -1,0 +1,252 @@
+name: Grafana PR previews
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review, closed]
+
+permissions:
+  contents: read
+
+jobs:
+  authorize:
+    if: github.event.action != 'closed' && github.event.pull_request.head.ref == 'development'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      trusted: ${{ steps.permission.outputs.trusted }}
+    steps:
+      - name: Verify trusted same-repository contributor
+        id: permission
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (pr.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+              core.info('Preview skipped: PR head is not in this repository.');
+              core.setOutput('trusted', 'false');
+              return;
+            }
+            const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: pr.user.login,
+            });
+            const trusted = ['admin', 'maintain', 'write'].includes(data.permission);
+            core.setOutput('trusted', String(trusted));
+            if (!trusted) core.info(`Preview skipped: author permission is ${data.permission}.`);
+
+  preview:
+    needs: authorize
+    if: needs.authorize.outputs.trusted == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: uv sync --locked
+      - name: Summarize dashboard and panel changes
+        id: summary
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
+        run: |
+          set -euo pipefail
+          summary="$(uv run python -m grafana_dashboards.tools.change_summary \
+            --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA" \
+            --pr-number "$PR_NUMBER" --preview-base-url "$GRAFANA_PROD_URL")"
+          {
+            echo 'markdown<<CHANGE_SUMMARY_EOF'
+            printf '%s\n' "$summary"
+            echo 'CHANGE_SUMMARY_EOF'
+          } >> "$GITHUB_OUTPUT"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Publish Admin-only previews in every affected Org
+        id: publish
+        shell: bash
+        env:
+          GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
+          TOKEN_PREFIX: ${{ vars.GRAFANA_PROD_TOKEN_SSM_PREFIX || '/grafana/dashboards/production' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -uo pipefail
+          orgs="$(git diff --name-only "$BASE_SHA..$HEAD_SHA" -- orgs/ | awk -F/ 'NF >= 3 && !seen[$2]++ {print $2}')"
+          if [[ -z "$orgs" ]]; then
+            echo "No changed dashboard JSON files; no preview was needed." >> "$GITHUB_STEP_SUMMARY"
+            echo "links=" >> "$GITHUB_OUTPUT"
+            echo "results=No changed dashboard JSON files; no preview was needed." >> "$GITHUB_OUTPUT"
+            echo "failed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          link_file="$(mktemp)"
+          result_file="$(mktemp)"
+          any_failed=false
+          while IFS= read -r org; do
+            [[ -z "$org" ]] && continue
+            if token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"; then
+              if links="$(GRAFANA_PROD_TOKEN="$token" uv run python -m grafana_dashboards.tools.preview \
+                --org "$org" --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA" \
+                --pr-number "$PR_NUMBER" --pr-title "$PR_TITLE")"; then
+                unset token
+                printf '%s\n' "- **$org:** Preview published." >> "$result_file"
+                while IFS= read -r link; do
+                  if [[ -n "$link" ]]; then
+                    printf '%s\n' "- **$org:** [Open Grafana Preview]($link)" >> "$link_file"
+                  fi
+                done <<< "$links"
+              else
+                unset token
+                any_failed=true
+                printf '%s\n' "- **$org:** Preview failed; see the workflow log." >> "$result_file"
+              fi
+            else
+              any_failed=true
+              printf '%s\n' "- **$org:** Could not retrieve the Grafana token; see the workflow log." >> "$result_file"
+            fi
+          done <<< "$orgs"
+          echo "## Per-Org Grafana Preview results" >> "$GITHUB_STEP_SUMMARY"
+          cat "$result_file" >> "$GITHUB_STEP_SUMMARY"
+          if [[ -s "$link_file" ]]; then
+            echo "## Successful preview links" >> "$GITHUB_STEP_SUMMARY"
+            cat "$link_file" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          {
+            echo 'links<<PREVIEW_LINKS_EOF'
+            cat "$link_file"
+            echo 'PREVIEW_LINKS_EOF'
+            echo 'results<<PREVIEW_RESULTS_EOF'
+            cat "$result_file"
+            echo 'PREVIEW_RESULTS_EOF'
+            echo "failed=$any_failed"
+          } >> "$GITHUB_OUTPUT"
+      - name: Comment with preview links
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_LINKS: ${{ steps.publish.outputs.links }}
+          PREVIEW_RESULTS: ${{ steps.publish.outputs.results }}
+          DASHBOARD_CHANGE_SUMMARY: ${{ steps.summary.outputs.markdown }}
+        with:
+          script: |
+            const marker = '<!-- grafana-dac-preview-links -->';
+            const links = process.env.PREVIEW_LINKS;
+            const results = process.env.PREVIEW_RESULTS;
+            const summary = process.env.DASHBOARD_CHANGE_SUMMARY;
+            const body = `${marker}\n${summary}\n\n## Per-Org preview results\n\n${results || 'No preview results were produced.'}\n\n## Successful preview links\n\n${links || 'No preview links are available.'}\n\nPreview folders are restricted to Grafana Admins.`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number, per_page: 100
+            });
+            const existing = comments.find(comment => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+
+      - name: Fail the check if any affected Org lacks a usable preview
+        if: steps.publish.outputs.failed == 'true'
+        run: exit 1
+
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.merged != true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: uv sync --locked
+      - name: Find affected dashboard Orgs
+        id: affected-orgs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            });
+            const orgs = [...new Set(files
+              .map(file => file.filename.match(/^orgs\/([^/]+)\/.*\.json$/)?.[1])
+              .filter(Boolean))].sort();
+            core.setOutput('orgs', orgs.join('\n'));
+            core.info(orgs.length ? `Affected Orgs: ${orgs.join(', ')}` : 'No dashboard JSON files changed.');
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Remove closed PR previews
+        shell: bash
+        env:
+          GRAFANA_PROD_URL: ${{ vars.GRAFANA_PROD_URL }}
+          TOKEN_PREFIX: ${{ vars.GRAFANA_PROD_TOKEN_SSM_PREFIX || '/grafana/dashboards/production' }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ORGS: ${{ steps.affected-orgs.outputs.orgs }}
+        run: |
+          set -uo pipefail
+          if [[ -z "$ORGS" ]]; then
+            echo "No dashboard previews were created for this PR." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          result_file="$(mktemp)"
+          any_failed=false
+          while IFS= read -r org; do
+            [[ -z "$org" ]] && continue
+            config="sites/${org}.yaml"
+            org_id="$(uv run python -c 'import sys,yaml; print(yaml.safe_load(open(sys.argv[1], encoding="utf-8"))["site"]["org_id"])' "$config")"
+            if token="$(aws ssm get-parameter --name "${TOKEN_PREFIX}/${org}/service-account-token" --with-decryption --query 'Parameter.Value' --output text)"; then
+              if GRAFANA_PROD_TOKEN="$token" uv run python -m grafana_dashboards.tools.cleanup \
+                --org-id "$org_id" --pr-number "$PR_NUMBER"; then
+                printf '%s\n' "- **$org:** Preview cleanup succeeded for PR #$PR_NUMBER." >> "$result_file"
+              else
+                any_failed=true
+                printf '%s\n' "- **$org:** Preview cleanup failed for PR #$PR_NUMBER; see the workflow log." >> "$result_file"
+              fi
+              unset token
+            else
+              any_failed=true
+              printf '%s\n' "- **$org:** Could not retrieve the Grafana token; see the workflow log." >> "$result_file"
+            fi
+          done <<< "$ORGS"
+          echo "## Per-Org closed-PR preview cleanup results" >> "$GITHUB_STEP_SUMMARY"
+          cat "$result_file" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$any_failed" == true ]]; then
+            exit 1
+          fi
