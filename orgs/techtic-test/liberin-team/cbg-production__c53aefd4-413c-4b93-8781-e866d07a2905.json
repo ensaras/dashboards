@@ -23,7 +23,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
       },
       "description": "",
       "fieldConfig": {
@@ -75,7 +75,7 @@
           "alias": "Daily Flow FIT 600-01",
           "datasource": {
             "type": "influxdb",
-            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+            "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
           },
           "groupBy": [
             {
@@ -118,7 +118,7 @@
           "alias": "Daily Flow FIT 600-02",
           "datasource": {
             "type": "influxdb",
-            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+            "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
           },
           "groupBy": [
             {
@@ -176,7 +176,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
       },
       "description": "",
       "fieldConfig": {
@@ -229,7 +229,7 @@
           "alias": "$col",
           "datasource": {
             "type": "influxdb",
-            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+            "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
           },
           "groupBy": [
             {
@@ -272,7 +272,7 @@
           "alias": "$col",
           "datasource": {
             "type": "influxdb",
-            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+            "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
           },
           "groupBy": [
             {
@@ -330,7 +330,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+        "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
       },
       "fieldConfig": {
         "defaults": {
@@ -412,7 +412,7 @@
           "alias": "$col",
           "datasource": {
             "type": "influxdb",
-            "uid": "feb32dec-7015-4a8b-86fb-d02b000c8d7d"
+            "uid": "f3ab1d17-039b-4b48-afd9-16be63a13272"
           },
           "groupBy": [
             {
