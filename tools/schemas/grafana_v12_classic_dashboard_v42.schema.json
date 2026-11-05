@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ensaras.com/schemas/grafana-v12-classic-dashboard-v42.schema.json",
+  "title": "Grafana v12 Classic dashboard JSON (schemaVersion 42)",
+  "description": "Repository validation profile for Grafana Classic dashboard JSON. Plugin-specific panel and query fields remain extensible.",
+  "type": "object",
+  "required": [
+    "uid",
+    "title",
+    "schemaVersion"
+  ],
+  "properties": {
+    "id": {
+      "type": ["integer", "null"]
+    },
+    "uid": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaVersion": {
+      "const": 42
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "editable": {
+      "type": "boolean"
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "panels": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/panel"}
+    },
+    "links": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "from": {},
+        "to": {}
+      },
+      "additionalProperties": true
+    },
+    "timepicker": {"type": "object"},
+    "templating": {
+      "type": "object",
+      "properties": {
+        "list": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "annotations": {
+      "type": "object",
+      "properties": {
+        "list": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "refresh": {"type": ["string", "null"]},
+    "timezone": {"type": "string"},
+    "graphTooltip": {"type": "integer"},
+    "description": {"type": "string"},
+    "retired": {"type": "boolean"}
+  },
+  "$defs": {
+    "panel": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "integer"},
+        "type": {"type": "string"},
+        "title": {"type": "string"},
+        "gridPos": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "integer"},
+            "y": {"type": "integer"},
+            "w": {"type": "integer", "minimum": 1, "maximum": 24},
+            "h": {"type": "integer", "minimum": 1}
+          },
+          "required": ["x", "y", "w", "h"],
+          "additionalProperties": true
+        },
+        "targets": {
+          "type": "array",
+          "items": {"type": "object"}
+        },
+        "panels": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/panel"}
+        },
+        "fieldConfig": {"type": "object"},
+        "options": {"type": "object"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
